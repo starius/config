@@ -1,0 +1,22 @@
+[ui]
+username = Boris Nagaev <bnagaev@gmail.com>
+verbose = True
+
+[extensions]
+mq =
+rebase =
+fetch =
+graphlog =
+hgk =
+pager =
+record =
+hgext.bookmarks =
+color =
+
+[hooks]
+pre-commit.spaces = ~/bin/hg-check-spaces
+
+[pager]
+pager = less -R
+quiet = True
+
