@@ -12,6 +12,7 @@ pager =
 record =
 hgext.bookmarks =
 color =
+eol =
 
 [hooks]
 pre-commit.spaces = ~/bin/hg-check-spaces
