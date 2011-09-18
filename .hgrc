@@ -13,6 +13,7 @@ record =
 hgext.bookmarks =
 color =
 eol =
+churn=
 
 [hooks]
 pre-commit.spaces = ~/bin/hg-check-spaces
