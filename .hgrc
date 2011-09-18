@@ -15,6 +15,7 @@ color =
 eol =
 churn=
 convert =
+purge =
 
 [hooks]
 pre-commit.spaces = ~/bin/hg-check-spaces
