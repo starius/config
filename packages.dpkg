@@ -65,6 +65,7 @@ ecryptfs-utils					install
 emboss						install
 eog						install
 epdfview					install
+etckeeper						install
 fail2ban					install
 fakeroot					install
 fancontrol					install
