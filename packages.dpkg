@@ -208,12 +208,6 @@ polipo						install
 postgresql					install
 powertop					install
 privoxy						deinstall
-pulseaudio					install
-pulseaudio-esound-compat			install
-pulseaudio-module-bluetooth			install
-pulseaudio-module-gconf				install
-pulseaudio-module-x11				install
-pulseaudio-utils				install
 putty						install
 putty-tools					install
 pwgen						install
