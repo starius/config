@@ -107,6 +107,7 @@ gpw						install
 graphicsmagick					install
 graphviz					install
 grep						install
+gucharmap					install
 gzip						install
 html2ps						install
 html2text					install
