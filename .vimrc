@@ -29,3 +29,5 @@ endif
 
 au FileType make set noet
 
+match ErrorMsg /\%>80v.\+/
+
