@@ -22,6 +22,7 @@ automake					install
 autossh						install
 bash						install
 bash-completion					install
+bvi						install
 bzip2						install
 ca-certificates					install
 ca-certificates-java				install
