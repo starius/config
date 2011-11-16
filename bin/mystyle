@@ -1,4 +1,3 @@
-
 #!/bin/bash
 astyle --style=java --add-brackets --lineend=linux --align-pointer=type \
     --align-reference=type \
