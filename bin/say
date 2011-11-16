@@ -1,0 +1,7 @@
+if [[ $2 == "" ]] ; then
+    2=en
+fi
+
+mplayer -prefer-ipv4 \
+    "http://translate.google.com/translate_tts?ie=UTF-8&tl=$2&q=$1";
+
