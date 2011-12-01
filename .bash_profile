@@ -8,3 +8,6 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias l='ls -CF'
 
+export PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
+export PATH=$PATH:/usr/local/bin
+
