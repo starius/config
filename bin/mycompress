@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#for i in `find -name '*.JPG'`; do
+for i in *; do
+    echo $i
+    #cp "$i" /tmp/
+    convert "$i" -normalize -quality 15 "$i"
+    #convert "$i" -normalize -quality 15 +profile '*' "$i"
+    #convert "$i" -normalize -quality 15 +profile '*' "`echo $i | sed 's/bmp/jpg/'`"
+    #convert "$i" -crop x50% -rotate 90 -normalize -quality 15 +profile '*' "`echo $i | sed 's/bmp/jpg/'`"
+    #convert "$i" -rotate -90 -crop x50% -rotate 90 -normalize -quality 15 +profile '*' "`echo $i | sed 's/bmp/jpg/'`"
+    #convert "$i" -rotate 90 -normalize -quality 25 -resize 30% "`echo $i | sed 's/bmp/jpg/'`"
+    #convert "$i" -normalize -quality 25 -resize 30% +profile '*' "`echo $i | sed 's/bmp/jpg/'`"
+    #convert "$i" -normalize -quality 15 "$i"
+done;
+
