@@ -168,5 +168,4 @@ valgrind					install
 vim						install
 vim-gnome					install
 virtualbox-ose					install
-witty						install
 zip						install
