@@ -1,5 +1,4 @@
 #!/bin/bash
-pidgin &
 qbittorrent &
 cryptkeeper &
 skype &
