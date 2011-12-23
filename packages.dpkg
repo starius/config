@@ -105,7 +105,6 @@ parted						install
 passwdqc					install
 pdf2svg						install
 pgadmin3					install
-pidgin						install
 poedit						install
 polipo						install
 postgresql					install
