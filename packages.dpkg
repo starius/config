@@ -1,3 +1,4 @@
+abiword						install
 ascii						install
 astyle						install
 audacity					install
@@ -44,6 +45,7 @@ git						install
 gitk						install
 gnome-mplayer					install
 gnome-office					install
+gnumeric					install
 gnupg-curl					install
 gnuplot-nox					install
 gnuplot-x11					install
