@@ -8,6 +8,8 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias l='ls -CF'
 
+alias mysshfs='sshfs -o transform_symlinks'
+
 export PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
 export PATH=$PATH:/usr/local/bin
 
