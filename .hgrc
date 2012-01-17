@@ -17,6 +17,9 @@ churn=
 convert =
 purge =
 
+[diff]
+git=true
+
 [hooks]
 pre-commit.spaces = ~/bin/hg-check-spaces
 
