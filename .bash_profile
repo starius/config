@@ -9,6 +9,7 @@ alias egrep='egrep --color=auto'
 alias l='ls -CF'
 
 alias mysshfs='sshfs -o transform_symlinks'
+alias mydiff='diff -Npru'
 
 export PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
 export PATH=$PATH:/usr/local/bin
