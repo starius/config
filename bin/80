@@ -1,0 +1,3 @@
+#!/bin/bash
+grep --color=auto '^.\{81,\}' `find -iregex '.+\.\([ch]\(pp\)?\|py\)$'`
+
