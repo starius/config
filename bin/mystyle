@@ -4,8 +4,6 @@ if [[ $files == "" ]] ; then
     files=`find * -name '*.?pp'`
 fi
 
-echo $files
-
 astyle --style=java --add-brackets --lineend=linux --align-pointer=type \
     --align-reference=type \
     --delete-empty-lines --convert-tabs --pad-header --pad-oper --unpad-paren \
