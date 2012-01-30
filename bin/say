@@ -1,7 +1,8 @@
-if [[ $2 == "" ]] ; then
-    2=en
+lang=$2
+if [[ $lang == "" ]] ; then
+    lang=en
 fi
 
 mplayer -prefer-ipv4 \
-    "http://translate.google.com/translate_tts?ie=UTF-8&tl=$2&q=$1";
+    "http://translate.google.com/translate_tts?ie=UTF-8&tl=$lang&q=$1";
 
