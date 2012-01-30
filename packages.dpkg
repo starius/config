@@ -23,6 +23,7 @@ dh-make						install
 dhcp3-client					install
 dhcp3-server					install
 dialign						install
+distcc						install
 dosbox						install
 doxygen						install
 dput						install
