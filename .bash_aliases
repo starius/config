@@ -10,6 +10,7 @@ alias mysshfs='sshfs -o transform_symlinks'
 alias mydiff='diff -Npru'
 
 # ??
+export LANG=en_US.utf8
 export EDITOR=vim
 export PATH=$PATH:~/bin
 export PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
