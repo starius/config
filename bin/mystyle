@@ -9,8 +9,16 @@ astyle --style=java --add-brackets --lineend=linux --align-pointer=type \
     --delete-empty-lines --convert-tabs --pad-header --pad-oper --unpad-paren \
     --indent-col1-comments \
     --quiet $files
+
+# remove double empty lines
 sed '/^$/N;/^\n$/D' -i $files
+
+# FOREACH (void * p, b) --> FOREACH (void* p, b)
 sed '/\(FOREACH\)/s/\(\w\) \([*&]\)/\1\2/' -i $files
+
+# FOREACH(a, b) --> FOREACH (a, b)
 sed '/define/!s/\(FOREACH\)(/\1 (/' -i $files
+
+# append new line to the last line
 sed '$s@\(.\+\)@\1\n@g' -i $files
 
