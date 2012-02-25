@@ -4,4 +4,5 @@ cryptkeeper &
 skype &
 keepassx &
 skype-call-recorder &
+UNIXPW_DISABLE_SSL=1 x11vnc -unixpw -loop &
 
