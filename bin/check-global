@@ -1,0 +1,26 @@
+#!/bin/bash
+
+global_classes=`mktemp`
+all_classes=`mktemp`
+
+global_hpp=$1
+if [[ $global_hpp == "" ]] ; then
+    global_hpp=global.hpp
+fi
+
+all_files=$2
+if [[ $all_files == "" ]] ; then
+    all_files=`find -iname '*.hpp'`
+fi
+
+mygrep='egrep --ignore-case --no-filename --only-matching'
+
+$mygrep '^(class|struct) \w+[^;a-z]' -r $all_files > $all_classes
+
+$mygrep '^(class|struct) \w+;' $global_hpp | \
+    egrep --only-matching ' \w+' > $global_classes
+
+grep -vF -f $global_classes $all_classes
+
+rm $global_classes $all_classes
+
