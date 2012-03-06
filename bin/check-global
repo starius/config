@@ -20,7 +20,7 @@ $mygrep '^(class|struct) \w+[^;a-z]' -r $all_files > $all_classes
 $mygrep '^(class|struct) \w+;' $global_hpp | \
     egrep --only-matching ' \w+' > $global_classes
 
-grep -vF -f $global_classes $all_classes
+grep -vF -f $global_classes $all_classes | sort | uniq
 
 rm $global_classes $all_classes
 
