@@ -15,7 +15,7 @@ fi
 
 mygrep='egrep --ignore-case --no-filename --only-matching'
 
-$mygrep '^(class|struct) \w+[^;a-z]' -r $all_files > $all_classes
+$mygrep '^(class|struct) \w+\>[^;]' -r $all_files > $all_classes
 
 $mygrep '^(class|struct) \w+;' $global_hpp | \
     egrep --only-matching ' \w+' > $global_classes
