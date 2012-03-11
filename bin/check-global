@@ -19,7 +19,7 @@ declaration='(template.*<.+>.*)?(class|struct)'
 $mygrep "^$declaration \w+\>[^;]" -r $all_files > $all_classes
 
 $mygrep "^$declaration \w+;" $global_hpp | \
-    sed 's@\(class\|struct\) \(\w\+\);@\2@' > $global_classes
+    sed 's@.*\(class\|struct\) \(\w\+\);@\2@' > $global_classes
 
 grep -vF -f $global_classes $all_classes | sort | uniq
 
