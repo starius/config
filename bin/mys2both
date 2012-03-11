@@ -1,0 +1,1 @@
+sudo ls -l && gnome-screensaver-command -l && sudo pm-suspend-hybrid
