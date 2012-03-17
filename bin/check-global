@@ -16,7 +16,8 @@ fi
 mygrep='egrep --ignore-case --no-filename --only-matching'
 declaration='(template.*<.+>.*)?(class|struct)'
 
-$mygrep "^$declaration \w+\>[^;]" -r $all_files > $all_classes
+$mygrep "^$declaration .+[^;]$" -r $all_files | \
+    sed -e 's@ \?[:{].*@@' -e 's@.* @@' > $all_classes
 
 $mygrep "$declaration \w+;" $global_hpp | \
     sed 's@.*\(class\|struct\) \(\w\+\);@\2@' > $global_classes
