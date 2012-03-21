@@ -1,0 +1,3 @@
+#!/bin/bash
+sudo aptitude remove `dpkg -S $1 | sed 's/:.\+//'`
+
