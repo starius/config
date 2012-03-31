@@ -50,7 +50,7 @@ gnumeric					install
 gnupg-curl					install
 gnuplot-nox					install
 gnuplot-x11					install
-google-chrome						install
+google-chrome-stable						install
 google-talkplugin						install
 gpw						install
 graphicsmagick					install
