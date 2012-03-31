@@ -13,7 +13,7 @@ gconftool-2 -t str -s /apps/metacity/global_keybindings/run_command_terminal \
     "<Control><Alt>t"
 gconftool-2 -t str -s /desktop/gnome/background/picture_filename \
     /usr/share/pixmaps/backgrounds/gnome/nature/Dune.jpg
-gconftool-2 -t str -s /desktop/gnome/applications/browser/exec
+gconftool-2 -t str -s /desktop/gnome/applications/browser/exec \
     /opt/google/chrome/google-chrome
 gconftool-2 -s /desktop/gnome/peripherals/touchpad/disable_while_typing \
     -t bool false
