@@ -9,6 +9,8 @@ apt-get update
 wget https://bitbucket.org/starius/config/raw/tip/packages.dpkg -O - | \
   dpkg --set-selections
 apt-get -y --force-yes dselect-upgrade
+apt-get -t testing install qbittorrent
+
 if (! grep -q ' /tmp' /etc/fstab ); then
     echo 'tmpfs /tmp tmpfs defaults,size=10g 0 0' >> /etc/fstab
 fi
