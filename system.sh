@@ -3,7 +3,8 @@ apt-get -y install vim tmux aptitude mercurial
 update-alternatives --set editor /usr/bin/vim.basic
 sed '/cdrom/s@^@#@' -i /etc/apt/sources.list
 cp google-*.list opera.list /etc/apt/sources.list.d/
-wget https://bitbucket.org/starius/config/raw/tip/packages.dpkg -O - | dpkg --set-selections
+wget https://bitbucket.org/starius/config/raw/tip/packages.dpkg -O - | \
+  dpkg --set-selections
 apt-get -y dselect-upgrade
 if (! grep -q ' /tmp' /etc/fstab ); then
     echo 'tmpfs /tmp tmpfs defaults,size=10g 0 0' >> /etc/fstab
