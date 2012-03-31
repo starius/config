@@ -26,11 +26,12 @@ gconftool-2 -t bool -s /desktop/gnome/url-handlers/magnet/needs_terminal false
 gconftool-2 -t bool -s /desktop/gnome/url-handlers/magnet/enabled true
 
 gconftool-2 -s /apps/gnome-terminal/profiles/Default/scrollbar_position \
-    /apps/gnome-terminal/profiles/Default/scrollbar_position hidden
-gconftool-2 -s /apps/gnome-terminal/profiles/Default/scrollbar_position \
-    /apps/gnome-terminal/profiles/Default/default_show_menubar false
+    -t string hidden
+gconftool-2 -s /apps/gnome-terminal/profiles/Default/default_show_menubar \
+    -t bool false
 
-gconftool-2 -s /desktop/gnome/peripherals/keyboard/kbd/layouts -t list '[us,ru]'
-gconftool-2 -s /desktop/gnome/peripherals/keyboard/kbd/options -t list \
-    '[grp    grp:ctrl_shift_toggle]'
+gconftool-2 -s /desktop/gnome/peripherals/keyboard/kbd/layouts \
+    -t list --list-type string '[us,ru]'
+gconftool-2 -s /desktop/gnome/peripherals/keyboard/kbd/options \
+    -t list --list-type string '[grp    grp:ctrl_shift_toggle]'
 
