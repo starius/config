@@ -33,5 +33,5 @@ gconftool-2 -s /apps/gnome-terminal/profiles/Default/default_show_menubar \
 gconftool-2 -s /desktop/gnome/peripherals/keyboard/kbd/layouts \
     -t list --list-type string '[us,ru]'
 gconftool-2 -s /desktop/gnome/peripherals/keyboard/kbd/options \
-    -t list --list-type string '[grp    grp:ctrl_shift_toggle]'
+    -t list --list-type string '[grp	grp:ctrl_shift_toggle]'
 
