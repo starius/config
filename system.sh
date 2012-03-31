@@ -11,7 +11,8 @@ if (! grep -q ' /tmp' /etc/fstab ); then
     echo 'tmpfs /tmp tmpfs defaults,size=10g 0 0' >> /etc/fstab
 fi
 
-wget http://atdot.ch/scr/files/0.8/skype-call-recorder-debian_0.8_i386.deb
+wget http://atdot.ch/scr/files/0.8/skype-call-recorder-debian_0.8_i386.deb \
+    -O skype-call-recorder-debian_0.8_i386.deb
 dpkg -i skype-call-recorder-debian_0.8_i386.deb
 apt-get -f -y install
 
