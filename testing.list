@@ -1,0 +1,3 @@
+deb http://mirror2.corbina.ru/debian/ testing contrib non-free main
+deb-src http://mirror2.corbina.ru/debian/ testing contrib non-free main
+

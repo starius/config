@@ -3,7 +3,7 @@ apt-get -y install vim tmux aptitude mercurial
 update-alternatives --set editor /usr/bin/vim.basic
 sed '/cdrom/s@^@#@' -i /etc/apt/sources.list
 cp google-*.list opera.list squeeze-backports.list /etc/apt/sources.list.d/
-cp sid.list /etc/apt/sources.list.d/
+cp testing.list /etc/apt/sources.list.d/
 echo 'APT::Default-Release "stable";' > /etc/apt/apt.conf
 apt-get update
 wget https://bitbucket.org/starius/config/raw/tip/packages.dpkg -O - | \
