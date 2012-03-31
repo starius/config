@@ -14,5 +14,6 @@ fi
 wget http://atdot.ch/scr/files/0.8/skype-call-recorder-debian_0.8_i386.deb
 dpkg -i skype-call-recorder-debian_0.8_i386.deb
 apt-get -f -y install
+
 apt-file update
 
