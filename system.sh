@@ -5,6 +5,7 @@ sed '/cdrom/s@^@#@' -i /etc/apt/sources.list
 cp google-*.list opera.list /etc/apt/sources.list.d/
 wget https://bitbucket.org/starius/config/raw/tip/packages.dpkg -O - | \
   dpkg --set-selections
+apt-get update
 apt-get -y dselect-upgrade
 if (! grep -q ' /tmp' /etc/fstab ); then
     echo 'tmpfs /tmp tmpfs defaults,size=10g 0 0' >> /etc/fstab
