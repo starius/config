@@ -7,6 +7,7 @@ autogen						install
 automake					install
 autossh						install
 ccache						install
+checkinstall						install
 cheese						install
 clang						install
 cmake						install
