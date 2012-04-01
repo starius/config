@@ -19,4 +19,5 @@ dpkg -i skype-call-recorder-debian_0.8_i386.deb
 apt-get -f -y install
 
 apt-file update
+update-command-not-found
 
