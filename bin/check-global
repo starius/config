@@ -35,7 +35,7 @@ $mygrep "^$declaration [^;]+$" $tmp1 | \
 $mygrep "$declaration \w+;" $global_hpp | \
     sed 's@.*\(class\|struct\) \(\w\+\);@\2@' > $global_classes
 
-grep -vF -f $global_classes $all_classes | sort | uniq
+grep -vFw -f $global_classes $all_classes | sort | uniq
 
 rm $global_classes $all_classes
 
