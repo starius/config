@@ -29,7 +29,7 @@ else
     grep --no-filename -A 1 "\*\/" $all_files > $tmp1
 fi
 
-$mygrep "^$declaration .+[^;]$" $tmp1 | \
+$mygrep "^$declaration [^;]+$" $tmp1 | \
     sed -e 's@ \?[:{].*@@' -e 's@.* @@' > $all_classes
 
 $mygrep "$declaration \w+;" $global_hpp | \
