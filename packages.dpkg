@@ -85,6 +85,7 @@ lynx						install
 lzma						install
 make						install
 mercurial					install
+mercurial-git					install
 mplayer						install
 mupdf						install
 muscle						install
