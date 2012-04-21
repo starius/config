@@ -145,7 +145,7 @@ skype						install
 sl						install
 smplayer					install
 sqlite3						install
-sqliteman					install
+sqlitebrowser					install
 ssh-import-id					install
 sshfs						install
 sshpass						install
