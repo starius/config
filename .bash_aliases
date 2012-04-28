@@ -8,3 +8,6 @@ alias l='ls -CF'
 
 alias mysshfs='sshfs -o transform_symlinks'
 alias mydiff='diff -Npru'
+
+alias mycmake="CXX='ccache g++' cmake -D CMAKE_INSTALL_PREFIX:PATH=/usr"
+
