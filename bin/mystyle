@@ -25,6 +25,9 @@ sed '/define/!s/\(^\s*[A-Z0-9_]\+\)(\(.\+\)) {$/\1 (\2) {/' -i $files
 # remove extra space before ;
 sed 's@ ;@;@g' -i $files
 
+# remove double spaces
+sed '/\<param\>/!s@\>  \<@ @g' -i $files
+
 # append new line to the last line
 sed '$s@\(.\+\)@\1\n@g' -i $files
 
