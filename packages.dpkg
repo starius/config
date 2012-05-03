@@ -14,8 +14,6 @@ cmake						install
 cmake-curses-gui				install
 command-not-found				install
 cpulimit					install
-chromium-browser					install
-chromium-browser-inspector					install
 cryptkeeper					install
 curl						install
 debhelper					install
@@ -53,6 +51,7 @@ gnumeric					install
 gnupg-curl					install
 gnuplot-nox					install
 gnuplot-x11					install
+google-chrome-stable						install
 google-talkplugin						install
 gpw						install
 graphicsmagick					install
