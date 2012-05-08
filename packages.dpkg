@@ -176,5 +176,6 @@ valgrind					install
 vim						install
 vim-gnome					install
 virtualbox-ose					install
+vlc-nox					install
 x11vnc						install
 zip						install
