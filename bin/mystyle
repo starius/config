@@ -18,6 +18,7 @@ sed '/\(FOREACH\)/s/\(\w\) \([*&]\)/\1\2/' -i $files
 
 # FOREACH(a, b) --> FOREACH (a, b)
 sed '/define/!s/\(FOREACH\)(/\1 (/' -i $files
+sed '/define/!s/\(foreach\)(/\1 (/' -i $files
 
 # BOOST_AUTO_TEST_CASE(test) --> BOOST_AUTO_TEST_CASE (test)
 sed '/define/!s/\(^\s*[A-Z0-9_]\+\)(\(.\+\)) {$/\1 (\2) {/' -i $files
