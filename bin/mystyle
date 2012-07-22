@@ -15,6 +15,7 @@ sed '/^$/N;/^\n$/D' -i $files
 
 # FOREACH (void * p, b) --> FOREACH (void* p, b)
 sed '/\(FOREACH\)/s/\(\w\) \([*&]\)/\1\2/' -i $files
+sed '/\(foreach\)/s/\(\w\) \([*&]\)/\1\2/' -i $files
 
 # FOREACH(a, b) --> FOREACH (a, b)
 sed '/define/!s/\(FOREACH\)(/\1 (/' -i $files
