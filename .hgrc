@@ -25,4 +25,5 @@ pre-commit.spaces = ~/bin/hg-check-spaces
 [pager]
 pager = less -R
 quiet = True
+attend = annotate, cat, diff, export, glog, log, qdiff, help
 
