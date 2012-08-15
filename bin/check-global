@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Optional arguments:
-# 1. file with declarations (=globa.hpp)
+# 1. file with declarations (=global.hpp)
 # 2. header files with definitions (= all hpp files recursively)
 # 3. whether to select only documented definitions (preceded by */)
 #    (if specified, means True)
