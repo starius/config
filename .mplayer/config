@@ -1,4 +1,5 @@
 # Write your default config options here!
-vf=screenshot
+ass=yes
+vf=ass,screenshot
 cache=10000
 
