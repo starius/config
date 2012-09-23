@@ -1,4 +1,4 @@
 #!/bin/bash
 
-awk 'BEGIN { i=0; } /^$/{i++}{print > "'$1'."i}' $1
+awk 'BEGIN { i=0; } /^$/{close("'$1'."i); i++}{print > "'$1'."i}' $1
 
