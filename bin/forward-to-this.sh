@@ -3,5 +3,5 @@
 # 2 host
 # 3 remote_port
 
-/usr/bin/ssh -f -N -R $3:localhost:$1 $2
+/usr/bin/ssh -oExitOnForwardFailure=yes -f -N -R $3:localhost:$1 $2
 
