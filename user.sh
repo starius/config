@@ -35,3 +35,6 @@ gconftool-2 -s /desktop/gnome/peripherals/keyboard/kbd/layouts \
 gconftool-2 -s /desktop/gnome/peripherals/keyboard/kbd/options \
     -t list --list-type string '[grp	grp:ctrl_shift_toggle]'
 
+gconftool-2 -s /apps/guake/style/background/transparency -t int 25
+gconftool-2 -s /apps/guake/style/background/color -t string '#ffffffffffff'
+
