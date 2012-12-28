@@ -37,4 +37,6 @@ gconftool-2 -s /desktop/gnome/peripherals/keyboard/kbd/options \
 
 gconftool-2 -s /apps/guake/style/background/transparency -t int 25
 gconftool-2 -s /apps/guake/style/background/color -t string '#ffffffffffff'
+gconftool-2 -s /apps/guake/style/font/color -t string '#000000000000'
+gconftool-2 -s /apps/guake/general/use_scrollbar -t bool false
 
