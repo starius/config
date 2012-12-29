@@ -12,3 +12,6 @@ alias mydiff='diff -Npru'
 alias mycmake="CXX='ccache g++' cmake -D CMAKE_INSTALL_PREFIX:PATH=/usr"
 alias octperm="perl -e 'printf \"%o\n\",(stat shift)[2] & 07777'"
 
+alias ssh-tor="ssh -o ProxyCommand='/usr/bin/connect -4 -S localhost:9050 %h %p'"
+alias ssh-onion="ssh -o ProxyCommand='connect -R remote -5 -S 127.0.0.1:9050 %h %p'"
+
