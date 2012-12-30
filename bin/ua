@@ -1,0 +1,5 @@
+userAgents=`cat ~/agents.txt`
+maxLines=`echo "$userAgents" | wc -l | tr -d ' '`
+randomUserAgent=$(echo "$userAgents" | sed -n $[ ( $RANDOM % ( $[ $maxLines - 1 ] + 1 ) ) + 1 ]p)
+
+echo $randomUserAgent
