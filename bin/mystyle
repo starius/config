@@ -39,3 +39,7 @@ sed '$s@\(.\+\)@\1\n@g' -i $files
 # fix indentation of "for (int a : b)"
 sed ':begin;$!N;s@^\(\s\+\)\([^\n]\+\)\nfor@\1\2\n\1for@;tbegin;P;D' -i $files
 
+# #include<iostream> -> #include <iostream>
+sed 's/^#include</#include </' -i $files
+sed 's/^#include"/#include "/' -i $files
+
