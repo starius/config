@@ -10,6 +10,9 @@ astyle --style=java --add-brackets --lineend=linux --align-pointer=type \
     --indent-col1-comments \
     --quiet $files
 
+# add empty line after each function or class
+sed '/^};\?$/,+1s/^\([^}#].\+\)/\n\1/' -i $files
+
 # remove double empty lines
 sed '/^$/N;/^\n$/D' -i $files
 
