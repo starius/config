@@ -6,5 +6,6 @@ skype &
 keepassx &
 skype-call-recorder &
 ekiga &
+bitcoin-qt &
 UNIXPW_DISABLE_SSL=1 x11vnc -unixpw -loop &
 
