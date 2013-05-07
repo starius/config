@@ -15,13 +15,12 @@ eol =
 churn=
 convert =
 purge =
-convert =
 
 [diff]
 git=true
 
 [hooks]
-#pre-commit.spaces = ~/bin/hg-check-spaces
+pre-commit.spaces = ~/bin/hg-check-spaces
 
 [pager]
 pager = less -R
