@@ -13,7 +13,7 @@ fi
 out=`mktemp $HOME/webcam-XXXXXXXXXX.avi`
 
 ffmpeg -f video4linux2 -r 25 -s 640x480 -i /dev/video0 \
-    -f alsa -ac $channels -i hw:$audio,0 -acodec flac -y $out
+    -f alsa -ac $channels -i hw:$audio,0 -acodec mp2 -y $out
 
 echo $out
 
