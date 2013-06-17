@@ -1,0 +1,2 @@
+mplayer -cache 500 -playlist http://s3.radioheart.ru:8019/wakeup.m3u
+
