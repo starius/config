@@ -18,4 +18,5 @@ alias ssh-onion="ssh -o ProxyCommand='connect -R remote -5 -S 127.0.0.1:9050 %h 
 USER_AGENT=`ua`
 alias curl-tor="curl --socks5 localhost:9050 -A '$USER_AGENT'"
 alias dpaste="pastebinit -a anonymous -b http://paste.debian.net"
+alias nasplayer="AUDIOSERVER=tcp/127.0.0.1:8008 mplayer -ao nas"
 
