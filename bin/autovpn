@@ -1,10 +1,19 @@
 #!/bin/bash
+
+VPN_INDEX=`nmcli con status | head -n 1 | grep -bo VPN | sed 's/:.*$//'`
+let 'VPN_START=VPN_INDEX+1' # 0-based to 1-based
+let 'VPN_STOP=VPN_START+2'
+
+UUID_INDEX=`nmcli con | head -n 1 | grep -bo UUID |  sed 's/:.*$//'`
+let 'UUID_START=UUID_INDEX+1' # 0-based to 1-based
+let 'UUID_STOP=UUID_START+35'
+
 while [ "true" ]
 do
-    if (! nmcli con status | cut -c 95-97 | grep -q yes ) then
-        if (! nmcli con status | cut -c 95-97 | grep -q yes ) then
+    if (! nmcli con status | cut -c $VPN_START-$VPN_STOP | grep -q yes ) then
+        if (! nmcli con status | cut -c $VPN_START-$VPN_STOP | grep -q yes ) then
             echo "Disconnected, trying to reconnect..."
-            CONNAME=`nmcli con | grep -v never | grep vpn -m 1 | cut -c 27-62`
+            CONNAME=`nmcli con | grep -v never | grep vpn -m 1 | cut -c $UUID_START-$UUID_STOP`
             nmcli con up uuid $CONNAME
         fi
     fi
