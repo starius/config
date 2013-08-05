@@ -16,6 +16,9 @@ sed '/^};\?$/,+1s/^\([^}#].\+\)/\n\1/' -i $files
 # remove double empty lines
 sed '/^$/N;/^\n$/D' -i $files
 
+# remove empty line (after }) before \endcode (doxygen examples)
+sed ':begin;$!N;s@^\n\\endcode@\\endcode@;tbegin;P;D' -i $files
+
 # FOREACH (void * p, b) --> FOREACH (void* p, b)
 sed '/\(FOREACH\)/s/\(\w\) \([*&]\)/\1\2/' -i $files
 sed '/^\(\s*foreach\)/s/\(\w\) \([*&]\)/\1\2/' -i $files
