@@ -4,4 +4,4 @@ export PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
 export PATH=$PATH:/usr/local/bin
 export PATH=~/bin:$PATH
 
-. .bashrc
+. ~/.bashrc
