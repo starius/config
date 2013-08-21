@@ -9,7 +9,6 @@ from urllib import urlencode
 from cookielib import CookieJar
 from os.path import expanduser, exists
 from pprint import pprint
-from collections import OrderedDict
 from argparse import ArgumentParser
 
 USERNAME = ""
@@ -230,7 +229,7 @@ class Imgur(object):
 
     def _infos(self, img):
         """ Print the infos of an image """
-        return dict_print(OrderedDict(img["image"].items() +
+        return dict_print(dict(img["image"].items() +
                 img["links"].items()))
 
     def _liststr(self, datas):
