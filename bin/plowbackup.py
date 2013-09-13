@@ -28,8 +28,9 @@ def list_files(base_dir):
 
 def plowup(args, file):
     output = tempfile.NamedTemporaryFile(delete=False)
-    os.system("bash -c 'plowup Sendspace %(file)s | tail -n 1 &> %(output)s'" %
-            {'file': file, 'output': output.name})
+    site = choice(args.sites_list)
+    os.system("bash -c 'plowup %(site)s %(file)s | tail -n 1 &> %(output)s'" %
+            {'file': file, 'site': site, 'output': output.name})
     url = open(output.name).read().strip()
     os.unlink(output.name)
     return url
@@ -122,9 +123,13 @@ p.add_argument('--out',help='Output file for script',
         metavar='FILE',type=w,default='-')
 p.add_argument('--encrypt',help='Encrypt files with ccrypt',
         metavar='DIR',type=bool,default=True)
+p.add_argument('--sites',
+        help='Sites used for upload separated by comma',
+        metavar='SITES',type=str,default='Sendspace')
 
 args = p.parse_args()
 base_dir = args.dir
+args.sites_list = args.sites.split(',')
 
 files = list_files(base_dir)
 for file in files:
