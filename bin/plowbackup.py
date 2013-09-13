@@ -4,11 +4,11 @@
 Good sites:
     * Sendspace
     * Sharebeast
-    * 1fichier
     * mega (required plugin plowshare-plugin-mega
 
 Working with delay:
     * hipfile
+    * 1fichier
     * uptobox
     * netload_in
     * bayfiles
@@ -234,7 +234,7 @@ p.add_argument('--filters',help='Sequence of filters to apply. '+\
         metavar='FF',type=str,default='xxd:25,head_tail:75,ccrypt')
 p.add_argument('--sites',
         help='Sites used for upload separated by comma or "local"',
-        metavar='SITES',type=str,default='Sendspace,Sharebeast,1fichier')
+        metavar='SITES',type=str,default='Sendspace,Sharebeast')
 p.add_argument('--verify',
         help='Download file and compare it with original',
         type=int,default=1)
