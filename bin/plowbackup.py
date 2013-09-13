@@ -132,6 +132,10 @@ def add_filter(generator, encode_filter, decode_filter):
 
 def add_filters(args, encode_filter, decode_filter):
     for filter in args.filters.split(','):
+        if ':' in filter:
+            filter, prob = filter.split(':')
+            if randint(0, 100) > int(prob):
+                continue
         add_filter(FILTERS[filter], encode_filter, decode_filter)
 
 def backup_file(args, file):
@@ -177,7 +181,8 @@ p.add_argument('--verbose',help='Verbose output',action='store_true')
 p.add_argument('--dir',help='Directory',metavar='DIR', default='.')
 p.add_argument('--out',help='Output file for script',
         metavar='FILE',type=w,default='-')
-p.add_argument('--filters',help='Sequence of filters to apply',
+p.add_argument('--filters',help='Sequence of filters to apply. '+\
+        'Probability in precent may be added after ":"',
         metavar='FF',type=str,default='head_tail,ccrypt')
 p.add_argument('--sites',
         help='Sites used for upload separated by comma or "local"',
