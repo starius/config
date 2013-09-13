@@ -1,6 +1,37 @@
 #!/usr/bin/python
 
-"""
+""" PlowBackup, tool for encrypted backup across several web-sites
+Copyright (C) 2013 Boris Nagaev <bnagaev@gmail.com>
+
+PlowBackup is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+PlowBackup is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with PlowBackup.  If not, see <http://www.gnu.org/licenses/>.
+
+Usage:
+
+Backup:
+$ cd backup
+$ plowbackup --out /path/to/download.sh
+
+Restore:
+$ cd /empty/dir
+$ sh /path/to/download.sh
+
+By default, all files are encrupted with one-off keys.
+Obscurity through other filters like xxd, rot13 etc is added.
+You can add your own filters (see xxd_filters for example).
+Set of sites to be used is specified by command line
+option --sites.
+
 Good sites:
     * Sendspace
     * Sharebeast
