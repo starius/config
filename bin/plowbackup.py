@@ -201,11 +201,21 @@ def rot13_filters(args):
             self.pattern = "cat %(in)s | rot13 > %(out)s"
     return E(), E()
 
+def gz_filters(args):
+    class E(Filter):
+        def __init__(self):
+            self.pattern = "cat %(in)s | gzip > %(out)s"
+    class D(Filter):
+        def __init__(self):
+            self.pattern = "cat %(in)s | gunzip > %(out)s"
+    return E(), D()
+
 FILTERS = {
     'ccrypt': encrypt_filters,
     'head_tail': head_tail_filters,
     'xxd': xxd_filters,
     'rot13': rot13_filters,
+    'gz': gz_filters,
 }
 
 def add_filter(generator, encode_filter, decode_filter):
