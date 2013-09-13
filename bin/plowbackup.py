@@ -27,7 +27,6 @@ def list_files(base_dir):
     return result
 
 def plowup(args, file):
-    output = tempfile.NamedTemporaryFile(delete=False)
     if args.sites == 'local':
         name = file.replace('/', '_')
         local = '/tmp/local_' + random_password() + '_' + name
@@ -35,6 +34,7 @@ def plowup(args, file):
                 {'file': file, 'local': local})
         return local
     else:
+        output = tempfile.NamedTemporaryFile(delete=False)
         site = choice(args.sites_list)
         os.system("bash -c 'plowup %(site)s %(file)s "+
                   "| tail -n 1 &> %(output)s'" %
