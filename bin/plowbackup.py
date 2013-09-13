@@ -205,7 +205,7 @@ def try_backup_file(args, file, o):
     # run encode filters
     encode = encode_filter.encode(local_file, upload_file)
     if args.verbose:
-        print encode
+        print(encode)
     os.system(encode)
     # upload
     url = plowup(args, upload_file)
@@ -234,7 +234,10 @@ def backup_file(args, file):
             cmd = o.getvalue()
             base_dir = tempfile.mkdtemp()
             script = tempfile.NamedTemporaryFile(delete=False)
-            script.write(cmd)
+            try:
+                script.write(cmd) # python2
+            except:
+                script.write(bytes(cmd, 'UTF-8')) # python3
             script.close()
             os.system('cd %(base_dir)s; sh %(script)s' %\
                     {'base_dir': base_dir, 'script': script.name})
