@@ -34,6 +34,19 @@ chars = string.ascii_letters + string.digits
 def random_password():
     return "".join(choice(chars) for x in range(randint(8, 12)))
 
+def random_filename():
+    def photo():
+        return 'P' + str(randint(1000000, 2000000)) + '.JPG'
+    def mhtml():
+        return random_password() + '.mhtml'
+    def mp4():
+        return random_password() + '.mp4'
+    def txt():
+        return random_password() + '.txt'
+    def mp3():
+        return random_password() + '.mp3'
+    return choice([photo, mhtml, mp4, txt, mp3])()
+
 def list_files(base_dir):
     result = []
     def list_files_(dir, prefix):
@@ -56,10 +69,12 @@ def plowup(args, file):
     else:
         output = tempfile.NamedTemporaryFile(delete=False)
         site = choice(args.sites_list)
-        os.system(("bash -c 'plowup %(site)s %(file)s "+
+        name = random_filename()
+        os.system(("bash -c 'plowup %(site)s " +
+                  " %(file)s:%(name)s "+
                   "| tail -n 1 &> %(output)s'") %
                   {'file': file, 'site': site,
-                   'output': output.name})
+                   'output': output.name, 'name': name})
         url = open(output.name).read().strip()
         os.unlink(output.name)
         return url
