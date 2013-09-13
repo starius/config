@@ -28,12 +28,21 @@ def list_files(base_dir):
 
 def plowup(args, file):
     output = tempfile.NamedTemporaryFile(delete=False)
-    site = choice(args.sites_list)
-    os.system("bash -c 'plowup %(site)s %(file)s | tail -n 1 &> %(output)s'" %
-            {'file': file, 'site': site, 'output': output.name})
-    url = open(output.name).read().strip()
-    os.unlink(output.name)
-    return url
+    if args.sites == 'local':
+        name = file.replace('/', '_')
+        local = '/tmp/local_' + random_password() + '_' + name
+        os.system("cp %(file)s %(local)s" %
+                {'file': file, 'local': local})
+        return local
+    else:
+        site = choice(args.sites_list)
+        os.system("bash -c 'plowup %(site)s %(file)s "+
+                  "| tail -n 1 &> %(output)s'" %
+                  {'file': file, 'site': site,
+                   'output': output.name})
+        url = open(output.name).read().strip()
+        os.unlink(output.name)
+        return url
 
 class Filter(object):
     def __init__(self):
@@ -105,12 +114,16 @@ def backup_file(args, file):
     url = plowup(args, upload_file)
     # remove tmp
     os.unlink(upload_file)
-    o.write('tmpdir=$(mktemp -d)\n')
-    o.write('plowdown -o $tmpdir %s\n' % url)
-    o.write('f=$(find $tmpdir -type f)\n')
+    if url.startswith('/tmp'):
+        o.write('f=%(url)s\n' % {'url': url})
+    else:
+        o.write('tmpdir=$(mktemp -d)\n')
+        o.write('plowdown -o $tmpdir %s\n' % url)
+        o.write('f=$(find $tmpdir -type f)\n')
     o.write(decode_filter.encode('$f', file))
-    o.write('rm $f\n')
-    o.write('rmdir $tmpdir\n')
+    if not url.startswith('/tmp'):
+        o.write('rm $f\n')
+        o.write('rmdir $tmpdir\n')
 
 r = argparse.FileType('r')
 w = argparse.FileType('w')
@@ -124,7 +137,7 @@ p.add_argument('--out',help='Output file for script',
 p.add_argument('--encrypt',help='Encrypt files with ccrypt',
         metavar='DIR',type=bool,default=True)
 p.add_argument('--sites',
-        help='Sites used for upload separated by comma',
+        help='Sites used for upload separated by comma or "local"',
         metavar='SITES',type=str,default='Sendspace')
 
 args = p.parse_args()
