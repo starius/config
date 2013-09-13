@@ -34,6 +34,57 @@ def plowup(args, file):
     os.unlink(output.name)
     return url
 
+class Filter(object):
+    def __init__(self):
+        self.pattern = 'cp %(in)s %(out)s'
+
+    def encode(self, in_file, out_file):
+        return self.pattern % \
+                {'in': in_file, 'out': out_file}
+
+class FilterChain(object):
+    def __init__(self):
+        self.filters = []
+
+    def push_back(self, filter):
+        self.filters.append(filter)
+
+    def push_front(self, filter):
+        self.filters.insert(0, filter)
+
+    def encode(self, in_file, out_file):
+        result = []
+        result.append('f1=$(mktemp)')
+        result.append('f2=$(mktemp)')
+        result.append('cp %(in)s $f1' % {'in': in_file})
+        for filter in self.filters:
+            result.append(filter.encode('$f1', '$f2'))
+        result.append('cp $f2 %(out)s ' % {'out': out_file})
+        result.append('rm $f1')
+        result.append('rm $f2')
+        return '\n'.join(result)
+
+def encrypt_filters(args):
+    key = random_password()
+    class E(Filter):
+        def __init__(self):
+            self.pattern = "cat %(in)s | ccrypt -e -K " + \
+                    key + " > %(out)s"
+    class D(Filter):
+        def __init__(self):
+            self.pattern = "cat %(in)s | ccrypt -d -K " + \
+                    key + " > %(out)s"
+    return E(), D()
+
+def add_filter(generator, encode_filter, decode_filter):
+    e, d = generator(args)
+    encode_filter.push_back(e)
+    decode_filter.push_front(d)
+
+def add_filters(args, encode_filter, decode_filter):
+    if args.encrypt:
+        add_filter(encrypt_filters, encode_filter, decode_filter)
+
 def backup_file(args, file):
     o = args.out
     dir = os.path.dirname(file)
@@ -41,31 +92,24 @@ def backup_file(args, file):
     if dir:
         o.write('mkdir -p %s\n' % dir)
         dir_opt = '-o ' + dir
-    upload_file = os.path.join(args.dir, file)
-    # encrypt
-    encrypted = ''
-    key = ''
-    if args.encrypt:
-        encrypted = tempfile.NamedTemporaryFile(delete=False)
-        key = random_password()
-        os.system("cat %(upload_file)s | ccrypt -e -K %(key)s > %(encrypted)s" %
-                {'upload_file': upload_file, 'key': key,
-                 'encrypted': encrypted.name})
-        upload_file = encrypted.name
+    local_file = os.path.join(args.dir, file)
+    upload_file = tempfile.NamedTemporaryFile(delete=False).name
+    encode_filter = FilterChain()
+    decode_filter = FilterChain()
+    # add filters
+    add_filters(args, encode_filter, decode_filter)
+    # run encode filters
+    os.system(encode_filter.encode(local_file, upload_file))
     # upload
     url = plowup(args, upload_file)
-    # delete tmp files
-    if args.encrypt:
-        os.unlink(encrypted.name)
-    if args.encrypt:
-        o.write('plowdown -o $tmpdir %s\n' % url)
-        o.write('f=$(find $tmpdir -type f)\n')
-        o.write('cat $f|ccrypt -d -K %(key)s > %(file)s\n' %
-                {'key': key, 'file': file})
-        o.write('rm $f\n')
-    else:
-        o.write('plowdown %(dir_opt)s %(url)s\n' %
-                {'dir_opt': dir_opt, 'url': url})
+    # remove tmp
+    os.unlink(upload_file)
+    o.write('tmpdir=$(mktemp -d)\n')
+    o.write('plowdown -o $tmpdir %s\n' % url)
+    o.write('f=$(find $tmpdir -type f)\n')
+    o.write(decode_filter.encode('$f', file))
+    o.write('rm $f\n')
+    o.write('rmdir $tmpdir\n')
 
 r = argparse.FileType('r')
 w = argparse.FileType('w')
@@ -85,7 +129,5 @@ base_dir = args.dir
 files = list_files(base_dir)
 for file in files:
     o = args.out
-    o.write('tmpdir=$(mktemp -d)\n')
     backup_file(args, file)
-    o.write('rmdir $tmpdir\n')
 
