@@ -63,6 +63,9 @@ class FilterChain(object):
         self.filters.insert(0, filter)
 
     def encode(self, in_file, out_file):
+        if not self.filters:
+            return 'cp %(in)s %(out)s\n' %\
+                   {'in': in_file, 'out': out_file}
         result = []
         result.append('f1=$(mktemp)')
         result.append('f2=$(mktemp)')
