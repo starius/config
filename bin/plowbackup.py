@@ -44,7 +44,7 @@ w = argparse.FileType('w')
 p = argparse.ArgumentParser(description='Plow Backup',
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 p.add_argument('-v','--version',action='version',version='%(prog)s 1.0')
-p.add_argument('--dir',help='Directory',metavar='DIR')
+p.add_argument('--dir',help='Directory',metavar='DIR', default='.')
 p.add_argument('--out',help='Output file for script',
         metavar='FILE',type=w,default='-')
 
