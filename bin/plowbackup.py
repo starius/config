@@ -21,6 +21,12 @@ import argparse
 import tempfile
 from random import randint, choice
 import string
+import filecmp
+import time
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 # The characters to make up the random password
 chars = string.ascii_letters + string.digits
@@ -152,8 +158,7 @@ def add_filters(args, encode_filter, decode_filter):
                 continue
         add_filter(FILTERS[filter], encode_filter, decode_filter)
 
-def backup_file(args, file):
-    o = args.out
+def try_backup_file(args, file, o):
     dir = os.path.dirname(file)
     dir_opt = ''
     if dir:
@@ -185,6 +190,35 @@ def backup_file(args, file):
         o.write('rm $f\n')
         o.write('rmdir $tmpdir\n')
 
+def backup_file(args, file):
+    if args.verify:
+        while True:
+            o = StringIO()
+            try_backup_file(args, file, o)
+            cmd = o.getvalue()
+            base_dir = tempfile.mkdtemp()
+            script = tempfile.NamedTemporaryFile(delete=False)
+            script.write(cmd)
+            script.close()
+            os.system('cd %(base_dir)s; sh %(script)s' %\
+                    {'base_dir': base_dir, 'script': script.name})
+            os.unlink(script.name)
+            f1 = os.path.join(base_dir, file)
+            f2 = os.path.join(args.dir, file)
+            ok = False
+            try:
+                ok = filecmp.cmp(f1, f2)
+            except:
+                pass
+            os.system('rm -r ' + base_dir)
+            if ok:
+                args.out.write(cmd)
+                break
+            else:
+                time.sleep(1) # to break it with Ctrl+C
+    else:
+        try_backup_file(args, file, args.out)
+
 r = argparse.FileType('r')
 w = argparse.FileType('w')
 
@@ -201,6 +235,9 @@ p.add_argument('--filters',help='Sequence of filters to apply. '+\
 p.add_argument('--sites',
         help='Sites used for upload separated by comma or "local"',
         metavar='SITES',type=str,default='Sendspace,Sharebeast,1fichier')
+p.add_argument('--verify',
+        help='Download file and compare it with original',
+        type=int,default=1)
 
 args = p.parse_args()
 base_dir = args.dir
