@@ -4,10 +4,14 @@
 Good sites:
     * Sendspace
     * Sharebeast
+    * 1fichier
     * mega (required plugin plowshare-plugin-mega
 
 Working with delay:
     * hipfile
+    * uptobox
+    * netload_in
+    * bayfiles
 """
 
 from gzip import GzipFile
@@ -196,7 +200,7 @@ p.add_argument('--filters',help='Sequence of filters to apply. '+\
         metavar='FF',type=str,default='xxd:25,head_tail:75,ccrypt')
 p.add_argument('--sites',
         help='Sites used for upload separated by comma or "local"',
-        metavar='SITES',type=str,default='Sendspace,Sharebeast')
+        metavar='SITES',type=str,default='Sendspace,Sharebeast,1fichier')
 
 args = p.parse_args()
 base_dir = args.dir
