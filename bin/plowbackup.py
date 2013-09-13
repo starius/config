@@ -110,9 +110,19 @@ def head_tail_filters(args):
                     " - "+head+" - "+tail+")"
     return E(), D()
 
+def xxd_filters(args):
+    class E(Filter):
+        def __init__(self):
+            self.pattern = "xxd %(in)s > %(out)s"
+    class D(Filter):
+        def __init__(self):
+            self.pattern = "xxd -r %(in)s > %(out)s"
+    return E(), D()
+
 FILTERS = {
     'ccrypt': encrypt_filters,
     'head_tail': head_tail_filters,
+    'xxd': xxd_filters,
 }
 
 def add_filter(generator, encode_filter, decode_filter):
