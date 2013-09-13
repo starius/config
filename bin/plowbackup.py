@@ -183,7 +183,7 @@ p.add_argument('--out',help='Output file for script',
         metavar='FILE',type=w,default='-')
 p.add_argument('--filters',help='Sequence of filters to apply. '+\
         'Probability in precent may be added after ":"',
-        metavar='FF',type=str,default='head_tail,ccrypt')
+        metavar='FF',type=str,default='xxd:25,head_tail:75,ccrypt')
 p.add_argument('--sites',
         help='Sites used for upload separated by comma or "local"',
         metavar='SITES',type=str,default='Sendspace')
