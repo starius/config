@@ -46,8 +46,8 @@ def plowup(args, file):
     else:
         output = tempfile.NamedTemporaryFile(delete=False)
         site = choice(args.sites_list)
-        os.system("bash -c 'plowup %(site)s %(file)s "+
-                  "| tail -n 1 &> %(output)s'" %
+        os.system(("bash -c 'plowup %(site)s %(file)s "+
+                  "| tail -n 1 &> %(output)s'") %
                   {'file': file, 'site': site,
                    'output': output.name})
         url = open(output.name).read().strip()
