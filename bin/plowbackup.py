@@ -90,12 +90,33 @@ def encrypt_filters(args):
                     key + " > %(out)s"
     return E(), D()
 
+def head_tail_filters(args):
+    head = str(randint(10, 1000))
+    tail = str(randint(10, 1000))
+    class E(Filter):
+        def __init__(self):
+            self.pattern =\
+                    "head -c " + head +\
+                    " /dev/urandom > %(out)s;"+\
+                    "cat %(in)s >> %(out)s;"+\
+                    "head -c " + tail +\
+                    " /dev/urandom >> %(out)s"
+    class D(Filter):
+        def __init__(self):
+            self.pattern =\
+                    "dd if=%(in)s of=%(out)s bs=1 "+\
+                    "skip="+head+" count=$(expr "+\
+                    "$(du -b %(in)s|cut -f1) "+\
+                    " - "+head+" - "+tail+")"
+    return E(), D()
+
 def add_filter(generator, encode_filter, decode_filter):
     e, d = generator(args)
     encode_filter.push_back(e)
     decode_filter.push_front(d)
 
 def add_filters(args, encode_filter, decode_filter):
+    add_filter(head_tail_filters, encode_filter, decode_filter)
     if args.encrypt:
         add_filter(encrypt_filters, encode_filter, decode_filter)
 
