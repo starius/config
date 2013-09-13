@@ -1,5 +1,15 @@
 #!/usr/bin/python
 
+"""
+Good sites:
+    * Sendspace
+    * Sharebeast
+    * mega (required plugin plowshare-plugin-mega
+
+Working with delay:
+    * hipfile
+"""
+
 from gzip import GzipFile
 import os
 import sys
@@ -186,7 +196,7 @@ p.add_argument('--filters',help='Sequence of filters to apply. '+\
         metavar='FF',type=str,default='xxd:25,head_tail:75,ccrypt')
 p.add_argument('--sites',
         help='Sites used for upload separated by comma or "local"',
-        metavar='SITES',type=str,default='Sendspace')
+        metavar='SITES',type=str,default='Sendspace,Sharebeast')
 
 args = p.parse_args()
 base_dir = args.dir
