@@ -110,15 +110,19 @@ def head_tail_filters(args):
                     " - "+head+" - "+tail+")"
     return E(), D()
 
+FILTERS = {
+    'ccrypt': encrypt_filters,
+    'head_tail': head_tail_filters,
+}
+
 def add_filter(generator, encode_filter, decode_filter):
     e, d = generator(args)
     encode_filter.push_back(e)
     decode_filter.push_front(d)
 
 def add_filters(args, encode_filter, decode_filter):
-    add_filter(head_tail_filters, encode_filter, decode_filter)
-    if args.encrypt:
-        add_filter(encrypt_filters, encode_filter, decode_filter)
+    for filter in args.filters.split(','):
+        add_filter(FILTERS[filter], encode_filter, decode_filter)
 
 def backup_file(args, file):
     o = args.out
@@ -163,8 +167,8 @@ p.add_argument('--verbose',help='Verbose output',action='store_true')
 p.add_argument('--dir',help='Directory',metavar='DIR', default='.')
 p.add_argument('--out',help='Output file for script',
         metavar='FILE',type=w,default='-')
-p.add_argument('--encrypt',help='Encrypt files with ccrypt',
-        metavar='DIR',type=int,default=1)
+p.add_argument('--filters',help='Sequence of filters to apply',
+        metavar='FF',type=str,default='head_tail,ccrypt')
 p.add_argument('--sites',
         help='Sites used for upload separated by comma or "local"',
         metavar='SITES',type=str,default='Sendspace')
