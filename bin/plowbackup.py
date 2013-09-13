@@ -139,7 +139,7 @@ p.add_argument('--dir',help='Directory',metavar='DIR', default='.')
 p.add_argument('--out',help='Output file for script',
         metavar='FILE',type=w,default='-')
 p.add_argument('--encrypt',help='Encrypt files with ccrypt',
-        metavar='DIR',type=bool,default=True)
+        metavar='DIR',type=int,default=1)
 p.add_argument('--sites',
         help='Sites used for upload separated by comma or "local"',
         metavar='SITES',type=str,default='Sendspace')
