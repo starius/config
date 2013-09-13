@@ -63,7 +63,7 @@ class FilterChain(object):
         result.append('cp $f2 %(out)s ' % {'out': out_file})
         result.append('rm $f1')
         result.append('rm $f2')
-        return '\n'.join(result)
+        return '\n'.join(result) + '\n'
 
 def encrypt_filters(args):
     key = random_password()
