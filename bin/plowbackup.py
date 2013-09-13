@@ -12,6 +12,16 @@ Working with delay:
     * uptobox
     * netload_in
     * bayfiles
+
+Requirements:
+    * plowshare (tested Sep 1 2013)
+    * bash
+    * cut
+    * ccrypt
+    * xxd
+    * rot13
+
+For list of filters, see var FILTERS.
 """
 
 from gzip import GzipFile
