@@ -179,6 +179,9 @@ def try_backup_file(args, file, o):
     url = plowup(args, upload_file)
     # remove tmp
     os.unlink(upload_file)
+    # permissions
+    permissions = os.popen('stat -c%a ' + local_file).read().strip()
+    # write commands to download the file
     if url.startswith('/tmp'):
         o.write('f=%(url)s\n' % {'url': url})
     else:
@@ -189,6 +192,7 @@ def try_backup_file(args, file, o):
     if not url.startswith('/tmp'):
         o.write('rm $f\n')
         o.write('rmdir $tmpdir\n')
+    o.write('chmod %s %s\n' %(permissions, file))
 
 def backup_file(args, file):
     if args.verify:
