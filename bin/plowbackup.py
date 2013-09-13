@@ -69,10 +69,10 @@ class FilterChain(object):
         result.append('cp %(in)s $f1' % {'in': in_file})
         for filter in self.filters:
             result.append(filter.encode('$f1', '$f2'))
-            result.append('cp $f2 $f1')
-        result.append('cp $f2 %(out)s ' % {'out': out_file})
+            result.append('mv $f2 $f1')
+        result.append('cp $f1 %(out)s ' % {'out': out_file})
         result.append('rm $f1')
-        result.append('rm $f2')
+        result.append('rm -f $f2')
         return '\n'.join(result) + '\n'
 
 def encrypt_filters(args):
