@@ -179,11 +179,12 @@ def head_tail_filters(args):
                     " /dev/urandom >> %(out)s"
     class D(Filter):
         def __init__(self):
+            head_1 = str(int(head) + 1)
             self.pattern =\
-                    "dd if=%(in)s of=%(out)s bs=1 "+\
-                    "skip="+head+" count=$(expr "+\
+                    "tail -c +"+head_1+" %(in)s |"+\
+                    "head -c $(expr "+\
                     "$(du -b %(in)s|cut -f1) "+\
-                    " - "+head+" - "+tail+")"
+                    " - "+head+" - "+tail+") > %(out)s"
     return E(), D()
 
 def xxd_filters(args):
