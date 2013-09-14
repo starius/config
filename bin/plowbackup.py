@@ -53,6 +53,10 @@ Requirements:
     * rot13
 
 For list of filters, see var FILTERS.
+
+TODO:
+* resume uploading (upload only not uploaded)
+* check old script not to upload same files
 """
 
 from gzip import GzipFile
