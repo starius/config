@@ -100,6 +100,17 @@ def escape_file(arg):
         arg = './' + arg
     return "'%s'" % arg.replace("'", r"'\''")
 
+def unescape_file(arg):
+    if arg in ('$f1', '$f2', '$f'):
+        return arg
+    assert arg.startswith("'")
+    assert arg.endswith("'")
+    arg = arg[1:-1] # remove ' '
+    arg = arg.replace(r"'\''", "'")
+    if arg.startswith('./-'):
+        arg = arg[2:] # remove ./
+    return arg
+
 def list_files(base_dir):
     result = []
     def list_files_(dir, prefix):
@@ -248,6 +259,21 @@ def add_filters(args, encode_filter, decode_filter):
                 continue
         add_filter(FILTERS[filter], encode_filter, decode_filter)
 
+# relies on fact that last cmd for each file is 'chmod'
+def parse_backup_script(file):
+    result = {} # local file name to command to get it
+    cmd = ''
+    for line in file:
+        cmd += line
+        line = line.strip()
+        if line:
+            if line.startswith('chmod'):
+                filename = line.split(' ', 2)[2]
+                filename = unescape_file(filename)
+                result[filename] = cmd
+                cmd = ''
+    return result
+
 def try_backup_file(args, file, o):
     dir = os.path.dirname(file)
     dir_opt = ''
@@ -318,7 +344,7 @@ def backup_file(args, file):
     else:
         try_backup_file(args, file, args.o)
 
-MODE_CHOICES = ('write', 'append')
+MODE_CHOICES = ('write', 'append', 'add_new')
 
 p = argparse.ArgumentParser(description='Plow Backup',
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -329,7 +355,7 @@ p.add_argument('--out',help='Output file for script',
         metavar='FILE',default='-')
 p.add_argument('--mode',
         help='What to do with output file %s' % str(MODE_CHOICES),
-        metavar='MODE',default='append',
+        metavar='MODE',default='add_new',
         choices=MODE_CHOICES)
 p.add_argument('--filters',help='Sequence of filters to apply. '+\
         'Probability in precent may be added after ":"',
@@ -344,23 +370,34 @@ p.add_argument('--verify',
 
 args = p.parse_args()
 
+append = args.mode in ('append', 'add_new')
+
 if args.out == '-':
     args.o = sys.stdout
 elif args.mode == 'write':
     args.o = open(args.out, 'w')
 elif args.mode == 'append':
     args.o = open(args.out, 'a')
+elif args.mode == 'add_new':
+    args.o = open(args.out, 'a+')
 else:
     sys.exit("Unknown mode '%s'" % args.mode)
 
 base_dir = args.dir
 args.sites_list = args.sites.split(',')
 
-if args.mode == 'append':
-    args.o.write("# PlowBackup begin\n")
+file2cmd = {}
+
+if args.mode == 'add_new':
+    file2cmd = parse_backup_script(args.o)
+
 files = list_files(base_dir)
+if append:
+    args.o.write("# PlowBackup begin\n")
 for file in files:
+    if args.mode == 'add_new' and file in file2cmd:
+        continue
     backup_file(args, file)
-if args.mode == 'append':
+if append:
     args.o.write("# PlowBackup end\n")
 
