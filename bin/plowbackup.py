@@ -318,6 +318,8 @@ def backup_file(args, file):
     else:
         try_backup_file(args, file, args.o)
 
+MODE_CHOICES = ('write', 'append')
+
 p = argparse.ArgumentParser(description='Plow Backup',
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 p.add_argument('-v','--version',action='version',version='%(prog)s 1.0')
@@ -325,9 +327,10 @@ p.add_argument('--verbose',help='Verbose output',action='store_true')
 p.add_argument('--dir',help='Directory',metavar='DIR', default='.')
 p.add_argument('--out',help='Output file for script',
         metavar='FILE',default='-')
-p.add_argument('--mode',help='What to do with output file',
+p.add_argument('--mode',
+        help='What to do with output file %s' % str(MODE_CHOICES),
         metavar='MODE',default='append',
-        choices=('write', 'append'))
+        choices=MODE_CHOICES)
 p.add_argument('--filters',help='Sequence of filters to apply. '+\
         'Probability in precent may be added after ":"',
         metavar='FF',type=str,
