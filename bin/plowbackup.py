@@ -311,15 +311,12 @@ def backup_file(args, file):
                 pass
             os.system('rm -r ' + escape_file(base_dir))
             if ok:
-                args.out.write(cmd)
+                args.o.write(cmd)
                 break
             else:
                 time.sleep(1) # to break it with Ctrl+C
     else:
-        try_backup_file(args, file, args.out)
-
-r = argparse.FileType('r')
-w = argparse.FileType('w')
+        try_backup_file(args, file, args.o)
 
 p = argparse.ArgumentParser(description='Plow Backup',
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -327,7 +324,10 @@ p.add_argument('-v','--version',action='version',version='%(prog)s 1.0')
 p.add_argument('--verbose',help='Verbose output',action='store_true')
 p.add_argument('--dir',help='Directory',metavar='DIR', default='.')
 p.add_argument('--out',help='Output file for script',
-        metavar='FILE',type=w,default='-')
+        metavar='FILE',default='-')
+p.add_argument('--mode',help='What to do with output file',
+        metavar='MODE',default='append',
+        choices=('write', 'append'))
 p.add_argument('--filters',help='Sequence of filters to apply. '+\
         'Probability in precent may be added after ":"',
         metavar='FF',type=str,
@@ -340,10 +340,24 @@ p.add_argument('--verify',
         type=int,default=1)
 
 args = p.parse_args()
+
+if args.out == '-':
+    args.o = sys.stdout
+elif args.mode == 'write':
+    args.o = open(args.out, 'w')
+elif args.mode == 'append':
+    args.o = open(args.out, 'a')
+else:
+    sys.exit("Unknown mode '%s'" % args.mode)
+
 base_dir = args.dir
 args.sites_list = args.sites.split(',')
 
+if args.mode == 'append':
+    args.o.write("# PlowBackup begin\n")
 files = list_files(base_dir)
 for file in files:
     backup_file(args, file)
+if args.mode == 'append':
+    args.o.write("# PlowBackup end\n")
 
