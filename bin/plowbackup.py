@@ -342,6 +342,7 @@ def backup_file(args, file):
                 time.sleep(1) # to break it with Ctrl+C
     else:
         try_backup_file(args, file, args.o)
+    args.o.flush()
 
 MODE_CHOICES = ('write', 'append', 'add_new')
 
