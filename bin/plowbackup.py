@@ -93,7 +93,6 @@ def random_filename():
     return choice([photo, mhtml, mp4, txt, mp3])()
 
 def escape_file(arg):
-    print arg
     if arg in ('$f1', '$f2', '$f'):
         return arg
     if arg.startswith('-'):
