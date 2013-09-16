@@ -57,6 +57,7 @@ For list of filters, see var FILTERS.
 TODO:
 * resume uploading (upload only not uploaded)
 * check old script not to upload same files
+* split large files into pieces
 """
 
 from gzip import GzipFile
