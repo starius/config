@@ -92,6 +92,14 @@ def random_filename():
         return random_password() + '.mp3'
     return choice([photo, mhtml, mp4, txt, mp3])()
 
+def escape_file(arg):
+    print arg
+    if arg in ('$f1', '$f2', '$f'):
+        return arg
+    if arg.startswith('-'):
+        arg = './' + arg
+    return "'%s'" % arg.replace("'", r"'\''")
+
 def list_files(base_dir):
     result = []
     def list_files_(dir, prefix):
@@ -109,7 +117,8 @@ def plowup(args, file):
         name = file.replace('/', '_')
         local = '/tmp/local_' + random_password() + '_' + name
         os.system("cp %(file)s %(local)s" %
-                {'file': file, 'local': local})
+                {'file': escape_file(file),
+                 'local': escape_file(local)})
         return local
     else:
         output = tempfile.NamedTemporaryFile(delete=False)
@@ -118,7 +127,7 @@ def plowup(args, file):
         os.system(("bash -c 'plowup %(site)s " +
                   " %(file)s:%(name)s "+
                   "| tail -n 1 &> %(output)s'") %
-                  {'file': file, 'site': site,
+                  {'file': escape_file(file), 'site': site,
                    'output': output.name, 'name': name})
         url = open(output.name).read().strip()
         os.unlink(output.name)
@@ -130,7 +139,8 @@ class Filter(object):
 
     def encode(self, in_file, out_file):
         return self.pattern % \
-                {'in': in_file, 'out': out_file}
+                {'in': escape_file(in_file),
+                 'out': escape_file(out_file)}
 
 class FilterChain(object):
     def __init__(self):
@@ -145,15 +155,18 @@ class FilterChain(object):
     def encode(self, in_file, out_file):
         if not self.filters:
             return 'cp %(in)s %(out)s\n' %\
-                   {'in': in_file, 'out': out_file}
+                {'in': escape_file(in_file),
+                 'out': escape_file(out_file)}
         result = []
         result.append('f1=$(mktemp)')
         result.append('f2=$(mktemp)')
-        result.append('cp %(in)s $f1' % {'in': in_file})
+        result.append('cp %(in)s $f1' %\
+                {'in': escape_file(in_file)})
         for filter in self.filters:
             result.append(filter.encode('$f1', '$f2'))
             result.append('mv $f2 $f1')
-        result.append('cp $f1 %(out)s ' % {'out': out_file})
+        result.append('cp $f1 %(out)s ' %\
+                {'out': escape_file(out_file)})
         result.append('rm $f1')
         result.append('rm -f $f2')
         return '\n'.join(result) + '\n'
@@ -240,7 +253,7 @@ def try_backup_file(args, file, o):
     dir = os.path.dirname(file)
     dir_opt = ''
     if dir:
-        o.write('mkdir -p %s\n' % dir)
+        o.write('mkdir -p %s\n' % escape_file(dir))
         dir_opt = '-o ' + dir
     local_file = os.path.join(args.dir, file)
     upload_file = tempfile.NamedTemporaryFile(delete=False).name
@@ -258,10 +271,11 @@ def try_backup_file(args, file, o):
     # remove tmp
     os.unlink(upload_file)
     # permissions
-    permissions = os.popen('stat -c%a ' + local_file).read().strip()
+    permissions = os.popen('stat -c%a ' +
+            escape_file(local_file)).read().strip()
     # write commands to download the file
     if url.startswith('/tmp'):
-        o.write('f=%(url)s\n' % {'url': url})
+        o.write('f=%(url)s\n' % {'url': escape_file(url)})
     else:
         o.write('tmpdir=$(mktemp -d)\n')
         o.write('plowdown -o $tmpdir %s\n' % url)
@@ -270,7 +284,8 @@ def try_backup_file(args, file, o):
     if not url.startswith('/tmp'):
         o.write('rm $f\n')
         o.write('rmdir $tmpdir\n')
-    o.write('chmod %s %s\n' %(permissions, file))
+    o.write('chmod %s %s\n' %\
+            (permissions, escape_file(file)))
 
 def backup_file(args, file):
     if args.verify:
@@ -295,7 +310,7 @@ def backup_file(args, file):
                 ok = filecmp.cmp(f1, f2)
             except:
                 pass
-            os.system('rm -r ' + base_dir)
+            os.system('rm -r ' + escape_file(base_dir))
             if ok:
                 args.out.write(cmd)
                 break
