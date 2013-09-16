@@ -114,8 +114,7 @@ def list_files(base_dir):
 
 def plowup(args, file):
     if args.sites == 'local':
-        name = file.replace('/', '_')
-        local = '/tmp/local_' + random_password() + '_' + name
+        local = '/tmp/local_' + random_password() + '_'
         os.system("cp %(file)s %(local)s" %
                 {'file': escape_file(file),
                  'local': escape_file(local)})
