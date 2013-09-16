@@ -103,9 +103,8 @@ def escape_file(arg):
 def unescape_file(arg):
     if arg in ('$f1', '$f2', '$f'):
         return arg
-    assert arg.startswith("'")
-    assert arg.endswith("'")
-    arg = arg[1:-1] # remove ' '
+    if arg.startswith("'") and arg.endswith("'"):
+        arg = arg[1:-1] # remove ' '
     arg = arg.replace(r"'\''", "'")
     if arg.startswith('./-'):
         arg = arg[2:] # remove ./
