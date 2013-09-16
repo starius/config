@@ -346,6 +346,5 @@ args.sites_list = args.sites.split(',')
 
 files = list_files(base_dir)
 for file in files:
-    o = args.out
     backup_file(args, file)
 
