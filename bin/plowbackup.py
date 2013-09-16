@@ -311,31 +311,34 @@ def try_backup_file(args, file, o):
     o.write('chmod %s %s\n' %\
             (permissions, escape_file(file)))
 
+def verify_file_cmd(args, file, cmd):
+    base_dir = tempfile.mkdtemp()
+    script = tempfile.NamedTemporaryFile(delete=False)
+    try:
+        script.write(cmd) # python2
+    except:
+        script.write(bytes(cmd, 'UTF-8')) # python3
+    script.close()
+    os.system('cd %(base_dir)s; sh %(script)s' %\
+            {'base_dir': base_dir, 'script': script.name})
+    os.unlink(script.name)
+    f1 = os.path.join(base_dir, file)
+    f2 = os.path.join(args.dir, file)
+    ok = False
+    try:
+        ok = filecmp.cmp(f1, f2)
+    except:
+        pass
+    os.system('rm -r ' + escape_file(base_dir))
+    return ok
+
 def backup_file(args, file):
     if args.verify:
         while True:
             o = StringIO()
             try_backup_file(args, file, o)
             cmd = o.getvalue()
-            base_dir = tempfile.mkdtemp()
-            script = tempfile.NamedTemporaryFile(delete=False)
-            try:
-                script.write(cmd) # python2
-            except:
-                script.write(bytes(cmd, 'UTF-8')) # python3
-            script.close()
-            os.system('cd %(base_dir)s; sh %(script)s' %\
-                    {'base_dir': base_dir, 'script': script.name})
-            os.unlink(script.name)
-            f1 = os.path.join(base_dir, file)
-            f2 = os.path.join(args.dir, file)
-            ok = False
-            try:
-                ok = filecmp.cmp(f1, f2)
-            except:
-                pass
-            os.system('rm -r ' + escape_file(base_dir))
-            if ok:
+            if verify_file_cmd(args, file, cmd):
                 args.o.write(cmd)
                 break
             else:
