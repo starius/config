@@ -347,7 +347,7 @@ def backup_file(args, file):
         try_backup_file(args, file, args.o)
     args.o.flush()
 
-MODE_CHOICES = ('write', 'append', 'add_new')
+MODE_CHOICES = ('write', 'append', 'add_new', 'verify')
 
 p = argparse.ArgumentParser(description='Plow Backup',
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -374,6 +374,7 @@ p.add_argument('--verify',
 args = p.parse_args()
 
 append = args.mode in ('append', 'add_new')
+read_cmd = args.mode in ('add_new', 'verify')
 
 if args.out == '-':
     args.o = sys.stdout
@@ -383,6 +384,8 @@ elif args.mode == 'append':
     args.o = open(args.out, 'a')
 elif args.mode == 'add_new':
     args.o = open(args.out, 'a+')
+elif args.mode == 'verify':
+    args.o = open(args.out, 'r')
 else:
     sys.exit("Unknown mode '%s'" % args.mode)
 
@@ -391,16 +394,24 @@ args.sites_list = args.sites.split(',')
 
 file2cmd = {}
 
-if args.mode == 'add_new':
+if read_cmd:
     file2cmd = parse_backup_script(args.o)
 
-files = list_files(base_dir)
-if append:
-    args.o.write("# PlowBackup begin\n")
-for file in files:
-    if args.mode == 'add_new' and file in file2cmd:
-        continue
-    backup_file(args, file)
-if append:
-    args.o.write("# PlowBackup end\n")
+if args.mode == 'verify':
+    for file, cmd in file2cmd.items():
+        ok = verify_file_cmd(args, file, cmd)
+        status = 'OK  ' if ok else 'FAIL'
+        print('%s %s' % (status, file))
+        if not ok:
+            time.sleep(0.5) # to break it with Ctrl+C
+else:
+    files = list_files(base_dir)
+    if append:
+        args.o.write("# PlowBackup begin\n")
+    for file in files:
+        if args.mode == 'add_new' and file in file2cmd:
+            continue
+        backup_file(args, file)
+    if append:
+        args.o.write("# PlowBackup end\n")
 
