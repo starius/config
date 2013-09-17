@@ -471,6 +471,8 @@ elif args.mode in ('write', 'append'):
             args.report.flush()
         else:
             backup_file(args, file)
+            args.report.write('%s %s\n' % ('UP  ', file))
+            args.report.flush()
     if append:
         args.o.write("# PlowBackup end\n")
 
