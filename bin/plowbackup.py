@@ -57,6 +57,8 @@ For list of filters, see var FILTERS.
 TODO:
 * split large files into pieces
 * readable names for tmp files
+* write: process reused files first
+* write: backup file (option)
 """
 
 from gzip import GzipFile
