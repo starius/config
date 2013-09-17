@@ -153,16 +153,13 @@ def plowup(args, file):
                  'local': escape_file(local)})
         return local
     else:
-        output = tempfile.NamedTemporaryFile(delete=False)
         site = choice(args.sites_list)
         name = random_filename()
-        os.system(("bash -c 'plowup %(site)s " +
+        url = os.popen(("bash -c 'plowup %(site)s " +
                   " %(file)s:%(name)s "+
-                  "| tail -n 1 &> %(output)s'") %
+                  "| tail -n 1'") %
                   {'file': escape_file(file), 'site': site,
-                   'output': output.name, 'name': name})
-        url = open(output.name).read().strip()
-        os.unlink(output.name)
+                   'name': name}).read().strip()
         return url
 
 class Filter(object):
