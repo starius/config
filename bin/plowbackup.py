@@ -330,7 +330,8 @@ def try_backup_file(args, file, o):
         o.write('tmpdir=$(mktemp -d -t plowbackup.down.XXXXXXX)\n')
         o.write(('plowdown %(quiet)s -o $tmpdir %(url)s'+
                  ' > /dev/null \n') %\
-                {'url': url, 'quiet': args.quiet_string})
+                {'url': escape_file(url),
+                 'quiet': args.quiet_string})
         o.write('f=$(find $tmpdir -type f)\n')
     o.write(decode_filter.encode('$f', file))
     if not url.startswith('/tmp'):
