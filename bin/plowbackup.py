@@ -410,6 +410,8 @@ def backup_file_signle(args, file):
             o = StringIO()
             try_backup_file(args, file, o)
             cmd = o.getvalue()
+            if args.verbose:
+                print(cmd)
             if verify_file_cmd(args, file, cmd):
                 return cmd
             else:
@@ -418,6 +420,8 @@ def backup_file_signle(args, file):
         o = StringIO()
         try_backup_file(args, file, o)
         cmd = o.getvalue()
+        if args.verbose:
+            print(cmd)
         return cmd
 
 def backup_file(args, file):
