@@ -337,6 +337,11 @@ def try_backup_file(args, file, o):
     permissions = os.popen('stat -c%a ' +
             escape_file(local_file)).read().strip()
     # write commands to download the file
+    md5 = md5sum(local_file)
+    condition = "`md5sum %(file)s|awk '{print $1;}'` = '%(md5)s'"%\
+            {'file': escape_file(file), 'md5': md5}
+    o.write("if [ ! -f %(file)s ] || [ ! %(condition)s ]; then\n" %
+            {'file': escape_file(file), 'condition': condition})
     if url.startswith('/tmp'):
         o.write('f=%(url)s\n' % {'url': escape_file(url)})
     else:
@@ -350,14 +355,13 @@ def try_backup_file(args, file, o):
     if not url.startswith('/tmp'):
         o.write('rm $f\n')
         o.write('rmdir $tmpdir\n')
-    md5 = md5sum(local_file)
-    c = "if [ `md5sum %(file)s|awk '{print $1;}'` = '%(md5)s' ];"+\
-        ' then\n'+\
+    c = "if [ -f %(file)s ] && [ %(condition)s ]; then\n"+\
         "echo 'OK  ' %(file)s\n"+\
         'else\n'+\
         "echo 'FAIL' %(file)s\n"+\
         'fi\n'
-    o.write(c % {'file': escape_file(file), 'md5': md5})
+    o.write(c % {'file': escape_file(file), 'condition': condition})
+    o.write("else\necho 'ASIS' %s\nfi\n" % escape_file(file))
     o.write('chmod %s %s\n' %\
             (permissions, escape_file(file)))
 
