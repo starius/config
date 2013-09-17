@@ -439,6 +439,7 @@ if args.mode == 'verify':
         ok = verify_file_cmd(args, file, cmd)
         status = 'OK  ' if ok else 'FAIL'
         args.report.write('%s %s\n' % (status, file))
+        args.report.flush()
         if not ok:
             time.sleep(0.5) # to break it with Ctrl+C
 elif args.mode in ('write', 'append'):
@@ -463,6 +464,7 @@ elif args.mode in ('write', 'append'):
                     verify_file_cmd(args, file, file2cmd[file]))):
             status = 'OK  ' if args.reuse == 'verify' else 'ASIS'
             args.report.write('%s %s\n' % (status, file))
+            args.report.flush()
             cmd = file2cmd[file]
             if args.mode == 'write':
                 args.o.write(cmd)
