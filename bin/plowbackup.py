@@ -263,6 +263,8 @@ def parse_backup_script(file):
     result = {} # local file name to command to get it
     cmd = ''
     for line in file:
+        if line.startswith('#'):
+            continue
         cmd += line
         line = line.strip()
         if line:
