@@ -340,7 +340,7 @@ def try_backup_file(args, file, o):
     o.write('chmod %s %s\n' %\
             (permissions, escape_file(file)))
 
-def verify_file_cmd(args, file, cmd):
+def verify_file_cmd_single_attempt(args, file, cmd):
     base_dir = tempfile.mkdtemp(prefix='plowbackup.down.')
     script = tempfile.NamedTemporaryFile(prefix='plowbackup.script.',
             delete=False)
@@ -361,6 +361,12 @@ def verify_file_cmd(args, file, cmd):
         pass
     os.system('rm -r ' + escape_file(base_dir))
     return ok
+
+def verify_file_cmd(args, file, cmd):
+    for i in range(0, args.verify_attempts):
+        if verify_file_cmd_single_attempt(args, file, cmd):
+            return True
+    return False
 
 def backup_file(args, file):
     if args.verify:
@@ -410,6 +416,9 @@ p.add_argument('--sites',
 p.add_argument('--verify',
         help='Download file and compare it with original',
         type=int,default=1)
+p.add_argument('--verify-attempts',
+        help='How much times try to get file while verification',
+        type=int,default=2)
 p.add_argument('--backup',
         help='Backup output file is exists before changing it',
         type=int,default=1)
