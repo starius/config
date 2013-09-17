@@ -57,7 +57,6 @@ For list of filters, see var FILTERS.
 TODO:
 * split large files into pieces
 * readable names for tmp files
-* write: backup file (option)
 """
 
 from gzip import GzipFile
@@ -378,6 +377,9 @@ p.add_argument('--sites',
 p.add_argument('--verify',
         help='Download file and compare it with original',
         type=int,default=1)
+p.add_argument('--backup',
+        help='Backup output file is exists before changing it',
+        type=int,default=1)
 
 args = p.parse_args()
 
@@ -403,6 +405,10 @@ if args.mode == 'verify':
         if not ok:
             time.sleep(0.5) # to break it with Ctrl+C
 elif args.mode in ('write', 'append'):
+    if os.path.exists(args.out):
+        backup_name = args.out + '.orig'
+        os.system('cp %s %s' %\
+                (escape_file(args.out), escape_file(backup_name)))
     if args.out == '-':
         args.o = sys.stdout
     elif args.mode == 'write':
