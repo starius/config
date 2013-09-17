@@ -349,7 +349,8 @@ def backup_file(args, file):
         try_backup_file(args, file, args.o)
     args.o.flush()
 
-MODE_CHOICES = ('write', 'append', 'add_new', 'verify')
+MODE_CHOICES = ('write', 'append', 'verify')
+REUSE_MODE_CHOICES = ('no', 'yes')
 
 p = argparse.ArgumentParser(description='Plow Backup',
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -360,8 +361,13 @@ p.add_argument('--out',help='Output file for script',
         metavar='FILE',default='-')
 p.add_argument('--mode',
         help='What to do with output file %s' % str(MODE_CHOICES),
-        metavar='MODE',default='add_new',
+        metavar='MODE',default='append',
         choices=MODE_CHOICES)
+p.add_argument('--reuse',
+        help='If previous data in output file will be used %s' %\
+                str(REUSE_MODE_CHOICES),
+        metavar='MODE',default='yes',
+        choices=REUSE_MODE_CHOICES)
 p.add_argument('--filters',help='Sequence of filters to apply. '+\
         'Probability in precent may be added after ":"',
         metavar='FF',type=str,
@@ -375,29 +381,19 @@ p.add_argument('--verify',
 
 args = p.parse_args()
 
-append = args.mode in ('append', 'add_new')
-read_cmd = args.mode in ('add_new', 'verify')
-
+append = args.mode == 'append'
+read_cmd = args.reuse == 'yes' or args.mode == 'verify'
 if args.out == '-':
-    args.o = sys.stdout
-elif args.mode == 'write':
-    args.o = open(args.out, 'w')
-elif args.mode == 'append':
-    args.o = open(args.out, 'a')
-elif args.mode == 'add_new':
-    args.o = open(args.out, 'a+')
-elif args.mode == 'verify':
-    args.o = open(args.out, 'r')
-else:
-    sys.exit("Unknown mode '%s'" % args.mode)
+    read_cmd = False
+
+file2cmd = {}
+if read_cmd and os.path.exists(args.out):
+    f = open(args.out)
+    file2cmd = parse_backup_script(f)
+    f.close()
 
 base_dir = args.dir
 args.sites_list = args.sites.split(',')
-
-file2cmd = {}
-
-if read_cmd:
-    file2cmd = parse_backup_script(args.o)
 
 if args.mode == 'verify':
     for file, cmd in file2cmd.items():
@@ -406,14 +402,23 @@ if args.mode == 'verify':
         print('%s %s' % (status, file))
         if not ok:
             time.sleep(0.5) # to break it with Ctrl+C
-else:
+elif args.mode in ('write', 'append'):
+    if args.out == '-':
+        args.o = sys.stdout
+    elif args.mode == 'write':
+        args.o = open(args.out, 'w')
+    elif args.mode == 'append':
+        args.o = open(args.out, 'a')
     files = list_files(base_dir)
     if append:
         args.o.write("# PlowBackup begin\n")
     for file in files:
-        if args.mode == 'add_new' and file in file2cmd:
-            continue
-        backup_file(args, file)
+        if file in file2cmd and args.reuse == 'yes':
+            cmd = file2cmd[file]
+            if args.mode == 'write':
+                args.o.write(cmd)
+        else:
+            backup_file(args, file)
     if append:
         args.o.write("# PlowBackup end\n")
 
