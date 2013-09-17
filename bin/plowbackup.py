@@ -57,7 +57,6 @@ For list of filters, see var FILTERS.
 TODO:
 * split large files into pieces
 * readable names for tmp files
-* write: process reused files first
 * write: backup file (option)
 """
 
@@ -411,6 +410,8 @@ elif args.mode in ('write', 'append'):
     elif args.mode == 'append':
         args.o = open(args.out, 'a')
     files = list_files(base_dir)
+    if args.mode == 'write' and args.reuse in ('yes', 'verify'):
+        files.sort(key=lambda file: 0 if file in file2cmd else 1)
     if append:
         args.o.write("# PlowBackup begin\n")
     for file in files:
