@@ -42,8 +42,8 @@ option --sites.
       You can lose previous content of file if error
       happens before reused content writting (see --backup).
     * verify. Read-only mode. Does not depend on --reuse.
-      Opens script for verifying. Test commands and compare
-      downloaded files with local files.
+      Opens script for verifying. Test commands and test md5
+      of downloaded files.
       Print 'OK' or "FAIL' and filename.
 
 --reuse:
@@ -89,6 +89,7 @@ import argparse
 import tempfile
 from random import randint, choice
 import string
+import hashlib
 import filecmp
 import time
 try:
@@ -131,6 +132,17 @@ def unescape_file(arg):
     if arg.startswith('./-'):
         arg = arg[2:] # remove ./
     return arg
+
+def md5sum(filename):
+    m = hashlib.md5()
+    f = open(filename)
+    while True:
+        buf = f.read(100500)
+        m.update(buf)
+        if not buf:
+            break
+    f.close()
+    return m.hexdigest()
 
 def list_files(base_dir):
     result = []
@@ -337,6 +349,14 @@ def try_backup_file(args, file, o):
     if not url.startswith('/tmp'):
         o.write('rm $f\n')
         o.write('rmdir $tmpdir\n')
+    md5 = md5sum(local_file)
+    c = "if [ `md5sum %(file)s|awk '{print $1;}'` = '%(md5)s' ];"+\
+        ' then\n'+\
+        "echo 'OK  ' %(file)s\n"+\
+        'else\n'+\
+        "echo 'FAIL' %(file)s\n"+\
+        'fi\n'
+    o.write(c % {'file': escape_file(file), 'md5': md5})
     o.write('chmod %s %s\n' %\
             (permissions, escape_file(file)))
 
@@ -349,16 +369,31 @@ def verify_file_cmd_single_attempt(args, file, cmd):
     except:
         script.write(bytes(cmd, 'UTF-8')) # python3
     script.close()
-    os.system('cd %(base_dir)s; sh %(script)s' %\
-            {'base_dir': base_dir, 'script': script.name})
+    result = tempfile.NamedTemporaryFile(prefix='plowbackup.result.',
+            delete=False)
+    result.close()
+    c = "cd %(base_dir)s; sh %(script)s | tail -n 1 |"+\
+        "awk '{print $1;}' > %(result)s"
+    os.system(c % \
+            {'base_dir': base_dir, 'script': script.name,
+             'result': result.name})
     os.unlink(script.name)
-    f1 = os.path.join(base_dir, file)
-    f2 = os.path.join(args.dir, file)
-    ok = False
-    try:
-        ok = filecmp.cmp(f1, f2)
-    except:
-        pass
+    result_code = open(result.name).read().strip()
+    os.unlink(result.name)
+    ok = None
+    if result_code == 'OK':
+        ok = True
+    elif result_code == 'FAIL':
+        ok = False
+    if ok == None:
+        # script without md5
+        f1 = os.path.join(base_dir, file)
+        f2 = os.path.join(args.dir, file)
+        ok = False
+        try:
+            ok = filecmp.cmp(f1, f2)
+        except:
+            pass
     os.system('rm -r ' + escape_file(base_dir))
     return ok
 
