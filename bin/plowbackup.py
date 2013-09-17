@@ -412,6 +412,9 @@ p.add_argument('--quiet', help='Tell plowshare be quiet',
 
 args = p.parse_args()
 
+if args.mode == 'verify' and args.out == '-':
+    print("Provide script file for verification!")
+
 append = args.mode == 'append'
 read_cmd = args.reuse in('yes', 'verify') or args.mode == 'verify'
 if args.out == '-':
