@@ -456,7 +456,8 @@ elif args.mode in ('write', 'append'):
     elif args.mode == 'append':
         args.o = open(args.out, 'a')
     files = list_files(base_dir)
-    if args.mode == 'write' and args.reuse in ('yes', 'verify'):
+    if args.mode in ('write', 'append') \
+            and args.reuse in ('yes', 'verify'):
         files.sort(key=lambda file: 0 if file in file2cmd else 1)
     if append:
         args.o.write("# PlowBackup begin\n")
