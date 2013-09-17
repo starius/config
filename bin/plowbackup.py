@@ -155,10 +155,11 @@ def plowup(args, file):
     else:
         site = choice(args.sites_list)
         name = random_filename()
-        url = os.popen(("bash -c 'plowup %(site)s " +
+        url = os.popen(("bash -c 'plowup %(quiet)s %(site)s " +
                   " %(file)s:%(name)s "+
                   "| tail -n 1'") %
                   {'file': escape_file(file), 'site': site,
+                   'quiet': args.quiet_string,
                    'name': name}).read().strip()
         return url
 
@@ -291,6 +292,9 @@ def parse_backup_script(file):
             if line.startswith('chmod'):
                 filename = line.split(' ', 2)[2]
                 filename = unescape_file(filename)
+                cmd = cmd.replace('plowdown -q', 'plowdown')
+                if args.quiet:
+                    cmd = cmd.replace('plowdown', 'plowdown -q')
                 result[filename] = cmd
                 cmd = ''
     return result
@@ -324,7 +328,9 @@ def try_backup_file(args, file, o):
         o.write('f=%(url)s\n' % {'url': escape_file(url)})
     else:
         o.write('tmpdir=$(mktemp -d)\n')
-        o.write('plowdown -o $tmpdir %s\n' % url)
+        o.write(('plowdown %(quiet)s -o $tmpdir %(url)s'+
+                 ' > /dev/null \n') %\
+                {'url': url, 'quiet': args.quiet_string})
         o.write('f=$(find $tmpdir -type f)\n')
     o.write(decode_filter.encode('$f', file))
     if not url.startswith('/tmp'):
@@ -401,6 +407,8 @@ p.add_argument('--verify',
 p.add_argument('--backup',
         help='Backup output file is exists before changing it',
         type=int,default=1)
+p.add_argument('--quiet', help='Tell plowshare be quiet',
+        type=int,default=1)
 
 args = p.parse_args()
 
@@ -417,6 +425,7 @@ if read_cmd and os.path.exists(args.out):
 
 base_dir = args.dir
 args.sites_list = args.sites.split(',')
+args.quiet_string = '-q' if args.quiet else ''
 
 if args.mode == 'verify':
     for file, cmd in file2cmd.items():
