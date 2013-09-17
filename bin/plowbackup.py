@@ -55,8 +55,6 @@ Requirements:
 For list of filters, see var FILTERS.
 
 TODO:
-* resume uploading (upload only not uploaded)
-* check old script not to upload same files
 * split large files into pieces
 * readable names for tmp files
 """
@@ -351,7 +349,7 @@ def backup_file(args, file):
     args.o.flush()
 
 MODE_CHOICES = ('write', 'append', 'verify')
-REUSE_MODE_CHOICES = ('no', 'yes')
+REUSE_MODE_CHOICES = ('no', 'yes', 'verify')
 
 p = argparse.ArgumentParser(description='Plow Backup',
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -383,7 +381,7 @@ p.add_argument('--verify',
 args = p.parse_args()
 
 append = args.mode == 'append'
-read_cmd = args.reuse == 'yes' or args.mode == 'verify'
+read_cmd = args.reuse in('yes', 'verify') or args.mode == 'verify'
 if args.out == '-':
     read_cmd = False
 
@@ -414,7 +412,9 @@ elif args.mode in ('write', 'append'):
     if append:
         args.o.write("# PlowBackup begin\n")
     for file in files:
-        if file in file2cmd and args.reuse == 'yes':
+        if file in file2cmd and (args.reuse == 'yes' or \
+                (args.reuse == 'verify' and
+                    verify_file_cmd(args, file, file2cmd[file]))):
             cmd = file2cmd[file]
             if args.mode == 'write':
                 args.o.write(cmd)
