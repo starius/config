@@ -378,6 +378,8 @@ def backup_file(args, file):
 MODE_CHOICES = ('write', 'append', 'verify')
 REUSE_MODE_CHOICES = ('no', 'yes', 'verify')
 
+w = argparse.FileType('w')
+
 p = argparse.ArgumentParser(description='Plow Backup',
     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 p.add_argument('-v','--version',action='version',version='%(prog)s 1.0')
@@ -394,6 +396,8 @@ p.add_argument('--reuse',
                 str(REUSE_MODE_CHOICES),
         metavar='MODE',default='yes',
         choices=REUSE_MODE_CHOICES)
+p.add_argument('--report',help='Output file for verification report',
+        metavar='FILE',type=w,default='-')
 p.add_argument('--filters',help='Sequence of filters to apply. '+\
         'Probability in precent may be added after ":"',
         metavar='FF',type=str,
@@ -434,7 +438,7 @@ if args.mode == 'verify':
     for file, cmd in file2cmd.items():
         ok = verify_file_cmd(args, file, cmd)
         status = 'OK  ' if ok else 'FAIL'
-        print('%s %s' % (status, file))
+        args.report.write('%s %s\n' % (status, file))
         if not ok:
             time.sleep(0.5) # to break it with Ctrl+C
 elif args.mode in ('write', 'append'):
