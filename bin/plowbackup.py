@@ -461,6 +461,8 @@ elif args.mode in ('write', 'append'):
         if file in file2cmd and (args.reuse == 'yes' or \
                 (args.reuse == 'verify' and
                     verify_file_cmd(args, file, file2cmd[file]))):
+            status = 'OK  ' if args.reuse == 'verify' else 'ASIS'
+            args.report.write('%s %s\n' % (status, file))
             cmd = file2cmd[file]
             if args.mode == 'write':
                 args.o.write(cmd)
