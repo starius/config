@@ -58,6 +58,7 @@ TODO:
 * resume uploading (upload only not uploaded)
 * check old script not to upload same files
 * split large files into pieces
+* readable names for tmp files
 """
 
 from gzip import GzipFile
