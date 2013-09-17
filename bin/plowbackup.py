@@ -80,7 +80,6 @@ For list of filters, see var FILTERS.
 
 TODO:
 * split large files into pieces
-* readable names for tmp files
 """
 
 from gzip import GzipFile
@@ -188,8 +187,8 @@ class FilterChain(object):
                 {'in': escape_file(in_file),
                  'out': escape_file(out_file)}
         result = []
-        result.append('f1=$(mktemp)')
-        result.append('f2=$(mktemp)')
+        result.append('f1=$(mktemp -t plowbackup.f1.XXXXXXXXXX)')
+        result.append('f2=$(mktemp -t plowbackup.f1.XXXXXXXXXX)')
         result.append('cp %(in)s $f1' %\
                 {'in': escape_file(in_file)})
         for filter in self.filters:
@@ -306,7 +305,8 @@ def try_backup_file(args, file, o):
         o.write('mkdir -p %s\n' % escape_file(dir))
         dir_opt = '-o ' + dir
     local_file = os.path.join(args.dir, file)
-    upload_file = tempfile.NamedTemporaryFile(delete=False).name
+    upload_file = tempfile.NamedTemporaryFile(prefix='plowbackup.up.',
+            delete=False).name
     encode_filter = FilterChain()
     decode_filter = FilterChain()
     # add filters
@@ -327,7 +327,7 @@ def try_backup_file(args, file, o):
     if url.startswith('/tmp'):
         o.write('f=%(url)s\n' % {'url': escape_file(url)})
     else:
-        o.write('tmpdir=$(mktemp -d)\n')
+        o.write('tmpdir=$(mktemp -d -t plowbackup.down.XXXXXXX)\n')
         o.write(('plowdown %(quiet)s -o $tmpdir %(url)s'+
                  ' > /dev/null \n') %\
                 {'url': url, 'quiet': args.quiet_string})
@@ -340,8 +340,9 @@ def try_backup_file(args, file, o):
             (permissions, escape_file(file)))
 
 def verify_file_cmd(args, file, cmd):
-    base_dir = tempfile.mkdtemp()
-    script = tempfile.NamedTemporaryFile(delete=False)
+    base_dir = tempfile.mkdtemp(prefix='plowbackup.down.')
+    script = tempfile.NamedTemporaryFile(prefix='plowbackup.script.',
+            delete=False)
     try:
         script.write(cmd) # python2
     except:
