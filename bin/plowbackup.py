@@ -32,6 +32,30 @@ You can add your own filters (see xxd_filters for example).
 Set of sites to be used is specified by command line
 option --sites.
 
+--mode:
+    * append (default). Do not change previous content
+      of output file, just append new. Old commands may be wrong,
+      but will not be removed. This mode is safer (for
+      previous content of output file.
+    * write. Open file for writting. Previos content is
+      removed (it can be reused depending on --reuse).
+      You can lose previous content of file if error
+      happens before reused content writting (see --backup).
+    * verify. Read-only mode. Does not depend on --reuse.
+      Opens script for verifying. Test commands and compare
+      downloaded files with local files.
+      Print 'OK' or "FAIL' and filename.
+
+--reuse:
+    * 'no'. Ignore previous content of output file.
+    * 'yes'. Use previous content of output file for
+      files with same names.
+    * 'verify'. Use previous content of output file for
+      files with same names, if they are equal to files,
+      produced by these commands. This make sense because
+      downloading is often much faster than uploading.
+      Furthermore, this saves disk space on websites.
+
 Good sites:
     * Sendspace
     * Sharebeast
