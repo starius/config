@@ -85,6 +85,7 @@ TODO:
 from gzip import GzipFile
 import os
 import sys
+import re
 import argparse
 import tempfile
 from random import randint, choice
@@ -403,19 +404,29 @@ def verify_file_cmd(args, file, cmd):
             return True
     return False
 
-def backup_file(args, file):
+def backup_file_signle(args, file):
     if args.verify:
         while True:
             o = StringIO()
             try_backup_file(args, file, o)
             cmd = o.getvalue()
             if verify_file_cmd(args, file, cmd):
-                args.o.write(cmd)
-                break
+                return cmd
             else:
                 time.sleep(1) # to break it with Ctrl+C
     else:
-        try_backup_file(args, file, args.o)
+        o = StringIO()
+        try_backup_file(args, file, o)
+        cmd = o.getvalue()
+        return cmd
+
+def backup_file(args, file):
+    cmd = backup_file_signle(args, file)
+    for i in range(1, args.count):
+        cmd2 =  backup_file_signle(args, file)
+        cmd2 = re.sub(r'chmod.*\n', '', cmd2) # chmod should be last
+        cmd = re.sub(r"echo 'FAIL'.*\n", cmd2, cmd)
+    args.o.write(cmd)
     args.o.flush()
 
 MODE_CHOICES = ('write', 'append', 'verify')
@@ -448,6 +459,9 @@ p.add_argument('--filters',help='Sequence of filters to apply. '+\
 p.add_argument('--sites',
         help='Sites used for upload separated by comma or "local"',
         metavar='SITES',type=str,default='Sendspace,Sharebeast')
+p.add_argument('--count',
+        help='How much times upload each file',
+        type=int,default=1)
 p.add_argument('--verify',
         help='Download file and compare it with original',
         type=int,default=1)
