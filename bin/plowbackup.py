@@ -115,7 +115,7 @@ def random_filename():
     def txt():
         return random_password() + '.txt'
     def mp3():
-        return random_password() + '.mp3'
+        return random_password() + '_' + random_password() + '.mp3'
     return choice([photo, mhtml, mp4, txt, mp3])()
 
 def escape_file(arg):
