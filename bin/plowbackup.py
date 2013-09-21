@@ -313,11 +313,6 @@ def parse_backup_script(file):
     return result
 
 def try_backup_file(args, file, o):
-    dir = os.path.dirname(file)
-    dir_opt = ''
-    if dir:
-        o.write('mkdir -p %s\n' % escape_file(dir))
-        dir_opt = '-o ' + dir
     local_file = os.path.join(args.dir, file)
     upload_file = tempfile.NamedTemporaryFile(prefix='plowbackup.up.',
             delete=False).name
@@ -430,6 +425,9 @@ def backup_file_signle(args, file):
         return cmd
 
 def backup_file(args, file):
+    dir = os.path.dirname(file)
+    if dir:
+        args.o.write('mkdir -p %s\n' % escape_file(dir))
     cmd = backup_file_signle(args, file)
     for i in range(1, args.count):
         cmd2 =  backup_file_signle(args, file)
