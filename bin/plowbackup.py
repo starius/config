@@ -390,11 +390,10 @@ def verify_file_cmd_single_attempt(args, file, cmd):
         # script without md5
         f1 = os.path.join(base_dir, file)
         f2 = os.path.join(args.dir, file)
-        ok = False
         try:
             ok = filecmp.cmp(f1, f2)
         except:
-            pass
+            ok = False
     os.system('rm -r ' + escape_file(base_dir))
     return ok
 
