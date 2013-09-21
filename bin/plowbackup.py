@@ -496,7 +496,6 @@ if read_cmd and os.path.exists(args.out):
     file2cmd = parse_backup_script(f)
     f.close()
 
-base_dir = args.dir
 args.sites_list = args.sites.split(',')
 args.quiet_string = '-q' if args.quiet else ''
 
@@ -519,6 +518,7 @@ elif args.mode in ('write', 'append'):
         args.o = open(args.out, 'w')
     elif args.mode == 'append':
         args.o = open(args.out, 'a')
+    base_dir = args.dir
     files = list_files(base_dir)
     if args.mode in ('write', 'append') \
             and args.reuse in ('yes', 'verify'):
