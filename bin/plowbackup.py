@@ -517,6 +517,7 @@ def backup_file(args, file):
     o.write('chmod %s %s\n' %\
             (permissions, escape_file(file)))
     args.o.write(o.getvalue())
+    args.o.flush()
 
 MODE_CHOICES = ('write', 'append', 'verify')
 REUSE_MODE_CHOICES = ('no', 'yes', 'verify')
