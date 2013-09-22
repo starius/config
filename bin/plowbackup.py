@@ -118,9 +118,15 @@ def random_filename():
         return random_password() + '_' + random_password() + '.mp3'
     return choice([photo, mhtml, mp4, txt, mp3])()
 
+PARTS_DIR = '$parts_dir/'
+
 def escape_file(arg):
     if arg in ('$f1', '$f2', '$f'):
         return arg
+    if arg.startswith(PARTS_DIR):
+        prefix_length = len(PARTS_DIR)
+        other = arg[prefix_length:]
+        return PARTS_DIR + escape_file(other)
     if arg.startswith('-'):
         arg = './' + arg
     return "'%s'" % arg.replace("'", r"'\''")
@@ -128,6 +134,10 @@ def escape_file(arg):
 def unescape_file(arg):
     if arg in ('$f1', '$f2', '$f'):
         return arg
+    if arg.startswith(PARTS_DIR):
+        prefix_length = len(PARTS_DIR)
+        other = arg[prefix_length:]
+        return PARTS_DIR + unescape_file(other)
     if arg.startswith("'") and arg.endswith("'"):
         arg = arg[1:-1] # remove ' '
     arg = arg.replace(r"'\''", "'")
@@ -312,16 +322,24 @@ def parse_backup_script(file):
                 cmd = ''
     return result
 
+MD5_CMD = "if [ -f %(file)s ] && [ %(cond)s ]; then\n"+\
+          "echo 'OK  ' %(file)s\n"+\
+          'else\n'+\
+          "echo 'FAIL' %(file)s\n"+\
+          'fi\n'
+
 def try_backup_file(args, file, o):
-    local_file = os.path.join(args.dir, file)
-    upload_file = tempfile.NamedTemporaryFile(prefix='plowbackup.up.',
+    local_upload_file = os.path.join(args.local_upload_dir, file)
+    local_download_file = os.path.join(args.local_download_dir, file)
+    upload_file = tempfile.NamedTemporaryFile(
+            prefix='plowbackup.up.',
             delete=False).name
     encode_filter = FilterChain()
     decode_filter = FilterChain()
     # add filters
     add_filters(args, encode_filter, decode_filter)
     # run encode filters
-    encode = encode_filter.encode(local_file, upload_file)
+    encode = encode_filter.encode(local_upload_file, upload_file)
     if args.verbose:
         print(encode)
     os.system(encode)
@@ -329,15 +347,7 @@ def try_backup_file(args, file, o):
     url = plowup(args, upload_file)
     # remove tmp
     os.unlink(upload_file)
-    # permissions
-    permissions = os.popen('stat -c%a ' +
-            escape_file(local_file)).read().strip()
     # write commands to download the file
-    md5 = md5sum(local_file)
-    condition = "`md5sum %(file)s|awk '{print $1;}'` = '%(md5)s'"%\
-            {'file': escape_file(file), 'md5': md5}
-    o.write("if [ ! -f %(file)s ] || [ ! %(condition)s ]; then\n" %
-            {'file': escape_file(file), 'condition': condition})
     if url.startswith('/tmp'):
         o.write('f=%(url)s\n' % {'url': escape_file(url)})
     else:
@@ -347,21 +357,24 @@ def try_backup_file(args, file, o):
                 {'url': escape_file(url),
                  'quiet': args.quiet_string})
         o.write('f=$(find $tmpdir -type f)\n')
-    o.write(decode_filter.encode('$f', file))
+    o.write(decode_filter.encode('$f', local_download_file))
     if not url.startswith('/tmp'):
         o.write('rm $f\n')
         o.write('rmdir $tmpdir\n')
-    c = "if [ -f %(file)s ] && [ %(condition)s ]; then\n"+\
-        "echo 'OK  ' %(file)s\n"+\
-        'else\n'+\
-        "echo 'FAIL' %(file)s\n"+\
-        'fi\n'
-    o.write(c % {'file': escape_file(file), 'condition': condition})
-    o.write("else\necho 'ASIS' %s\nfi\n" % escape_file(file))
-    o.write('chmod %s %s\n' %\
-            (permissions, escape_file(file)))
+    md5 = md5sum(local_upload_file)
+    cond = "`md5sum %(file)s|awk '{print $1;}'` = '%(md5)s'"%\
+            {'file': escape_file(local_download_file), 'md5': md5}
+    o.write(MD5_CMD % {'file': escape_file(local_download_file),
+                       'cond': cond})
 
 def verify_file_cmd_single_attempt(args, file, cmd):
+    cmd0 = 'parts_dir=$(mktemp -d -t '+\
+           'plowbackup.parts.verify.XXXXXXX)\n'
+    dir = os.path.dirname(file)
+    if dir:
+        cmd0 += 'mkdir -p %s\n' % escape_file(dir)
+        cmd0 += 'mkdir -p $parts_dir/%s\n' % escape_file(dir)
+    cmd = cmd0 + cmd
     base_dir = tempfile.mkdtemp(prefix='plowbackup.down.')
     script = tempfile.NamedTemporaryFile(prefix='plowbackup.script.',
             delete=False)
@@ -389,7 +402,7 @@ def verify_file_cmd_single_attempt(args, file, cmd):
     if ok == None:
         # script without md5
         f1 = os.path.join(base_dir, file)
-        f2 = os.path.join(args.dir, file)
+        f2 = os.path.join(args.local_upload_dir, file)
         try:
             ok = filecmp.cmp(f1, f2)
         except:
@@ -423,17 +436,85 @@ def backup_file_signle(args, file):
             print(cmd)
         return cmd
 
-def backup_file(args, file):
-    dir = os.path.dirname(file)
-    if dir:
-        args.o.write('mkdir -p %s\n' % escape_file(dir))
+def backup_file_part(args, file):
     cmd = backup_file_signle(args, file)
     for i in range(1, args.count):
-        cmd2 =  backup_file_signle(args, file)
-        cmd2 = re.sub(r'chmod.*\n', '', cmd2) # chmod should be last
+        cmd2 = backup_file_signle(args, file)
         cmd = re.sub(r"echo 'FAIL'.*\n", cmd2, cmd)
-    args.o.write(cmd)
-    args.o.flush()
+    return cmd
+
+def cut_file(in_file, out_file, begin, end):
+    out_size = end - begin
+    head = begin + 1
+    # 2> /dev/null because tail: write error
+    c = "tail -c +%(head)i %(in)s 2> /dev/null |"+\
+        "head -c %(out_size)i > %(out)s"
+    c = c % {'in': escape_file(in_file),
+             'out': escape_file(out_file),
+             'head': head, 'out_size': out_size}
+    os.system(c)
+
+def backup_file(args, file):
+    o = StringIO()
+    dir = os.path.dirname(file)
+    if dir:
+        o.write('mkdir -p %s\n' % escape_file(dir))
+    abs_file = os.path.join(args.dir, file)
+    md5 = md5sum(abs_file)
+    cond = "`md5sum %(file)s|awk '{print $1;}'` = '%(md5)s'"%\
+            {'file': escape_file(file), 'md5': md5}
+    c = "if [ ! -f %(file)s ] || [ ! %(cond)s ]; then\n"
+    o.write(c % {'file': escape_file(file), 'cond': cond})
+    size = os.path.getsize(abs_file)
+    max_part_size = 1024 ** 2 * args.max_part_size
+    if size <= max_part_size:
+        args.local_upload_dir = args.dir
+        args.local_download_dir = '.'
+        o.write(backup_file_part(args, file))
+    else:
+        o.write('parts_dir=$(mktemp -d -t '+
+                'plowbackup.parts.down.XXXXXXX)\n')
+        args.local_download_dir = '$parts_dir'
+        parts_dir = tempfile.mkdtemp(prefix='plowbackup.parts.up.')
+        dir = os.path.dirname(file)
+        if dir:
+            os.system('mkdir -p %s\n' %
+                    escape_file(os.path.join(parts_dir, dir)))
+            o.write('mkdir -p %s\n' %
+                    escape_file(os.path.join('$parts_dir/', dir)))
+        args.local_upload_dir = parts_dir
+        pos = 0
+        i = 0
+        while pos < size:
+            part_size = randint(max_part_size // 2, max_part_size)
+            if pos + part_size > size:
+                part_size = size - pos
+            part_path = file + '.' + str(i)
+            abs_part_path = os.path.join(parts_dir, part_path)
+            cut_file(abs_file, abs_part_path, pos, pos + part_size)
+            cmd = backup_file_part(args, part_path)
+            o.write(cmd)
+            down_part_path = os.path.join('$parts_dir', part_path)
+            o.write('cat %(down_part_path)s >> %(file)s\n' %
+                    {'down_part_path': escape_file(down_part_path),
+                     'file': escape_file(file)})
+            o.write('rm %(down_part_path)s\n' %
+                    {'down_part_path': escape_file(down_part_path)})
+            os.unlink(abs_part_path)
+            pos += part_size
+            i += 1
+        os.system("rm -r %s" % escape_file(parts_dir))
+        o.write('rm -r $parts_dir\n')
+        o.write(MD5_CMD % {'file': escape_file(file),
+                           'cond': cond})
+    o.write("else\necho 'ASIS' %s\nfi\n" %
+                 escape_file(file))
+    # permissions
+    permissions = os.popen('stat -c%a ' +
+            escape_file(abs_file)).read().strip()
+    o.write('chmod %s %s\n' %\
+            (permissions, escape_file(file)))
+    args.o.write(o.getvalue())
 
 MODE_CHOICES = ('write', 'append', 'verify')
 REUSE_MODE_CHOICES = ('no', 'yes', 'verify')
@@ -466,8 +547,11 @@ p.add_argument('--sites',
         help='Sites used for upload separated by comma or "local"',
         metavar='SITES',type=str,default='Sendspace,Sharebeast')
 p.add_argument('--count',
-        help='How much times upload each file',
+        help='How much times upload each file(part)',
         type=int,default=1)
+p.add_argument('--max-part-size',
+        help='Max size of uploaded file part in MB',
+        type=int,default=5)
 p.add_argument('--verify',
         help='Download file and compare it with original',
         type=int,default=1)
@@ -498,6 +582,8 @@ if read_cmd and os.path.exists(args.out):
 
 args.sites_list = args.sites.split(',')
 args.quiet_string = '-q' if args.quiet else ''
+
+args.local_upload_dir = args.dir
 
 if args.mode == 'verify':
     for file, cmd in file2cmd.items():
