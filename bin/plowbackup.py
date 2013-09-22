@@ -370,11 +370,12 @@ def try_backup_file(args, file, o):
 def verify_file_cmd_single_attempt(args, file, cmd):
     cmd0 = 'parts_dir=$(mktemp -d -t '+\
            'plowbackup.parts.verify.XXXXXXX)\n'
+    cmd2 = 'rm -r $parts_dir\n'
     dir = os.path.dirname(file)
     if dir:
         cmd0 += 'mkdir -p %s\n' % escape_file(dir)
         cmd0 += 'mkdir -p $parts_dir/%s\n' % escape_file(dir)
-    cmd = cmd0 + cmd
+    cmd = cmd0 + cmd + cmd2
     base_dir = tempfile.mkdtemp(prefix='plowbackup.down.')
     script = tempfile.NamedTemporaryFile(prefix='plowbackup.script.',
             delete=False)
