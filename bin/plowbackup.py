@@ -502,6 +502,7 @@ def backup_file(args, file):
             o.write('rm %(down_part_path)s\n' %
                     {'down_part_path': escape_file(down_part_path)})
             os.unlink(abs_part_path)
+            args.report.write('%s %s.%i\n' % ('UP  ', file, i))
             pos += part_size
             i += 1
         os.system("rm -r %s" % escape_file(parts_dir))
