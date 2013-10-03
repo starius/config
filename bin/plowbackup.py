@@ -79,7 +79,6 @@ Requirements:
 For list of filters, see var FILTERS.
 
 TODO:
-* split large files into pieces
 * parallel uploads
 """
 
