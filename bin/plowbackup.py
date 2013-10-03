@@ -614,6 +614,7 @@ elif args.mode in ('write', 'append'):
         files.sort(key=lambda file: 0 if file in file2cmd else 1)
     if append:
         args.o.write("# PlowBackup begin\n")
+        args.o.flush()
     for file in files:
         if file in file2cmd and (args.reuse == 'yes' or \
                 (args.reuse == 'verify' and
@@ -621,6 +622,7 @@ elif args.mode in ('write', 'append'):
             cmd = file2cmd[file]
             if args.mode == 'write':
                 args.o.write(cmd)
+                args.o.flush()
             status = 'OK  ' if args.reuse == 'verify' else 'ASIS'
             args.report.write('%s %s\n' % (status, file))
             args.report.flush()
@@ -630,4 +632,5 @@ elif args.mode in ('write', 'append'):
             args.report.flush()
     if append:
         args.o.write("# PlowBackup end\n")
+        args.o.flush()
 
