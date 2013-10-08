@@ -14,6 +14,7 @@ do
         if (! nmcli con status | cut -c $VPN_START-$VPN_STOP | grep -q yes ) then
             echo "Disconnected, trying to reconnect..."
             CONNAME=`nmcli con | grep -v never | grep vpn -m 1 | cut -c $UUID_START-$UUID_STOP`
+            echo $CONNAME
             nmcli con up uuid $CONNAME
         fi
     fi
