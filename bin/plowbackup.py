@@ -489,7 +489,7 @@ def backup_file(args, file):
         local_args.local_upload_dir = parts_dir
         pos = 0
         i = 0
-        o.write('rm %(file)s\n' % {'file': escape_file(file)})
+        o.write('rm -f %(file)s\n' % {'file': escape_file(file)})
         while pos < size:
             part_size = randint(max_part_size // 2, max_part_size)
             if pos + part_size > size:
