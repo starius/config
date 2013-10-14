@@ -77,9 +77,6 @@ Requirements:
     * rot13
 
 For list of filters, see var FILTERS.
-
-TODO:
-* parallel uploads
 """
 
 from gzip import GzipFile
@@ -88,6 +85,8 @@ import sys
 import re
 import argparse
 import tempfile
+import threading
+from multiprocessing.pool import ThreadPool
 from random import randint, choice
 import string
 import hashlib
@@ -327,9 +326,9 @@ MD5_CMD = "if [ -f %(file)s ] && [ %(cond)s ]; then\n"+\
           "echo 'FAIL' %(file)s\n"+\
           'fi\n'
 
-def try_backup_file(args, file, o):
-    local_upload_file = os.path.join(args.local_upload_dir, file)
-    local_download_file = os.path.join(args.local_download_dir, file)
+def try_backup_file(args, file, o, local_args):
+    local_upload_file = os.path.join(local_args.local_upload_dir, file)
+    local_download_file = os.path.join(local_args.local_download_dir, file)
     upload_file = tempfile.NamedTemporaryFile(
             prefix='plowbackup.up.',
             delete=False).name
@@ -416,11 +415,11 @@ def verify_file_cmd(args, file, cmd):
             return True
     return False
 
-def backup_file_signle(args, file):
+def backup_file_signle(args, file, local_args):
     if args.verify:
         while True:
             o = StringIO()
-            try_backup_file(args, file, o)
+            try_backup_file(args, file, o, local_args)
             cmd = o.getvalue()
             if args.verbose:
                 print(cmd)
@@ -430,16 +429,16 @@ def backup_file_signle(args, file):
                 time.sleep(1) # to break it with Ctrl+C
     else:
         o = StringIO()
-        try_backup_file(args, file, o)
+        try_backup_file(args, file, o, local_args)
         cmd = o.getvalue()
         if args.verbose:
             print(cmd)
         return cmd
 
-def backup_file_part(args, file):
-    cmd = backup_file_signle(args, file)
+def backup_file_part(args, file, local_args):
+    cmd = backup_file_signle(args, file, local_args)
     for i in range(1, args.count):
-        cmd2 = backup_file_signle(args, file)
+        cmd2 = backup_file_signle(args, file, local_args)
         cmd = re.sub(r"echo 'FAIL'.*\n", cmd2, cmd)
     return cmd
 
@@ -454,7 +453,12 @@ def cut_file(in_file, out_file, begin, end):
              'head': head, 'out_size': out_size}
     os.system(c)
 
+class LocalArgs(object):
+    pass
+
 def backup_file(args, file):
+    local_args = LocalArgs() # thread-local
+    local_args.local_upload_dir = args.dir
     o = StringIO()
     dir = os.path.dirname(file)
     if dir:
@@ -468,13 +472,13 @@ def backup_file(args, file):
     size = os.path.getsize(abs_file)
     max_part_size = 1024 ** 2 * args.max_part_size
     if size <= max_part_size:
-        args.local_upload_dir = args.dir
-        args.local_download_dir = '.'
-        o.write(backup_file_part(args, file))
+        local_args.local_upload_dir = args.dir
+        local_args.local_download_dir = '.'
+        o.write(backup_file_part(args, file, local_args))
     else:
         o.write('parts_dir=$(mktemp -d -t '+
                 'plowbackup.parts.down.XXXXXXX)\n')
-        args.local_download_dir = '$parts_dir'
+        local_args.local_download_dir = '$parts_dir'
         parts_dir = tempfile.mkdtemp(prefix='plowbackup.parts.up.')
         dir = os.path.dirname(file)
         if dir:
@@ -482,7 +486,7 @@ def backup_file(args, file):
                     escape_file(os.path.join(parts_dir, dir)))
             o.write('mkdir -p %s\n' %
                     escape_file(os.path.join('$parts_dir/', dir)))
-        args.local_upload_dir = parts_dir
+        local_args.local_upload_dir = parts_dir
         pos = 0
         i = 0
         o.write('rm %(file)s\n' % {'file': escape_file(file)})
@@ -493,7 +497,7 @@ def backup_file(args, file):
             part_path = file + '.' + str(i)
             abs_part_path = os.path.join(parts_dir, part_path)
             cut_file(abs_file, abs_part_path, pos, pos + part_size)
-            cmd = backup_file_part(args, part_path)
+            cmd = backup_file_part(args, part_path, local_args)
             o.write(cmd)
             down_part_path = os.path.join('$parts_dir', part_path)
             o.write('cat %(down_part_path)s >> %(file)s\n' %
@@ -502,8 +506,7 @@ def backup_file(args, file):
             o.write('rm %(down_part_path)s\n' %
                     {'down_part_path': escape_file(down_part_path)})
             os.unlink(abs_part_path)
-            args.report.write('%s %s.%i\n' % ('UP  ', file, i))
-            args.report.flush()
+            report_write(args, '%s %s.%i\n' % ('UP  ', file, i))
             pos += part_size
             i += 1
         os.system("rm -r %s" % escape_file(parts_dir))
@@ -517,8 +520,7 @@ def backup_file(args, file):
             escape_file(abs_file)).read().strip()
     o.write('chmod %s %s\n' %\
             (permissions, escape_file(file)))
-    args.o.write(o.getvalue())
-    args.o.flush()
+    o_write(args, o.getvalue())
 
 MODE_CHOICES = ('write', 'append', 'verify')
 REUSE_MODE_CHOICES = ('no', 'yes', 'verify')
@@ -556,6 +558,9 @@ p.add_argument('--count',
 p.add_argument('--max-part-size',
         help='Max size of uploaded file part in MB',
         type=int,default=5)
+p.add_argument('--workers',
+        help='Number of workers',
+        type=int,default=1)
 p.add_argument('--verify',
         help='Download file and compare it with original',
         type=int,default=1)
@@ -588,13 +593,37 @@ args.sites_list = args.sites.split(',')
 args.quiet_string = '-q' if args.quiet else ''
 
 args.local_upload_dir = args.dir
+args.report_lock = threading.Lock()
+args.o_lock = threading.Lock()
+
+def report_write(args, data):
+    with args.report_lock:
+        args.report.write(data)
+        args.report.flush()
+
+def o_write(args, data):
+    with args.o_lock:
+        args.o.write(data)
+        args.o.flush()
+
+def do_upload(file):
+    if file in file2cmd and (args.reuse == 'yes' or \
+            (args.reuse == 'verify' and
+                verify_file_cmd(args, file, file2cmd[file]))):
+        cmd = file2cmd[file]
+        if args.mode == 'write':
+            o_write(args, cmd)
+        status = 'OK  ' if args.reuse == 'verify' else 'ASIS'
+        report_write(args, '%s %s\n' % (status, file))
+    else:
+        backup_file(args, file)
+        report_write(args, '%s %s\n' % ('UP  ', file))
 
 if args.mode == 'verify':
     for file, cmd in file2cmd.items():
         ok = verify_file_cmd(args, file, cmd)
         status = 'OK  ' if ok else 'FAIL'
-        args.report.write('%s %s\n' % (status, file))
-        args.report.flush()
+        report_write(args, '%s %s\n' % (status, file))
         if not ok:
             time.sleep(0.5) # to break it with Ctrl+C
 elif args.mode in ('write', 'append'):
@@ -614,24 +643,11 @@ elif args.mode in ('write', 'append'):
             and args.reuse in ('yes', 'verify'):
         files.sort(key=lambda file: 0 if file in file2cmd else 1)
     if append:
-        args.o.write("# PlowBackup begin\n")
-        args.o.flush()
-    for file in files:
-        if file in file2cmd and (args.reuse == 'yes' or \
-                (args.reuse == 'verify' and
-                    verify_file_cmd(args, file, file2cmd[file]))):
-            cmd = file2cmd[file]
-            if args.mode == 'write':
-                args.o.write(cmd)
-                args.o.flush()
-            status = 'OK  ' if args.reuse == 'verify' else 'ASIS'
-            args.report.write('%s %s\n' % (status, file))
-            args.report.flush()
-        else:
-            backup_file(args, file)
-            args.report.write('%s %s\n' % ('UP  ', file))
-            args.report.flush()
+        o_write(args, "# PlowBackup begin\n")
+    pool = ThreadPool(args.workers)
+    async_result = pool.map_async(do_upload, files)
+    while not async_result.ready():
+        time.sleep(1) # to break it with Ctrl+C
     if append:
-        args.o.write("# PlowBackup end\n")
-        args.o.flush()
+        o_write(args, "# PlowBackup end\n")
 
