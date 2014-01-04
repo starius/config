@@ -1,0 +1,1 @@
+mplayer -cache 100 -playlist http://japanradio.ru/playlist.m3u
