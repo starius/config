@@ -12,7 +12,7 @@ set showmatch
 set hlsearch
 set incsearch
 "set ignorecase
-set listchars=tab:··
+set listchars=tab:..
 set list
 
 set ffs=unix,dos,mac
