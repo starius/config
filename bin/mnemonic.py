@@ -1684,6 +1684,15 @@ if __name__ == '__main__':
     if len( sys.argv ) == 1:
         print 'I need arguments: a hex string to encode, or a list of words to decode'
     elif len( sys.argv ) == 2:
-        print ' '.join(mn_encode(sys.argv[1]))
+        if sys.argv[1] == 'random':
+            import random
+            BITS = 256
+            chars = BITS / 8 * 2
+            ABC = '0123456789abcdef'
+            value = ''.join(random.choice(ABC) for i in range(chars))
+            print value
+            print ' '.join(mn_encode(value))
+        else:
+            print ' '.join(mn_encode(sys.argv[1]))
     else:
         print mn_decode(sys.argv[1:])
