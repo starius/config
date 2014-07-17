@@ -1678,6 +1678,8 @@ def mn_decode( wlist ):
         out += '%08x'%x
     return out
 
+def hex2mnemonic(value):
+    return ' '.join(mn_encode(value))
 
 if __name__ == '__main__':
     import sys
@@ -1691,8 +1693,8 @@ if __name__ == '__main__':
             ABC = '0123456789abcdef'
             value = ''.join(random.choice(ABC) for i in range(chars))
             print(value)
-            print(' '.join(mn_encode(value)))
+            print(hex2mnemonic(value))
         else:
-            print(' '.join(mn_encode(sys.argv[1])))
+            print(hex2mnemonic(sys.argv[1]))
     else:
         print(mn_decode(sys.argv[1:]))
