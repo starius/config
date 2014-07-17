@@ -3315,15 +3315,18 @@ def hex2mnemonic(value):
 
 if __name__ == '__main__':
     import sys
+    BITS = 256
     if len(sys.argv) >= 2 and sys.argv[1] == 'ru':
         words = words_ru
+        del sys.argv[1]
+    if len(sys.argv) >= 2 and sys.argv[1] == '128':
+        BITS = 128
         del sys.argv[1]
     if len( sys.argv ) == 1:
         print('I need arguments: a hex string to encode, or a list of words to decode')
     elif len( sys.argv ) == 2:
         if sys.argv[1] == 'random':
             import random
-            BITS = 256
             chars = int(BITS / 8 * 2)
             ABC = '0123456789abcdef'
             value = ''.join(random.choice(ABC) for i in range(chars))
