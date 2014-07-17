@@ -3323,7 +3323,7 @@ if __name__ == '__main__':
         BITS = 128
         del sys.argv[1]
     if len( sys.argv ) == 1:
-        print('I need arguments: a hex string to encode, or a list of words to decode')
+        print('Usage: mnemonic.py [ru] [128] random|hex-string|mnemonic')
     elif len( sys.argv ) == 2:
         if sys.argv[1] == 'random':
             import random
