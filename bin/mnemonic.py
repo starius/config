@@ -3289,6 +3289,8 @@ n = 1626
 # Instead, the digit represented by a word is variable, it depends on the previous word.
 
 def mn_encode( message ):
+    if len(message) % 8:
+        message = '0' * (8 - len(message) % 8) + message
     out = []
     for i in range(len(message)//8):
         word = message[8*i:8*i+8]
@@ -3300,6 +3302,8 @@ def mn_encode( message ):
     return out
 
 def mn_decode( wlist ):
+    if len(wlist) % 3:
+        wlist = [words[0]] * (3 - len(wlist) % 3) + wlist
     out = ''
     for i in range(len(wlist)//3):
         word1, word2, word3 = wlist[3*i:3*i+3]
