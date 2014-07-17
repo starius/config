@@ -1694,6 +1694,8 @@ if __name__ == '__main__':
             value = ''.join(random.choice(ABC) for i in range(chars))
             print(value)
             print(hex2mnemonic(value))
+        elif ' ' in sys.argv[1]:
+            print(mn_decode(sys.argv[1].split()))
         else:
             print(hex2mnemonic(sys.argv[1]))
     else:
