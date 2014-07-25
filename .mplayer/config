@@ -4,4 +4,5 @@ ass=yes
 vf=ass,screenshot
 cache=10000
 alang=j
+heartbeat-cmd="xscreensaver-command -deactivate"
 
