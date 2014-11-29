@@ -15,6 +15,7 @@ eol =
 churn=
 convert =
 purge =
+#hggit = /usr/share/pyshared/hgext/git
 
 [diff]
 git=true
