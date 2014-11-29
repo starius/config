@@ -9,7 +9,7 @@ alias l='ls -CF'
 alias mysshfs='sshfs -o transform_symlinks'
 alias mydiff='diff -Npru'
 
-alias mycmake="CXX='ccache g++' cmake -D CMAKE_INSTALL_PREFIX:PATH=/usr"
+alias mycmake="CXX='ccache c++' cmake -D CMAKE_INSTALL_PREFIX:PATH=/usr"
 alias octperm="perl -e 'printf \"%o\n\",(stat shift)[2] & 07777'"
 
 # ssh -o ProxyCommand="nc -X 5 -x localhost:9050 %h %p" host
