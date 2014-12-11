@@ -3,3 +3,6 @@
 	email = bnagaev@gmail.com
 [color]
 	ui = auto
+[alias]
+	utccommit = !git commit --date=\"$(date --utc +%Y-%m-%dT%H:%M:%S%z)\"
+	mskcommit = !git commit --date=\"$(TZ=Europe/Moscow date +%Y-%m-%dT%H:%M:%S%z)\"
