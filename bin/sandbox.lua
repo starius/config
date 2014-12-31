@@ -6,6 +6,7 @@ local sandbox = {}
 
 -- sample sandbox environment
 sandbox.env = {
+  _VERSION = _VERSION,
   print = print,
   select = select,
   ipairs = ipairs,
