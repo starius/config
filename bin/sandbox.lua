@@ -5,10 +5,9 @@
 local sandbox = {}
 
 -- sample sandbox environment
-sandbox.env = function()
-  return {
+sandbox.env = function(more_functions)
+  local env = {
   _VERSION = _VERSION,
-  print = print,
   select = select,
   ipairs = ipairs,
   next = next,
@@ -18,16 +17,10 @@ sandbox.env = function()
   tostring = tostring,
   type = type,
   unpack = unpack or table.unpack,
-  coroutine = {
-      create = coroutine.create, resume = coroutine.resume,
-      running = coroutine.running, status = coroutine.status,
-      wrap = coroutine.wrap },
   string = {
       byte = string.byte, char = string.char,
-      find = string.find, format = string.format,
-      gmatch = string.gmatch, gsub = string.gsub,
+      format = string.format,
       len = string.len, lower = string.lower,
-      match = string.match, rep = string.rep,
       reverse = string.reverse, sub = string.sub,
       upper = string.upper },
   table = {
@@ -48,7 +41,23 @@ sandbox.env = function()
   os = {
       clock = os.clock, difftime = os.difftime,
       time = os.time },
-}
+    }
+    if more_functions then
+        env.print = print
+        env.coroutine = {
+            create=coroutine.create,
+            resume=coroutine.resume,
+            running=coroutine.running,
+            status=coroutine.status,
+            wrap=coroutine.wrap,
+        }
+        env.string.find = string.find
+        env.string.gmatch = string.gmatch
+        env.string.gsub = string.gsub
+        env.string.match = string.match
+        env.string.rep = string.rep
+    end
+    return env
 end
 
 sandbox.protect = function(env, code)
