@@ -58,7 +58,7 @@ sandbox.env = function(more_functions)
     return env
 end
 
-sandbox.protect = function(env, code)
+sandbox.load = function(env, code)
     env = env or sandbox.env()
     if type(code) ~= 'string' then
         return nil, 'Type of code should be string'
@@ -81,7 +81,7 @@ sandbox.protect = function(env, code)
 end
 
 sandbox.run_code = function(env, code, ...)
-    local f, message = sandbox.protect(env, code)
+    local f, message = sandbox.load(env, code)
     if not f then
         return nil, message
     end
