@@ -71,10 +71,8 @@ sandbox.run_code = function(env, code, ...)
         if not f then
             return false, message
         end
-        local orig_env = getfenv(f)
         setfenv(f, env)
         local results = {pcall(f, ...)}
-        setfenv(f, orig_env)
         return unpack(results)
     else
         return false, 'Implemented in Lua 5.1 and 5.2 only'
