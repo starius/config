@@ -5,7 +5,8 @@
 local sandbox = {}
 
 -- sample sandbox environment
-sandbox.env = {
+sandbox.env = function()
+  return {
   _VERSION = _VERSION,
   print = print,
   select = select,
@@ -48,9 +49,10 @@ sandbox.env = {
       clock = os.clock, difftime = os.difftime,
       time = os.time },
 }
+end
 
 sandbox.run_code = function(env, code, ...)
-    env = env or sandbox.env
+    env = env or sandbox.env()
     if type(code) ~= 'string' then
         return false, 'Type of code should be string'
     end
