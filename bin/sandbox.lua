@@ -51,32 +51,35 @@ sandbox.env = function()
 }
 end
 
-sandbox.run_code = function(env, code, ...)
+sandbox.protect = function(env, code)
     env = env or sandbox.env()
     if type(code) ~= 'string' then
-        return false, 'Type of code should be string'
+        return nil, 'Type of code should be string'
     end
     if code:byte(1) == 27 then
-        return false, 'Bytecode is not allowed'
+        return nil, 'Bytecode is not allowed'
     end
     if _VERSION == 'Lua 5.2' then
-        local f, message = load(code, 'sandbox', 't', env)
-        if not f then
-            return false, message
-        end
-        local results = {pcall(f, ...)}
-        return table.unpack(results)
+        return load(code, 'sandbox', 't', env)
     elseif _VERSION == 'Lua 5.1' then
         local f, message = loadstring(code, 'sandbox')
         if not f then
-            return false, message
+            return nil, message
         end
         setfenv(f, env)
-        local results = {pcall(f, ...)}
-        return unpack(results)
+        return f
     else
-        return false, 'Implemented in Lua 5.1 and 5.2 only'
+        return nil, 'Implemented in Lua 5.1 and 5.2 only'
     end
+end
+
+sandbox.run_code = function(env, code, ...)
+    local f, message = sandbox.protect(env, code)
+    if not f then
+        return nil, message
+    end
+    local results = {pcall(f, ...)}
+    return unpack(results)
 end
 
 sandbox.run_file = function(env, fname, ...)
