@@ -80,28 +80,48 @@ sandbox.load = function(env, code)
     end
 end
 
-sandbox.run_code = function(env, code, ...)
-    local f, message = sandbox.load(env, code)
-    if not f then
-        return nil, message
+sandbox.antidos = function(f, timeout, memory)
+    return function(...)
+        local clock0 = os.clock()
+        local mem0 = collectgarbage("count")
+        local checktime = function()
+            if os.clock() - clock0 > timeout then
+                error("CPU time exhausted")
+            end
+            if collectgarbage("count") - mem0 > memory then
+                error("Memory exhausted")
+            end
+        end
+        local hook, mask, count = debug.gethook()
+        debug.sethook(checktime, "", 1e3)
+        local results = {pcall(f, ...)}
+        -- restore original hook if any
+        debug.sethook(hook, mask, count)
+        local unpack = unpack or table.unpack
+        return unpack(results)
     end
-    local results = {pcall(f, ...)}
-    return unpack(results)
-end
-
-sandbox.run_file = function(env, fname, ...)
-    local input_file = io.open(fname, 'r')
-    local code = input_file:read('*a')
-    input_file:close()
-    return sandbox.run_code(env, code, ...)
 end
 
 -- http://stackoverflow.com/a/4521960
 if not pcall(debug.getlocal, 4, 1) then
     local fname = assert(arg[1], 'Provide .lua file to run')
-    local status, results = sandbox.run_file(nil, fname)
-    if not status then
-        print(results)
+    local input_file = io.open(fname, 'r')
+    local code = input_file:read('*a')
+    input_file:close()
+    local env = sandbox.env()
+    env.print = print
+    local f, message = sandbox.load(env, code)
+    if not f then
+        print(message)
+    end
+    f = sandbox.antidos(f, 10, 100000) -- 10 seconds, 100 mb
+    local results = {f()}
+    if not results[1] then
+        print(results[2])
+    else
+        table.remove(results, 1)
+        local unpack = unpack or table.unpack
+        print(unpack(results))
     end
 end
 
