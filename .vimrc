@@ -1,4 +1,5 @@
 
+language messages C
 set nu showcmd
 syntax on
 filetype indent on
