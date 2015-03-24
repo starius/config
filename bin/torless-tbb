@@ -1,0 +1,12 @@
+#!/bin/sh
+
+rm Browser/TorBrowser/Data/Browser/profile.default/extensions/tor-launcher@torproject.org.xpi
+
+conf=Browser/TorBrowser/Data/Browser/profile.default/preferences/extension-overrides.js
+cat >> $conf <<EOL
+pref("extensions.torbutton.settings_method", "transparent");
+pref("extensions.torbutton.use_privoxy", false);
+pref("extensions.torbutton.use_privoxy", false);
+pref("network.proxy.socks_remote_dns", false);
+pref("network.proxy.type", 0);
+EOL
