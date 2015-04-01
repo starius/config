@@ -36,7 +36,9 @@ sed 's@ ;@;@g' -i $files
 sed '/\<param\>/!s@\>  \<@ @g' -i $files
 
 # append new line to the last line
-sed '$s@\(.\+\)@\1\n@g' -i $files
+#sed '$s@\(.\+\)@\1\n@g' -i $files
+# remove new line after the last line
+#sed '${/^$/D}' -i $files
 
 # fix indentation of "for (int a : b)"
 sed ':begin;$!N;s@^\(\s\+\)\([^\n]\+\)\nfor@\1\2\n\1for@;tbegin;P;D' -i $files
