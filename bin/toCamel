@@ -1,0 +1,7 @@
+#!/usr/bin/env lua
+
+local name = assert(arg[1], "Provide underscored_name")
+local camelName = name:gsub("_(%l)", function(l)
+    return l:upper()
+end)
+print(camelName)
