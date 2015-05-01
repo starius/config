@@ -1,3 +1,5 @@
+#!/bin/bash
+
 (for f in $@; do luac -l -p $f; done) | egrep ETGLOBAL | \
     awk '{print $7}' | \
     egrep -wv \
