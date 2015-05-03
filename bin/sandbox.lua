@@ -4,6 +4,23 @@
 
 local sandbox = {}
 
+sandbox.string = function(more_functions)
+    local s = {
+        byte=string.byte, char=string.char,
+        format=string.format, len=string.len,
+        lower=string.lower, reverse=string.reverse,
+        sub=string.sub, upper=string.upper,
+    }
+    if more_functions then
+        s.find = string.find
+        s.gmatch = string.gmatch
+        s.gsub = string.gsub
+        s.match = string.match
+        s.rep = string.rep
+    end
+    return s
+end
+
 -- sample sandbox environment
 sandbox.env = function(more_functions)
     local env = {
@@ -11,13 +28,8 @@ sandbox.env = function(more_functions)
         next=next, pairs=pairs, pcall=pcall,
         tonumber=tonumber, tostring=tostring,
         type=type,
-        unpack = unpack or table.unpack,
-        string = {
-            byte=string.byte, char=string.char,
-            format=string.format, len=string.len,
-            lower=string.lower, reverse=string.reverse,
-            sub=string.sub, upper=string.upper,
-        },
+        unpack = unpack,
+        string = sandbox.string(more_functions),
         table = {
             insert=table.insert, maxn=table.maxn,
             remove=table.remove, sort=table.sort,
@@ -49,34 +61,53 @@ sandbox.env = function(more_functions)
             status=coroutine.status,
             wrap=coroutine.wrap,
         }
-        env.string.find = string.find
-        env.string.gmatch = string.gmatch
-        env.string.gsub = string.gsub
-        env.string.match = string.match
-        env.string.rep = string.rep
     end
     return env
 end
 
-sandbox.load = function(env, code)
+sandbox.replace_string = function(string_lib)
+    local string_saved = {}
+    for k, v in pairs(string) do
+        string_saved[k] = v
+    end
+    for k, v in pairs(string_saved) do
+        string[k] = nil
+    end
+    for k, v in pairs(string_lib) do
+        string[k] = v
+    end
+    return string_saved
+end
+
+sandbox.load = function(env, code, string_lib)
     env = env or sandbox.env()
+    string_lib = string_lib or sandbox.string()
     if type(code) ~= 'string' then
         return nil, 'Type of code should be string'
     end
     if code:byte(1) == 27 then
         return nil, 'Bytecode is not allowed'
     end
+    local func
     if _VERSION == 'Lua 5.2' or _VERSION == 'Lua 5.3' then
-        return load(code, 'sandbox', 't', env)
+        func = load(code, 'sandbox', 't', env)
     elseif _VERSION == 'Lua 5.1' then
         local f, message = loadstring(code, 'sandbox')
         if not f then
             return nil, message
         end
         setfenv(f, env)
-        return f
+        func = f
     else
-        return nil, 'Implemented in Lua 5.1 and 5.2 only'
+        return nil, 'Implemented in Lua 5.1, 5.2, 5.3 only'
+    end
+    local unpack = unpack or table.unpack
+    return function(...)
+        local string_saved = sandbox.replace_string(string_lib)
+        local results = {pcall(func(...))}
+        table.remove(results, 1) -- pcall's status
+        sandbox.replace_string(string_saved)
+        return unpack(results)
     end
 end
 
@@ -126,4 +157,3 @@ if not pcall(debug.getlocal, 4, 1) then
 end
 
 return sandbox
-
