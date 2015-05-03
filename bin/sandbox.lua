@@ -66,7 +66,7 @@ sandbox.load = function(env, code)
     if code:byte(1) == 27 then
         return nil, 'Bytecode is not allowed'
     end
-    if _VERSION == 'Lua 5.2' then
+    if _VERSION == 'Lua 5.2' or _VERSION == 'Lua 5.3' then
         return load(code, 'sandbox', 't', env)
     elseif _VERSION == 'Lua 5.1' then
         local f, message = loadstring(code, 'sandbox')
