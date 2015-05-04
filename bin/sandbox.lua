@@ -66,16 +66,8 @@ sandbox.env = function(more_functions)
 end
 
 sandbox.replace_string = function(string_lib)
-    local string_saved = {}
-    for k, v in pairs(string) do
-        string_saved[k] = v
-    end
-    for k, v in pairs(string_saved) do
-        string[k] = nil
-    end
-    for k, v in pairs(string_lib) do
-        string[k] = v
-    end
+    local string_saved = debug.getmetatable("")
+    debug.setmetatable("", {__index = string_lib})
     return string_saved
 end
 
