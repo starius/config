@@ -8,3 +8,5 @@
 	mskcommit = !git commit --date=\"$(TZ=Europe/Moscow date +%Y-%m-%dT%H:%M:%S%z)\"
 [core]
 	pager = less -F -X -R
+[push]
+	default = simple
