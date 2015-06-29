@@ -10,3 +10,5 @@
 	pager = less -F -X -R
 [push]
 	default = current
+[init]
+	templatedir = ~/.git_template
