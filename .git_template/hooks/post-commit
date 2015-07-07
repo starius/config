@@ -1,3 +1,0 @@
-#!/bin/bash
-
-eval `beautify_git_hash.py dead|tail -1`
