@@ -42,7 +42,7 @@ option --sites.
       You can lose previous content of file if error
       happens before reused content writting (see --backup).
     * verify. Read-only mode. Does not depend on --reuse.
-      Opens script for verifying. Test commands and test md5
+      Opens script for verifying. Test commands and test sha256
       of downloaded files.
       Print 'OK' or "FAIL' and filename.
 
@@ -75,6 +75,7 @@ Requirements:
     * gpg
     * xxd
     * rot13
+    * sha256sum
 
 For list of filters, see var FILTERS.
 """
@@ -143,8 +144,8 @@ def unescape_file(arg):
         arg = arg[2:] # remove ./
     return arg
 
-def md5sum(filename):
-    m = hashlib.md5()
+def sha256sum(filename):
+    m = hashlib.sha256()
     f = open(filename)
     while True:
         buf = f.read(100500)
@@ -363,9 +364,9 @@ def try_backup_file(args, file, o, local_args):
     if not url.startswith('/tmp'):
         o.write('rm $f\n')
         o.write('rmdir $tmpdir\n')
-    md5 = md5sum(local_upload_file)
-    cond = "`md5sum %(file)s|awk '{print $1;}'` = '%(md5)s'"%\
-            {'file': escape_file(local_download_file), 'md5': md5}
+    sha256 = sha256sum(local_upload_file)
+    cond = "`sha256sum %(file)s|awk '{print $1;}'` = '%(sha256)s'"%\
+            {'file': escape_file(local_download_file), 'sha256': sha256}
     o.write(MD5_CMD % {'file': escape_file(local_download_file),
                        'cond': cond})
 
@@ -403,7 +404,7 @@ def verify_file_cmd_single_attempt(args, file, cmd):
     elif result_code == 'FAIL':
         ok = False
     if ok == None:
-        # script without md5
+        # script without sha256
         f1 = os.path.join(base_dir, file)
         f2 = os.path.join(args.local_upload_dir, file)
         try:
@@ -468,9 +469,9 @@ def backup_file(args, file):
     if dir:
         o.write('mkdir -p %s\n' % escape_file(dir))
     abs_file = os.path.join(args.dir, file)
-    md5 = md5sum(abs_file)
-    cond = "`md5sum %(file)s|awk '{print $1;}'` = '%(md5)s'"%\
-            {'file': escape_file(file), 'md5': md5}
+    sha256 = sha256sum(abs_file)
+    cond = "`sha256sum %(file)s|awk '{print $1;}'` = '%(sha256)s'"%\
+            {'file': escape_file(file), 'sha256': sha256}
     c = "if [ ! -f %(file)s ] || [ ! %(cond)s ]; then\n"
     o.write(c % {'file': escape_file(file), 'cond': cond})
     size = os.path.getsize(abs_file)
