@@ -72,7 +72,7 @@ Requirements:
     * plowshare (tested Sep 1 2013)
     * bash
     * cut
-    * ccrypt
+    * gpg
     * xxd
     * rot13
 
@@ -223,15 +223,19 @@ class FilterChain(object):
         return '\n'.join(result) + '\n'
 
 def encrypt_filters(args):
+    cipher = choice(['AES256', 'TWOFISH'])
     key = random_password()
+    CMD_COMMON = 'gpg --passphrase %s --batch --cipher-algo %s --force-mdc '
+    CMD_E = CMD_COMMON + '--symmetric '
+    CMD_D = CMD_COMMON + '--decrypt '
+    cmd_e = CMD_E % (key, cipher)
+    cmd_d = CMD_E % (key, cipher)
     class E(Filter):
         def __init__(self):
-            self.pattern = "cat %(in)s | ccrypt -e -K " + \
-                    key + " > %(out)s"
+            self.pattern = "cat %(in)s | " + cmd_e + " > %(out)s"
     class D(Filter):
         def __init__(self):
-            self.pattern = "cat %(in)s | ccrypt -d -K " + \
-                    key + " > %(out)s"
+            self.pattern = "cat %(in)s | " + cmd_d + " > %(out)s"
     return E(), D()
 
 def head_tail_filters(args):
@@ -280,7 +284,7 @@ def gz_filters(args):
     return E(), D()
 
 FILTERS = {
-    'ccrypt': encrypt_filters,
+    'gpg': encrypt_filters,
     'head_tail': head_tail_filters,
     'xxd': xxd_filters,
     'rot13': rot13_filters,
@@ -548,7 +552,7 @@ p.add_argument('--report',help='Output file for verification report',
 p.add_argument('--filters',help='Sequence of filters to apply. '+\
         'Probability in precent may be added after ":"',
         metavar='FF',type=str,
-        default='xxd:25,head_tail:75,gz:50,ccrypt,head_tail:75')
+        default='xxd:25,head_tail:75,gz:50,gpg,head_tail:75')
 p.add_argument('--sites',
         help='Sites used for upload separated by comma or "local"',
         metavar='SITES',type=str,default='Sendspace,Sharebeast')
