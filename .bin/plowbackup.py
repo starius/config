@@ -59,6 +59,7 @@ option --sites.
 Good sites:
     * Sendspace
     * Sharebeast
+    * rghost
     * mega (required plugin plowshare-plugin-mega)
 
 Working with delay:
@@ -556,7 +557,7 @@ p.add_argument('--filters',help='Sequence of filters to apply. '+\
         default='xxd:25,head_tail:75,gz:50,gpg,head_tail:75')
 p.add_argument('--sites',
         help='Sites used for upload separated by comma or "local"',
-        metavar='SITES',type=str,default='Sendspace,Sharebeast')
+        metavar='SITES',type=str,default='Sendspace,Sharebeast,rghost')
 p.add_argument('--count',
         help='How much times upload each file(part)',
         type=int,default=1)
