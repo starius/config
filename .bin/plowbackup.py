@@ -59,7 +59,7 @@ option --sites.
 Good sites:
     * Sendspace
     * Sharebeast
-    * mega (required plugin plowshare-plugin-mega
+    * mega (required plugin plowshare-plugin-mega)
 
 Working with delay:
     * hipfile
