@@ -30,7 +30,7 @@ endif
 
 au FileType make set noet
 
-match ErrorMsg /\%>80v.\+/
+match ErrorMsg /\%<81v.\%>77v/
 2match ErrorMsg /\s\+$/
 
 " vim -b : edit binary using xxd-format!
