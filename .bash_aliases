@@ -6,6 +6,8 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias l='ls -CF'
 
+alias myhd='hexdump -v -e "1/1 \"%020_ax: \"" -e "16/1 \"%02x \" " -e "1/1 \" |\"" -e "16/1 \"%_p\"" -e "1/1 \"|\n\""'
+
 alias mysshfs='sshfs -o transform_symlinks'
 alias mydiff='diff -Npru'
 
