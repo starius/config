@@ -36,13 +36,18 @@ local function lddRec(start)
     return deps
 end
 
-local start = arg[1]
-
-if not start then
-    print "Usage: ldd-rec.lua filename"
+if not arg[1] then
+    print "Usage: ldd-rec.lua filenames"
 else
-    local deps = lddRec(start)
-    for _, dep in ipairs(deps) do
+    local deps_set = {}
+    for i = 1, #arg do
+        local file = arg[i]
+        local deps = lddRec(file)
+        for _, dep in ipairs(deps) do
+            deps_set[dep] = true
+        end
+    end
+    for dep, _ in pairs(deps_set) do
         print(dep)
     end
 end
