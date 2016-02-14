@@ -2,7 +2,7 @@
 # Write your default config options here!
 ass=yes
 vf=ass,screenshot
-cache=10000
+cache=1000
 alang=j
 heartbeat-cmd="xscreensaver-command -deactivate"
 
