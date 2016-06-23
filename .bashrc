@@ -133,3 +133,5 @@ HISTCONTROL=ignorespace
 HISTCONTROL=erasedups
 shopt -s histappend
 PROMPT_COMMAND='history -a; history -n'
+
+export GOPATH=$HOME/gopath
