@@ -135,4 +135,4 @@ shopt -s histappend
 PROMPT_COMMAND='history -a; history -n'
 
 export GOPATH=$HOME/gopath
-export PATH=$HOME/.goroot/bin:$PATH
+export PATH=$HOME/.goroot/bin:$GOPATH/bin:$PATH
