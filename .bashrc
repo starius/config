@@ -113,9 +113,9 @@ if ! shopt -oq posix; then
 fi
 
 
-export PATH="~/.luarocks/bin:$PATH"
-export PATH="$PATH:~/.linuxbrew/bin"
-export PATH="$PATH:~/node_modules/phantomjs/lib/phantom/bin/"
+export PATH="$HOME/.luarocks/bin:$PATH"
+export PATH="$PATH:$HOME/.linuxbrew/bin"
+export PATH="$PATH:$HOME/node_modules/phantomjs/lib/phantom/bin/"
 export PATH="$PATH:$HOME/.gem/ruby/1.9.1/bin"
 export PATH="$PATH:$HOME/.local/bin"
 
@@ -126,7 +126,7 @@ export LANG=en_US.utf8
 export EDITOR=vim
 export PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
 export PATH=$PATH:/usr/local/bin
-export PATH=~/.bin:$PATH
+export PATH=$HOME/.bin:$PATH
 
 HISTCONTROL=ignoredups
 HISTCONTROL=ignorespace
