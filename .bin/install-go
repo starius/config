@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -xue
+
+gohere.py ~/.goroot
+mkdir -p ~/gopath
