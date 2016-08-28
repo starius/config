@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -xue
+
+file=$(
+    curl 'https://www.torproject.org/download/download-easy.html.en' \
+    | egrep -o 'tor-browser-linux64-[0-9.]+_en-US.tar.xz' \
+    | head -1
+)
+version=$(echo "$file" | egrep -o '[0-9.]{3,}')
+url="https://www.torproject.org/dist/torbrowser/${version}/${file}"
+sigfile="${file}.asc"
+sigurl="https://www.torproject.org/dist/torbrowser/${version}/${sigfile}"
+
+curl -L -o "/tmp/${file}" "$url"
+curl -L -o "/tmp/${sigfile}" "$sigurl"
+
+gpg --keyserver pool.sks-keyservers.net --recv-keys 0xEF6E286DDA85EA2A4BA7DE684E2C6E8793298290
+gpg --verify "/tmp/${sigfile}"
+
+tar -C "$HOME" -xf "/tmp/${file}"
