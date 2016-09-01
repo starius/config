@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# based on https://github.com/globaleaks/Tor2web/wiki/Installation-Guide#build-tor-with-tor2web-mode-and-some-patches
+
+set -xue
+
+# debian sources
+distr=$(lsb_release --codename --short)
+echo "deb http://deb.torproject.org/torproject.org ${distr} main" \
+    | sudo tee /etc/apt/sources.list.d/tor.list
+echo "deb-src http://deb.torproject.org/torproject.org ${distr} main" \
+    | sudo tee --append /etc/apt/sources.list.d/tor.list
+
+# prepare gpg
+gpg --keyserver keys.gnupg.net --recv A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89
+gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | sudo apt-key add -
+
+# prepare apt
+sudo apt-get update
+sudo apt-get --yes install deb.torproject.org-keyring
+sudo apt-get update
+sudo apt-get --yes install fakeroot devscripts
+sudo apt-get --yes build-dep tor
+
+# download tor sources
+rm -rf ~/tor2web-buildenv/debian-packages
+mkdir -p ~/tor2web-buildenv/debian-packages
+cd ~/tor2web-buildenv/debian-packages
+apt-get source tor
+cd tor-*
+
+# Now we enable Tor2web mode build-time required flags:
+sed '/dh_auto_configure --/a --enable-tor2web-mode \\' -i debian/rules
+grep enable-tor2web-mode debian/rules
+sed '/Tor2webMode/s@"0"@"1"@' -i src/or/config.c
+egrep 'Tor2webMode.*"1"' src/or/config.c
+
+# build .deb
+DEB_BUILD_OPTIONS=nocheck debuild -rfakeroot -us -uc
+
+# install tor
+cd ..
+sudo dpkg -i tor*.deb
+
+# Mark Tor packages to prevent automagical updates:
+sudo apt-mark hold tor tor-dbg tor-geoipdb
