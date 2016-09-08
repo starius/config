@@ -1,0 +1,47 @@
+#!/bin/bash
+
+set -xue
+
+PB_ROOT="${HOME}/.protobuf-root"
+PB_SRC="${HOME}/protobuf"
+LUA_PB="${HOME}/lua-protobuf"
+
+# protobuf itself
+git clone https://github.com/google/protobuf "$PB_SRC"
+cd "$PB_SRC"
+./autogen.sh
+./configure --prefix "$PB_ROOT"
+make -j 4
+make install
+
+# Go (needs ./install-go)
+go get \
+    google.golang.org/grpc \
+    github.com/golang/protobuf/{proto,protoc-gen-go}
+
+# Python
+cd "${PB_SRC}/python"
+python setup.py install --user
+PY_ROOT="$(echo ${HOME}/.local/lib/python*/site-packages)"
+# make sure PY_ROOT is not ambigous
+[[ $(echo "$PY_ROOT" | grep -o site-packages | wc -l) == 1 ]]
+
+# Lua
+git clone https://github.com/indygreg/lua-protobuf "$LUA_PB"
+cd "$LUA_PB"
+python setup.py install --user
+# https://github.com/indygreg/lua-protobuf#missing-plugin_pb2-python-module
+protoc \
+    -I"${PB_SRC}/src" \
+    --python_out "$PY_ROOT" \
+    "${PB_SRC}/src/google/protobuf/compiler/plugin.proto"
+touch "${PY_ROOT}/google/protobuf/compiler/__init__.py"
+# Test
+HELLOWORLD_OUT="${HOME}/lua-protobuf/hello-out"
+mkdir "$HELLOWORLD_OUT"
+HELLOWORLD="${GOPATH}/src/google.golang.org/grpc/examples/helloworld/helloworld"
+protoc \
+    -I "$HELLOWORLD" \
+    --lua_out "$HELLOWORLD_OUT" \
+    "${HELLOWORLD}/helloworld.proto"
+rm -rf "$HELLOWORLD_OUT"

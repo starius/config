@@ -138,3 +138,5 @@ export GOPATH=$HOME/gopath
 export PATH=$HOME/.goroot/bin:$GOPATH/bin:$PATH
 
 export PATH=$HOME/.luaroot/bin:$PATH
+
+export PATH=$HOME/.protobuf-root/bin:$PATH
