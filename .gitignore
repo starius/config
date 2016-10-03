@@ -16,6 +16,7 @@
 # build artifacts
 .cmake
 .cache
+.local
 .luaroot
 .goroot
 .fontconfig
