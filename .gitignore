@@ -19,6 +19,7 @@
 .local
 .luaroot
 .goroot
+.protobuf-root
 .fontconfig
 .wine
 pkg
