@@ -22,20 +22,22 @@ go get \
 # Python
 cd "${PB_SRC}/python"
 python setup.py install --user
-PY_ROOT="$(echo ${HOME}/.local/lib/python*/site-packages)"
-# make sure PY_ROOT is not ambigous
-[[ $(echo "$PY_ROOT" | grep -o site-packages | wc -l) == 1 ]]
 
 # Lua
 git clone https://github.com/indygreg/lua-protobuf "$LUA_PB"
 cd "$LUA_PB"
 python setup.py install --user
 # https://github.com/indygreg/lua-protobuf#missing-plugin_pb2-python-module
+# Put this file to ~/.local/bin/plugin_pb2.py
+T=$(mktemp -d)
 protoc \
     -I"${PB_SRC}/src" \
-    --python_out "$PY_ROOT" \
+    --python_out "$T" \
     "${PB_SRC}/src/google/protobuf/compiler/plugin.proto"
-touch "${PY_ROOT}/google/protobuf/compiler/__init__.py"
+cp "${T}/google/protobuf/compiler/plugin_pb2.py" "$HOME/.local/bin"
+rm -r "$T"
+sed -i 's/google.protobuf.compiler.plugin_pb2/plugin_pb2/' \
+    $(grep -l google.protobuf.compiler.plugin_pb2 -r $HOME/.local/lib)
 # Test
 HELLOWORLD_OUT="${HOME}/lua-protobuf/hello-out"
 mkdir "$HELLOWORLD_OUT"
