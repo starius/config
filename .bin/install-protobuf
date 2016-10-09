@@ -3,11 +3,14 @@
 set -xue
 
 PB_ROOT="${HOME}/.protobuf-root"
-PB_SRC="${HOME}/protobuf"
-LUA_PB="${HOME}/lua-protobuf"
+PB_SRC="${HOME}/src/github.com/google/protobuf"
+LUA_PB="${HOME}/src/github.com/indygreg/lua-protobuf"
 
 # protobuf itself
-git clone https://github.com/google/protobuf "$PB_SRC"
+if [ ! -d "$PB_SRC" ]; then
+    mkdir -p "$PB_SRC"
+    git clone https://github.com/google/protobuf "$PB_SRC"
+fi
 cd "$PB_SRC"
 ./autogen.sh
 ./configure --prefix "$PB_ROOT"
@@ -24,7 +27,10 @@ cd "${PB_SRC}/python"
 python setup.py install --user
 
 # Lua
-git clone https://github.com/indygreg/lua-protobuf "$LUA_PB"
+if [ ! -d "$LUA_PB" ]; then
+    mkdir -p "$LUA_PB"
+    git clone https://github.com/indygreg/lua-protobuf "$LUA_PB"
+fi
 cd "$LUA_PB"
 python setup.py install --user
 # https://github.com/indygreg/lua-protobuf#missing-plugin_pb2-python-module
@@ -39,11 +45,11 @@ rm -r "$T"
 sed -i 's/google.protobuf.compiler.plugin_pb2/plugin_pb2/' \
     $(grep -l google.protobuf.compiler.plugin_pb2 -r $HOME/.local/lib)
 # Test
-HELLOWORLD_OUT="${HOME}/lua-protobuf/hello-out"
-mkdir "$HELLOWORLD_OUT"
+HELLOWORLD_OUT=$(mktemp -d)
+mkdir -p "$HELLOWORLD_OUT"
 HELLOWORLD="${GOPATH}/src/google.golang.org/grpc/examples/helloworld/helloworld"
 protoc \
     -I "$HELLOWORLD" \
     --lua_out "$HELLOWORLD_OUT" \
     "${HELLOWORLD}/helloworld.proto"
-rm -rf "$HELLOWORLD_OUT"
+rm -r "$HELLOWORLD_OUT"
