@@ -15,6 +15,7 @@
 
 # build artifacts
 .cmake
+.cmake-root
 .cache
 .local
 .luaroot

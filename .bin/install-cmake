@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -xue
+
+V="3.7.1"
+CHECKSUM="449a5bce64dbd4d5b9517ebd1a1248ed197add6ad27934478976fd5f1f9330e1"
+CMAKE_PREFIX="${HOME}/.cmake-root"
+SRCCACHE="${HOME}/.cache/cmake-src"
+
+SHORTV=$(echo "$V" | grep -oE "[0-9]+\.[0-9]+")
+SRCFNAME="cmake-${V}.tar.gz"
+URL="https://cmake.org/files/v${SHORTV}/${SRCFNAME}"
+
+mkdir -p "$SRCCACHE"
+if [ ! -f "${SRCCACHE}/${SRCFNAME}" ]; then
+    wget -O "${SRCCACHE}/${SRCFNAME}" "$URL"
+fi
+echo "${CHECKSUM}  ${SRCCACHE}/${SRCFNAME}" | sha256sum -c
+
+T=$(mktemp -d)
+
+SRCDIR="${T}/src"
+mkdir "$SRCDIR"
+tar -C "$SRCDIR" -xf "${SRCCACHE}/${SRCFNAME}"
+
+BLDDIR="${T}/build"
+mkdir "$BLDDIR"
+cd "$BLDDIR" && "${SRCDIR}/cmake-${V}/configure" --prefix="$CMAKE_PREFIX"
+make -C "$BLDDIR" -j 4
+make -C "$BLDDIR" install
+
+rm -r "$T"
