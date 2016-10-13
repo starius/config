@@ -13,9 +13,11 @@ if [ ! -d "$PB_SRC" ]; then
 fi
 cd "$PB_SRC"
 ./autogen.sh
-./configure --prefix "$PB_ROOT"
+T=$(mktemp -d)
+cd "$T" && "${PB_SRC}/configure" --prefix "$PB_ROOT"
 make -j 4
 make install
+rm -r "$T"
 
 # Go (needs ./install-go)
 go get \
