@@ -86,8 +86,8 @@ export PATH="$PATH:$HOME/node_modules/phantomjs/lib/phantom/bin/"
 export PATH="$PATH:$HOME/.gem/ruby/1.9.1/bin"
 export PATH="$PATH:$HOME/.local/bin"
 
-export LUA_PATH="/usr/local/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?/init.lua;$HOME/.luarocks/share/lua/5.1/?.lua;$HOME/.luarocks/share/lua/5.1/?/init.lua;/usr/share/lua/5.1//?.lua;/usr/share/lua/5.1//?/init.lua;./?.lua;/usr/local/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?/init.lua;/usr/local/lib/lua/5.1/?.lua;/usr/local/lib/lua/5.1/?/init.lua;/usr/share/lua/5.1/?.lua;/usr/share/lua/5.1/?/init.lua;/usr/share/luajit-2.1.0-alpha/?.lua"
-export LUA_CPATH="/usr/local/lib/lua/5.1/?.so;$HOME/.luarocks/lib/lua/5.1/?.so;./?.so;/usr/local/lib/lua/5.1/?.so;/usr/lib/x86_64-linux-gnu/lua/5.1/?.so;/usr/lib/lua/5.1/?.so;/usr/local/lib/lua/5.1/loadall.so"
+export LUA_PATH="/usr/local/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?/init.lua;$HOME/.luarocks/share/lua/5.1/?.lua;$HOME/.luarocks/share/lua/5.1/?/init.lua;/usr/share/lua/5.1//?.lua;/usr/share/lua/5.1//?/init.lua;./?.lua;/usr/local/share/lua/5.1/?.lua;/usr/local/share/lua/5.1/?/init.lua;/usr/local/lib/lua/5.1/?.lua;/usr/local/lib/lua/5.1/?/init.lua;/usr/share/lua/5.1/?.lua;/usr/share/lua/5.1/?/init.lua;/usr/share/luajit-2.1.0-alpha/?.lua;$HOME/.luaroot/share/lua/5.1/?.lua;$HOME/.luaroot/share/lua/5.1/?/init.lua"
+export LUA_CPATH="/usr/local/lib/lua/5.1/?.so;$HOME/.luarocks/lib/lua/5.1/?.so;./?.so;/usr/local/lib/lua/5.1/?.so;/usr/lib/x86_64-linux-gnu/lua/5.1/?.so;/usr/lib/lua/5.1/?.so;/usr/local/lib/lua/5.1/loadall.so;$HOME/.luaroot/lib/lua/5.1/?.so"
 
 export PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
 export PATH=$PATH:/usr/local/bin
