@@ -14,6 +14,11 @@
 .cmake
 .cache
 .goroot
+pkg
+bin
 
 # default files with settings
 .profile
+
+# sources
+src
