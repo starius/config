@@ -1,0 +1,19 @@
+# history files
+.viminfo
+.vim/undodir
+.bash_history
+.bash_logout
+.lesshst
+
+# keys
+.ssh
+.gnupg
+.gist
+
+# build artifacts
+.cmake
+.cache
+.goroot
+
+# default files with settings
+.profile
