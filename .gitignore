@@ -1,5 +1,6 @@
 # history files
 .viminfo
+.*.swp
 .vim/undodir
 .bash_history
 .bash_logout
@@ -16,6 +17,8 @@
 .cache
 .luaroot
 .goroot
+.fontconfig
+.wine
 pkg
 bin
 
