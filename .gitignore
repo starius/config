@@ -21,6 +21,8 @@
 .luaroot
 .goroot
 .protobuf-root
+.rust-root
+.cargo
 .fontconfig
 .wine
 pkg

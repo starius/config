@@ -101,3 +101,5 @@ export PATH=$HOME/.luaroot/bin:$PATH
 export PATH=$HOME/.protobuf-root/bin:$PATH
 
 export PATH=$HOME/.cmake-root/bin:$PATH
+
+export PATH=$HOME/.rust-root/bin:$PATH
