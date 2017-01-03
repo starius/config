@@ -33,3 +33,20 @@ bin
 
 # sources
 src
+
+# GUI
+Desktop
+Documents
+Downloads
+Music
+Pictures
+Public
+Templates
+Videos
+.Xresources
+.config
+.dbus
+.fonts.conf
+.gconf
+.xsession-errors
+.xsettingsd
