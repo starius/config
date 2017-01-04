@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -xue
+
+V="2.11.0"
+CHECKSUM="7e7e8d69d494892373b87007674be5820a4bc1ef596a0117d03ea3169119fd0b"
+GIT_PREFIX="${HOME}/.git-root"
+SRCCACHE="${HOME}/.cache/git-src"
+
+SRCFNAME="git-${V}.tar.xz"
+URL="https://www.kernel.org/pub/software/scm/git/${SRCFNAME}"
+
+mkdir -p "$SRCCACHE"
+if [ ! -f "${SRCCACHE}/${SRCFNAME}" ]; then
+    wget -O "${SRCCACHE}/${SRCFNAME}" "$URL"
+fi
+echo "${CHECKSUM}  ${SRCCACHE}/${SRCFNAME}" | sha256sum -c
+
+T=$(mktemp -d)
+
+SRCDIR="${T}/src"
+mkdir "$SRCDIR"
+tar -C "$SRCDIR" -xf "${SRCCACHE}/${SRCFNAME}"
+
+make -C "${SRCDIR}/git-${V}" configure
+cd "${SRCDIR}/git-${V}" && ./configure --prefix="$GIT_PREFIX"
+make -C "${SRCDIR}/git-${V}" -j 4
+make -C "${SRCDIR}/git-${V}" install
+
+rm -rf "$T"

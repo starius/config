@@ -22,6 +22,7 @@
 .goroot
 .protobuf-root
 .rust-root
+.git-root
 .cargo
 .fontconfig
 .wine
