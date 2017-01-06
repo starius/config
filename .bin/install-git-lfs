@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -xue
+
+go get github.com/git-lfs/git-lfs
