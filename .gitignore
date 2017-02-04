@@ -1,6 +1,7 @@
 # history files
 .viminfo
 .*.swp
+.vim/.netrwhist
 .vim/undodir
 .bash_history
 .bash_logout
