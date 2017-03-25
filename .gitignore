@@ -15,6 +15,7 @@
 .gist
 
 # build artifacts
+.aptitude
 .cmake
 .cmake-root
 .cache
