@@ -151,6 +151,22 @@ func chooseServer(cacheDir string) (string, error) {
 	return server, nil
 }
 
+func chooseServerAndCheck(cacheDir string) (string, error) {
+	for i := 0; i < 10; i++ {
+		server, err := chooseServer(cacheDir)
+		if err != nil {
+			return "", err
+		}
+		// Note that this can be used for fingerprinting.
+		if CheckServer(server) {
+			return server, nil
+		}
+		log.Printf("Server %s is not working. Retrying...", server)
+		time.Sleep(1 * time.Second)
+	}
+	return "", fmt.Errorf("all servers tried seem to be down")
+}
+
 func makeConfig(cacheDir, authFile, server string) (string, error) {
 	caFile := filepath.Join(cacheDir, "ca.rsa.4096.crt")
 	if err := ioutil.WriteFile(caFile, []byte(CA), 0600); err != nil {
@@ -241,7 +257,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to make/check auth.txt: %s.", err)
 	}
-	server, err := chooseServer(cacheDir)
+	server, err := chooseServerAndCheck(cacheDir)
 	if err != nil {
 		log.Fatalf("Failed to choose server: %s.", err)
 	}
