@@ -1,0 +1,220 @@
+package main
+
+import (
+	"bufio"
+	"bytes"
+	"flag"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+	"os/exec"
+	"os/user"
+	"path/filepath"
+	"strings"
+	"time"
+
+	"github.com/howeyc/gopass"
+)
+
+//go:generate python gen.py
+
+const (
+	IPTABLES_WAIT          = 15
+	WAIT_BEFORE_COLLECTION = 60
+)
+
+var (
+	cacheDir0    = flag.String("cache", "~/.cache/pia-connect", "Directory to store password and server addresses.")
+	dryRun       = flag.Bool("dry", false, "Run 'vmstat 5' instead of openvpn.")
+	skipIptables = flag.Bool("skip-iptables", false, "Do not change iptables needed to accept DNS on QubesOS.")
+)
+
+func expandTilde(path string) (string, error) {
+	if path[0] != '~' {
+		return path, nil
+	}
+	if path[1] != '/' {
+		return "", fmt.Errorf("path %q starts with '~' but not with '~/'", path)
+	}
+	usr, err := user.Current()
+	if err != nil {
+		return "", fmt.Errorf("user.Current: %s", err)
+	}
+	return filepath.Join(usr.HomeDir, path[2:]), nil
+}
+
+func makeCacheDir(path string) error {
+	wantMode := os.FileMode(0700 | os.ModeDir)
+	_ = os.MkdirAll(path, wantMode)
+	stat, err := os.Stat(path)
+	if err != nil {
+		return fmt.Errorf("os.Stat(%s): %s", path, err)
+	}
+	if !stat.IsDir() {
+		return fmt.Errorf("%s is not a directory", path)
+	}
+	if stat.Mode() != wantMode {
+		return fmt.Errorf("%s has mode %s, want %s", path, stat.Mode(), wantMode)
+	}
+	return nil
+}
+
+func makeAuthTxt(cacheDir string) (string, error) {
+	authFile := filepath.Join(cacheDir, "auth.txt")
+	_, err := os.Stat(authFile)
+	if err == nil {
+		return authFile, nil
+	}
+	if !os.IsNotExist(err) {
+		return "", fmt.Errorf("os.Stat(%s): %s", authFile, err)
+	}
+	fmt.Printf("Creating file %s\n", authFile)
+	fmt.Println("Username and password will be stored in plaintext in the file.")
+	fmt.Println("If you are uncomfortable with this, press Ctrl+C.")
+	fmt.Printf("Enter username: ")
+	reader := bufio.NewReader(os.Stdin)
+	username, err := reader.ReadString('\n')
+	if err != nil {
+		return "", fmt.Errorf("username not entered: %s", err)
+	}
+	username = strings.TrimSpace(username)
+	fmt.Printf("Enter password: ")
+	password, err := gopass.GetPasswdMasked()
+	if err != nil {
+		return "", fmt.Errorf("password not entered: %s", err)
+	}
+	t := fmt.Sprintf("%s\n%s\n", username, password)
+	if err := ioutil.WriteFile(authFile, []byte(t), 0600); err != nil {
+		return "", fmt.Errorf("ioutil.WriteFile(%s): %s", authFile, err)
+	}
+	return authFile, nil
+}
+
+func makeConfig(cacheDir, authFile string) (string, error) {
+	caFile := filepath.Join(cacheDir, "ca.rsa.4096.crt")
+	if err := ioutil.WriteFile(caFile, []byte(CA), 0600); err != nil {
+		return "", fmt.Errorf("ioutil.WriteFile(%s): %s", caFile, err)
+	}
+	crlFile := filepath.Join(cacheDir, "crl.rsa.4096.pem")
+	if err := ioutil.WriteFile(crlFile, []byte(CRL), 0600); err != nil {
+		return "", fmt.Errorf("ioutil.WriteFile(%s): %s", crlFile, err)
+	}
+	configFile := filepath.Join(cacheDir, "config.ovpn")
+	config := CONFIG
+	config = strings.Replace(config, "CA_FILE", caFile, -1)
+	config = strings.Replace(config, "CRL_FILE", crlFile, -1)
+	config = strings.Replace(config, "AUTH_FILE", authFile, -1)
+	if err := ioutil.WriteFile(configFile, []byte(config), 0600); err != nil {
+		return "", fmt.Errorf("ioutil.WriteFile(%s): %s", configFile, err)
+	}
+	return configFile, nil
+}
+
+func runOpenVpn(configFile string) (*os.Process, error) {
+	c := exec.Command("sudo", "openvpn", "--config", configFile)
+	if *dryRun {
+		c = exec.Command("vmstat", "5")
+	}
+	c.Stdout = os.Stdout
+	c.Stderr = os.Stdout
+	if err := c.Start(); err != nil {
+		return nil, fmt.Errorf("exec.Cmd.Start: %s", err)
+	}
+	return c.Process, nil
+}
+
+func fixIptables() error {
+	c := exec.Command("sudo", "iptables-save")
+	rules, err := c.Output()
+	if err != nil {
+		return err
+	}
+	if !bytes.Contains(rules, []byte("-A PREROUTING -p udp -m udp --dport 53 -j ACCEPT")) {
+		c := exec.Command(
+			"sudo", "iptables",
+			"-t", "nat",
+			"-I", "PREROUTING", "1",
+			"-p", "udp", "-m", "udp",
+			"--dport", "53",
+			"-j", "ACCEPT",
+		)
+		if err := c.Start(); err != nil {
+			return err
+		}
+	}
+	if !bytes.Contains(rules, []byte("-A INPUT -p udp -m udp --dport 53 -j ACCEPT")) {
+		c := exec.Command(
+			"sudo", "iptables",
+			"-I", "INPUT", "1",
+			"-p", "udp", "-m", "udp",
+			"--dport", "53",
+			"-j", "ACCEPT",
+		)
+		if err := c.Start(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func updateServersCache(path string) error {
+	// TODO
+	return nil
+}
+
+func main() {
+	flag.Parse()
+	if *cacheDir0 == "" {
+		log.Fatal("Please specify --cache.")
+	}
+	cacheDir, err := expandTilde(*cacheDir0)
+	if err != nil {
+		log.Fatalf("Failed to expand ~ to home dir: %s.", err)
+	}
+	if err := makeCacheDir(cacheDir); err != nil {
+		log.Fatalf("Failed to make/check cache dir: %s.", err)
+	}
+	authFile, err := makeAuthTxt(cacheDir)
+	if err != nil {
+		log.Fatalf("Failed to make/check auth.txt: %s.", err)
+	}
+	configFile, err := makeConfig(cacheDir, authFile)
+	if err != nil {
+		log.Fatalf("Failed to make config: %s.", err)
+	}
+	child, err := runOpenVpn(configFile)
+	if err != nil {
+		log.Fatalf("Failed to run openvpn: %s.", err)
+	}
+	if !*skipIptables && !*dryRun {
+		go func() {
+			for {
+				// Repeat because qubes-setup-dnat-to-ns runs when new VM is connected.
+				if err := fixIptables(); err != nil {
+					child.Kill()
+					log.Fatalf("Failed to fix iptables rules: %s.", err)
+				}
+				time.Sleep(IPTABLES_WAIT * time.Second)
+			}
+		}()
+	}
+	fmt.Println("pia-connect: openvpn started. Starting DNS server.")
+	go func() {
+		if err := RunDNS(); err != nil {
+			child.Kill()
+			log.Fatalf("Failed to run DNS server: %s.", err)
+		}
+	}()
+	fmt.Printf("pia-connect: waiting %d seconds.\n", WAIT_BEFORE_COLLECTION)
+	time.Sleep(WAIT_BEFORE_COLLECTION * time.Second)
+	fmt.Println("pia-connect: updating server addresses cache.")
+	if err := updateServersCache(cacheDir); err != nil {
+		log.Printf("Failed to update server addresses cache: %s.", err)
+	}
+	fmt.Println("pia-connect: waiting for child process.")
+	if _, err := child.Wait(); err != nil {
+		log.Fatalf("Wait: %s.", err)
+	}
+	os.Exit(0)
+}
