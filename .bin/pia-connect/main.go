@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"os"
 	"os/exec"
 	"os/user"
@@ -91,7 +92,66 @@ func makeAuthTxt(cacheDir string) (string, error) {
 	return authFile, nil
 }
 
-func makeConfig(cacheDir, authFile string) (string, error) {
+func printZones() {
+	fmt.Println("The list of known countries and servers of PIA:")
+	var line string
+	for country, zones := range COUNTRY2ZONES {
+		t := fmt.Sprintf("  %s: %s.", country, strings.Join(zones, ","))
+		if len(line)+len(t) > 135 {
+			fmt.Println(line)
+			line = ""
+		}
+		line += t
+	}
+	fmt.Println(line)
+}
+
+func getZones(cacheDir string) ([]string, error) {
+	zonesFile := filepath.Join(cacheDir, "zones.txt")
+	zonesBytes, err := ioutil.ReadFile(zonesFile)
+	if err == nil {
+		zones, err := ParseZones(string(zonesBytes))
+		if err != nil {
+			return nil, err
+		}
+		return zones, nil
+	}
+	if _, err := os.Stat(zonesFile); !os.IsNotExist(err) {
+		return nil, fmt.Errorf("file %s exists but can't be read: %s", zonesFile, err)
+	}
+	printZones()
+	fmt.Printf("Please choose zones (for instance nl,brazil): ")
+	reader := bufio.NewReader(os.Stdin)
+	zonesStr, err := reader.ReadString('\n')
+	if err != nil {
+		return nil, fmt.Errorf("zones not entered: %s", err)
+	}
+	zones, err := ParseZones(zonesStr)
+	if err != nil {
+		return nil, err
+	}
+	if err := ioutil.WriteFile(zonesFile, []byte(zonesStr), 0600); err != nil {
+		return nil, fmt.Errorf("ioutil.WriteFile(%s): %s", zonesFile, err)
+	}
+	fmt.Printf("Chosen zones were saved to file %s\n", zonesFile)
+	return zones, nil
+}
+
+func chooseServer(cacheDir string) (string, error) {
+	zones, err := getZones(cacheDir)
+	if err != nil {
+		return "", err
+	}
+	zone := zones[rand.Intn(len(zones))]
+	servers, has := SERVERS[zone]
+	if !has {
+		return "", fmt.Errorf("no servers for zone: %s", zone)
+	}
+	server := servers[rand.Intn(len(servers))]
+	return server, nil
+}
+
+func makeConfig(cacheDir, authFile, server string) (string, error) {
 	caFile := filepath.Join(cacheDir, "ca.rsa.4096.crt")
 	if err := ioutil.WriteFile(caFile, []byte(CA), 0600); err != nil {
 		return "", fmt.Errorf("ioutil.WriteFile(%s): %s", caFile, err)
@@ -105,6 +165,7 @@ func makeConfig(cacheDir, authFile string) (string, error) {
 	config = strings.Replace(config, "CA_FILE", caFile, -1)
 	config = strings.Replace(config, "CRL_FILE", crlFile, -1)
 	config = strings.Replace(config, "AUTH_FILE", authFile, -1)
+	config = strings.Replace(config, "SERVER", server, -1)
 	if err := ioutil.WriteFile(configFile, []byte(config), 0600); err != nil {
 		return "", fmt.Errorf("ioutil.WriteFile(%s): %s", configFile, err)
 	}
@@ -165,6 +226,7 @@ func updateServersCache(path string) error {
 
 func main() {
 	flag.Parse()
+	rand.Seed(time.Now().UTC().UnixNano())
 	if *cacheDir0 == "" {
 		log.Fatal("Please specify --cache.")
 	}
@@ -179,7 +241,11 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to make/check auth.txt: %s.", err)
 	}
-	configFile, err := makeConfig(cacheDir, authFile)
+	server, err := chooseServer(cacheDir)
+	if err != nil {
+		log.Fatalf("Failed to choose server: %s.", err)
+	}
+	configFile, err := makeConfig(cacheDir, authFile, server)
 	if err != nil {
 		log.Fatalf("Failed to make config: %s.", err)
 	}

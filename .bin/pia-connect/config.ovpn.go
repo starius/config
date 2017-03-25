@@ -3,7 +3,7 @@ package main
 const CONFIG = `client
 dev tun0
 proto udp
-remote 46.166.137.234 1197 # TODO make cache of servers' addresses
+remote SERVER 1197
 nobind
 persist-key
 persist-tun
