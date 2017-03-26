@@ -20,6 +20,9 @@ import (
 )
 
 //go:generate python gen.py
+//go:generate pia-connect -gen-servers
+//go:generate sed -e "s/[{,]/\\0\\n/g" -e "s/}/,\\n}/g" -i servers.go
+//go:generate go fmt servers.go
 
 const (
 	IPTABLES_WAIT          = 15
@@ -31,6 +34,7 @@ var (
 	dryRun       = flag.Bool("dry", false, "Run 'vmstat 5' instead of openvpn.")
 	skipIptables = flag.Bool("skip-iptables", false, "Do not change iptables needed to accept DNS on QubesOS.")
 	updateWait   = flag.Duration("update-wait", 60*time.Second, "Time to wait before updating servers cache.")
+	genServers   = flag.Bool("gen-servers", false, "Generate servers.go from cache/servers.json.")
 )
 
 func expandTilde(path string) (string, error) {
@@ -307,6 +311,18 @@ func updateServersCache(cacheDir string) error {
 	return nil
 }
 
+func generateServers(cacheDir string) error {
+	m, err := getZone2servers(cacheDir)
+	if err != nil {
+		return err
+	}
+	t := fmt.Sprintf("package main\n\nvar SERVERS = %#v\n", m)
+	if err := ioutil.WriteFile("servers.go", []byte(t), 0644); err != nil {
+		return fmt.Errorf("ioutil.WriteFile(%s): %s", "servers.go", err)
+	}
+	return nil
+}
+
 func main() {
 	flag.Parse()
 	rand.Seed(time.Now().UTC().UnixNano())
@@ -319,6 +335,13 @@ func main() {
 	}
 	if err := makeCacheDir(cacheDir); err != nil {
 		log.Fatalf("Failed to make/check cache dir: %s.", err)
+	}
+	if *genServers {
+		err := generateServers(cacheDir)
+		if err != nil {
+			log.Fatalf("Failed to generate servers.go: %s.", err)
+		}
+		return
 	}
 	authFile, err := makeAuthTxt(cacheDir)
 	if err != nil {
