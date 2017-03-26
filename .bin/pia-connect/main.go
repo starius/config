@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -29,6 +30,7 @@ var (
 	cacheDir0    = flag.String("cache", "~/.cache/pia-connect", "Directory to store password and server addresses.")
 	dryRun       = flag.Bool("dry", false, "Run 'vmstat 5' instead of openvpn.")
 	skipIptables = flag.Bool("skip-iptables", false, "Do not change iptables needed to accept DNS on QubesOS.")
+	updateWait   = flag.Duration("update-wait", 60*time.Second, "Time to wait before updating servers cache.")
 )
 
 func expandTilde(path string) (string, error) {
@@ -137,15 +139,45 @@ func getZones(cacheDir string) ([]string, error) {
 	return zones, nil
 }
 
+func getZone2servers(cacheDir string) (map[string][]string, error) {
+	m := make(map[string][]string)
+	serversFile := filepath.Join(cacheDir, "servers.json")
+	serversBytes, err := ioutil.ReadFile(serversFile)
+	if err == nil {
+		if err := json.Unmarshal(serversBytes, &m); err != nil {
+			return nil, fmt.Errorf("json.Unmarshal %s: %s", serversFile, err)
+		}
+	}
+	// Merge with servers shipped with the binary.
+	for zone, servers := range SERVERS {
+		set := make(map[string]bool)
+		for _, s := range m[zone] {
+			set[s] = true
+		}
+		for _, s := range servers {
+			if _, has := set[s]; !has {
+				m[zone] = append(m[zone], s)
+				set[s] = true
+			}
+		}
+	}
+	return m, nil
+}
+
 func chooseServer(cacheDir string) (string, error) {
 	zones, err := getZones(cacheDir)
 	if err != nil {
 		return "", err
 	}
 	zone := zones[rand.Intn(len(zones))]
-	servers, has := SERVERS[zone]
+	zone2servers, err := getZone2servers(cacheDir)
+	if err != nil {
+		return "", err
+	}
+	servers, has := zone2servers[zone]
 	if !has {
-		return "", fmt.Errorf("no servers for zone: %s", zone)
+		log.Printf("No servers for zone: %s.", zone)
+		return "zone_is_empty", nil
 	}
 	server := servers[rand.Intn(len(servers))]
 	return server, nil
@@ -156,6 +188,9 @@ func chooseServerAndCheck(cacheDir string) (string, error) {
 		server, err := chooseServer(cacheDir)
 		if err != nil {
 			return "", err
+		}
+		if server == "zone_is_empty" {
+			continue
 		}
 		// Note that this can be used for fingerprinting.
 		if CheckServer(server) {
@@ -235,8 +270,40 @@ func fixIptables() error {
 	return nil
 }
 
-func updateServersCache(path string) error {
-	// TODO
+func updateServersCache(cacheDir string) error {
+	m, err := getZone2servers(cacheDir)
+	if err != nil {
+		return err
+	}
+	zones, err := getZones(cacheDir)
+	if err != nil {
+		return err
+	}
+	for _, zone := range zones {
+		set := make(map[string]bool)
+		for _, s := range m[zone] {
+			set[s] = true
+		}
+		fresh, err := getFreshServers(zone)
+		if err != nil {
+			return fmt.Errorf("getFreshServers(%s): %s", zone, err)
+		}
+		for _, s := range fresh {
+			if _, has := set[s]; !has {
+				m[zone] = append(m[zone], s)
+				set[s] = true
+			}
+		}
+		time.Sleep(1 * time.Second)
+	}
+	serversBytes, err := json.MarshalIndent(m, "", "    ")
+	if err != nil {
+		return fmt.Errorf("json.MarshalIndent: %s", err)
+	}
+	serversFile := filepath.Join(cacheDir, "servers.json")
+	if err := ioutil.WriteFile(serversFile, serversBytes, 0600); err != nil {
+		return fmt.Errorf("ioutil.WriteFile(%s): %s", serversFile, err)
+	}
 	return nil
 }
 
@@ -288,13 +355,13 @@ func main() {
 			log.Fatalf("Failed to run DNS server: %s.", err)
 		}
 	}()
-	fmt.Printf("pia-connect: waiting %d seconds.\n", WAIT_BEFORE_COLLECTION)
-	time.Sleep(WAIT_BEFORE_COLLECTION * time.Second)
+	fmt.Printf("pia-connect: waiting %s.\n", *updateWait)
+	time.Sleep(*updateWait * time.Second)
 	fmt.Println("pia-connect: updating server addresses cache.")
 	if err := updateServersCache(cacheDir); err != nil {
 		log.Printf("Failed to update server addresses cache: %s.", err)
 	}
-	fmt.Println("pia-connect: waiting for child process.")
+	fmt.Println("pia-connect: updating finished. Waiting for child process.")
 	if _, err := child.Wait(); err != nil {
 		log.Fatalf("Wait: %s.", err)
 	}

@@ -6,6 +6,8 @@ import (
 	"net"
 	"strings"
 	"time"
+
+	"github.com/miekg/dns"
 )
 
 var (
@@ -60,4 +62,30 @@ func CheckServer(server string) bool {
 		return false
 	}
 	return true
+}
+
+func getFreshServers(zone string) ([]string, error) {
+	client := dns.Client{
+		ReadTimeout:  *timeout,
+		WriteTimeout: *timeout,
+	}
+	fullZone := zone + ".privateinternetaccess.com."
+	req := &dns.Msg{
+		Question: []dns.Question{
+			dns.Question{fullZone, dns.TypeA, dns.ClassINET},
+		},
+	}
+	req.Id = dns.Id()
+	req.RecursionDesired = true
+	response, _, err := client.Exchange(req, *upstream)
+	if err != nil {
+		return nil, fmt.Errorf("resolving %s: %s.", fullZone, err)
+	}
+	var servers []string
+	for _, ans := range response.Answer {
+		if a, ok := ans.(*dns.A); ok {
+			servers = append(servers, a.A.String())
+		}
+	}
+	return servers, nil
 }
