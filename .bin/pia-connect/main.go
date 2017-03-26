@@ -429,6 +429,9 @@ func main() {
 	go func() {
 		if err := RunDNS(); err != nil {
 			kill(child)
+			fmt.Println("Have you forgotten:")
+			fmt.Println("  sudo setcap cap_net_bind_service=+ep pia-connect")
+			fmt.Println("?")
 			log.Fatalf("Failed to run DNS server: %s.", err)
 		}
 	}()
