@@ -64,3 +64,48 @@ To update generated Go sources (you need to build the tool before):
 ```
 $ go generate
 ```
+
+## First session demo
+
+```
+$ pia-connect
+Creating file /home/user/.cache/pia-connect/auth.txt
+Username and password will be stored in plaintext in the file.
+If you are uncomfortable with this, press Ctrl+C.
+Enter username: p0123456
+Enter password: ********
+The list of known countries and servers of PIA:
+  Netherlands: nl.  Sweden: sweden.  Finland: fi.  Switzerland: swiss.  Romania: ro.  Singapore: sg.
+  United Kingdom: uk-london,uk-southampton.  Australia: aus,aus-melbourne.  Mexico: mexico.  Denmark: denmark.  South Korea: kr.
+  Hong Kong: hk.  Japan: japan.  India: in.  Canada: ca-toronto,ca.  Norway: no.  Brazil: brazil.  New Zealand: nz.  France: france.
+  Ireland: ireland.  Italy: italy.  Turkey: turkey.  Israel: israel.
+  United States: us-california,us-east,us-midwest,us-chicago,us-texas,us-florida,us-seattle,us-west,us-siliconvalley,us-newyorkcity.
+  Germany: germany.
+North America: us-california,us-east,us-midwest,ca,ca-toronto
+Europe: italy,nl,ro,germany,fi,no,denmark,swiss,sweden
+Asia: aus,aus-melbourne,nz,kr,hk,sg,japan,in
+Please choose zones (for instance nl,brazil): us-california,us-east,us-midwest,ca,ca-toronto
+Chosen zones were saved to file /home/user/.cache/pia-connect/zones.txt
+2017/03/26 10:20:30 Using VPN server: 1.2.3.4.
+Sun Mar 26 10:20:30 2017 OpenVPN 2.3.10 built on Aug  1 2013
+Sun Mar 26 10:20:30 2017 library versions: OpenSSL 1.0.0
+Sun Mar 26 10:20:30 2017 WARNING: normally if you use --mssfix and/or --fragment, you should also set --tun-mtu 1500 (currently it is 1350)
+Sun Mar 26 10:20:30 2017 UDPv4 link local: [undef]
+Sun Mar 26 10:20:30 2017 UDPv4 link remote: [AF_INET]1.2.3.4:1197
+Sun Mar 26 10:20:30 2017 WARNING: this configuration may cache passwords in memory -- use the auth-nocache option to prevent this
+2017/03/26 10:20:30 pia-connect: openvpn started. Starting DNS server.
+2017/03/26 10:20:30 pia-connect: waiting 1m0s.
+2017/03/26 10:20:30 Running sudo iptables-save
+Sun Mar 26 10:20:30 2017 WARNING: 'link-mtu' is used inconsistently, local='link-mtu 1420', remote='link-mtu 1542'
+Sun Mar 26 10:20:30 2017 WARNING: 'tun-mtu' is used inconsistently, local='tun-mtu 1350', remote='tun-mtu 1500'
+Sun Mar 26 10:20:30 2017 WARNING: 'cipher' is used inconsistently, local='cipher AES-256-CBC', remote='cipher BF-CBC'
+Sun Mar 26 10:20:30 2017 WARNING: 'auth' is used inconsistently, local='auth SHA256', remote='auth SHA1'
+Sun Mar 26 10:20:30 2017 WARNING: 'keysize' is used inconsistently, local='keysize 256', remote='keysize 128'
+Sun Mar 26 10:20:30 2017 [517a3fceb4b09a4a9ae53a782d5726ee] Peer Connection Initiated with [AF_INET]1.2.3.4:1197
+Sun Mar 26 10:20:30 2017 TUN/TAP device tun0 opened
+Sun Mar 26 10:20:30 2017 do_ifconfig, tt->ipv6=0, tt->did_ifconfig_ipv6_setup=0
+Sun Mar 26 10:20:30 2017 /usr/sbin/ip link set dev tun0 up mtu 1350
+Sun Mar 26 10:20:30 2017 /usr/sbin/ip addr add dev tun0 local 10.11.12.6 peer 10.11.12.5
+Sun Mar 26 10:20:30 2017 Initialization Sequence Completed
+2017/03/26 10:20:30 Running sudo iptables-save
+```
