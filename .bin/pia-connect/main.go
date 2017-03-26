@@ -13,6 +13,7 @@ import (
 	"os/exec"
 	"os/user"
 	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 
@@ -324,7 +325,13 @@ func generateServers(cacheDir string) error {
 	if err != nil {
 		return err
 	}
-	t := fmt.Sprintf("package main\n\nvar SERVERS = %#v\n", m)
+	var perZone []string
+	for zone, servers := range m {
+		perZone = append(perZone, fmt.Sprintf(`%q: %#v`, zone, servers))
+	}
+	sort.Strings(perZone)
+	s := strings.Join(perZone, ", ")
+	t := fmt.Sprintf("package main\n\nvar SERVERS = map[string][]string{%s}\n", s)
 	if err := ioutil.WriteFile("servers.go", []byte(t), 0644); err != nil {
 		return fmt.Errorf("ioutil.WriteFile(%s): %s", "servers.go", err)
 	}
