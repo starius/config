@@ -405,6 +405,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to choose server: %s.", err)
 	}
+	log.Printf("Using VPN server: %s.", server)
 	configFile, err := makeConfig(cacheDir, authFile, server)
 	if err != nil {
 		log.Fatalf("Failed to make config: %s.", err)
