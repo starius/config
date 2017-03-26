@@ -35,6 +35,7 @@ var (
 	skipIptables = flag.Bool("skip-iptables", false, "Do not change iptables needed to accept DNS on QubesOS.")
 	updateWait   = flag.Duration("update-wait", 60*time.Second, "Time to wait before updating servers cache.")
 	genServers   = flag.Bool("gen-servers", false, "Generate servers.go from cache/servers.json.")
+	updateAll    = flag.Bool("update-all-zones", false, "Update cache for all zones, not only chosen zones.")
 )
 
 func expandTilde(path string) (string, error) {
@@ -279,9 +280,16 @@ func updateServersCache(cacheDir string) error {
 	if err != nil {
 		return err
 	}
-	zones, err := getZones(cacheDir)
-	if err != nil {
-		return err
+	var zones []string
+	if *updateAll {
+		for zone := range VALID_ZONES {
+			zones = append(zones, zone)
+		}
+	} else {
+		zones, err = getZones(cacheDir)
+		if err != nil {
+			return err
+		}
 	}
 	for _, zone := range zones {
 		set := make(map[string]bool)
