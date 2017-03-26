@@ -250,7 +250,7 @@ func systemOutput(cmd string, args ...string) ([]byte, error) {
 }
 
 func kill(p *os.Process) {
-	if os.Getuid() == 0 {
+	if os.Getuid() == 0 || *dryRun {
 		p.Kill()
 	} else {
 		pid := p.Pid
