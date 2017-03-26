@@ -232,7 +232,7 @@ func makeConfig(cacheDir, authFile, server string) (string, error) {
 	return configFile, nil
 }
 
-func runOpenVpn(configFile string) (*os.Process, error) {
+func runOpenVpn(cacheDir, configFile string) (*os.Process, error) {
 	c := exec.Command("sudo", "openvpn", "--config", configFile)
 	if *dryRun {
 		c = exec.Command("vmstat", "5")
@@ -241,6 +241,15 @@ func runOpenVpn(configFile string) (*os.Process, error) {
 	c.Stderr = os.Stdout
 	if err := c.Start(); err != nil {
 		return nil, fmt.Errorf("exec.Cmd.Start: %s", err)
+	}
+	// Remove short living files.
+	time.Sleep(1 * time.Second)
+	for _, f := range []string{"ca.rsa.4096.crt", "crl.rsa.4096.pem", "config.ovpn"} {
+		full := filepath.Join(cacheDir, f)
+		if err := os.Remove(full); err != nil {
+			c.Process.Kill()
+			return nil, fmt.Errorf("os.Remove(%s): %s", full, err)
+		}
 	}
 	return c.Process, nil
 }
@@ -373,7 +382,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to make config: %s.", err)
 	}
-	child, err := runOpenVpn(configFile)
+	child, err := runOpenVpn(cacheDir, configFile)
 	if err != nil {
 		log.Fatalf("Failed to run openvpn: %s.", err)
 	}
