@@ -27,6 +27,7 @@ import (
 
 const (
 	IPTABLES_WAIT          = 15
+	MONITOR_WAIT           = 1
 	WAIT_BEFORE_COLLECTION = 60
 )
 
@@ -424,6 +425,22 @@ func main() {
 			}
 		}()
 	}
+	go func() {
+		// Monitor network.
+		failures := 0
+		for {
+			time.Sleep(MONITOR_WAIT * time.Second)
+			if CheckServer(server) {
+				failures = 0
+			} else {
+				failures += 1
+			}
+			if failures > 15 {
+				kill(child)
+				log.Fatalf("The connection is down. Exiting.")
+			}
+		}
+	}()
 	log.Println("pia-connect: openvpn started. Starting DNS server.")
 	go func() {
 		if err := RunDNS(); err != nil {
