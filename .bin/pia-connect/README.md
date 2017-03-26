@@ -13,6 +13,7 @@ Install Go. You can use tool [gohere][gohere] for this.
 ```
 $ go get github.com/starius/config/.bin/pia-connect
 $ sudo setcap "cap_net_bind_service=+ep" "$(which pia-connect)"
+# or run the tool as root ^^
 $ pia-connect
 ```
 
