@@ -38,7 +38,7 @@ func CheckServer(server string) bool {
 	// http://serverfault.com/a/470065
 	addr := &net.UDPAddr{
 		IP:   net.ParseIP(server),
-		Port: 1194,
+		Port: 1197,
 	}
 	conn, err := net.DialUDP("udp", nil, addr)
 	if err != nil {
