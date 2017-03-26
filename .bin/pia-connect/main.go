@@ -406,7 +406,7 @@ func main() {
 		}
 	}()
 	log.Printf("pia-connect: waiting %s.\n", *updateWait)
-	time.Sleep(*updateWait * time.Second)
+	time.Sleep(*updateWait)
 	log.Println("pia-connect: updating server addresses cache.")
 	if err := updateServersCache(cacheDir); err != nil {
 		log.Printf("Failed to update server addresses cache: %s.", err)
