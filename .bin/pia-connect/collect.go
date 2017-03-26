@@ -44,6 +44,7 @@ func CheckServer(server string) bool {
 	if err != nil {
 		return false
 	}
+	defer conn.Close()
 	if err := conn.SetDeadline(time.Now().Add(1 * time.Second)); err != nil {
 		return false
 	}
