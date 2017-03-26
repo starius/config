@@ -398,20 +398,20 @@ func main() {
 			}
 		}()
 	}
-	fmt.Println("pia-connect: openvpn started. Starting DNS server.")
+	log.Println("pia-connect: openvpn started. Starting DNS server.")
 	go func() {
 		if err := RunDNS(); err != nil {
 			child.Kill()
 			log.Fatalf("Failed to run DNS server: %s.", err)
 		}
 	}()
-	fmt.Printf("pia-connect: waiting %s.\n", *updateWait)
+	log.Printf("pia-connect: waiting %s.\n", *updateWait)
 	time.Sleep(*updateWait * time.Second)
-	fmt.Println("pia-connect: updating server addresses cache.")
+	log.Println("pia-connect: updating server addresses cache.")
 	if err := updateServersCache(cacheDir); err != nil {
 		log.Printf("Failed to update server addresses cache: %s.", err)
 	}
-	fmt.Println("pia-connect: updating finished. Waiting for child process.")
+	log.Println("pia-connect: updating finished. Waiting for child process.")
 	if _, err := child.Wait(); err != nil {
 		log.Fatalf("Wait: %s.", err)
 	}
