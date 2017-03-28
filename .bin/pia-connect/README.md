@@ -44,8 +44,7 @@ all are accessible only for the user:
 
 The files above can be edited by human.
 
-The following files are short living and are not expected to be edited
-by human. The tool removes them after starting `openvpn`.
+The following files are not expected to be edited by human:
 
   * `ca.rsa.4096.crt` and `crl.rsa.4096.pem` is public crypto data needed
     to connect to [PIA][pia] using stong crypto;
