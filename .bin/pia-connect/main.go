@@ -249,18 +249,8 @@ func systemOutput(cmd string, args ...string) ([]byte, error) {
 	return c.Output()
 }
 
-func kill(p *os.Process) {
-	if os.Getuid() == 0 || *dryRun {
-		p.Kill()
-	} else {
-		pid := p.Pid
-		_ = system("sudo", "pkill", "-P", fmt.Sprintf("%d", pid))
-		_ = system("sudo", "kill", fmt.Sprintf("%d", pid))
-	}
-}
-
 func runOpenVpn(configFile string) (*os.Process, error) {
-	c := exec.Command("sudo", "openvpn", "--config", configFile)
+	c := exec.Command("openvpn", "--config", configFile)
 	if *dryRun {
 		c = exec.Command("vmstat", "5")
 	}
@@ -273,13 +263,13 @@ func runOpenVpn(configFile string) (*os.Process, error) {
 }
 
 func fixIptables() error {
-	rules, err := systemOutput("sudo", "iptables-save")
+	rules, err := systemOutput("iptables-save")
 	if err != nil {
 		return err
 	}
 	if !bytes.Contains(rules, []byte("-A PREROUTING -p udp -m udp --dport 53 -j ACCEPT")) {
 		err := system(
-			"sudo", "iptables",
+			"iptables",
 			"-t", "nat",
 			"-I", "PREROUTING", "1",
 			"-p", "udp", "-m", "udp",
@@ -292,7 +282,7 @@ func fixIptables() error {
 	}
 	if !bytes.Contains(rules, []byte("-A INPUT -p udp -m udp --dport 53 -j ACCEPT")) {
 		err := system(
-			"sudo", "iptables",
+			"iptables",
 			"-I", "INPUT", "1",
 			"-p", "udp", "-m", "udp",
 			"--dport", "53",
@@ -409,7 +399,7 @@ func main() {
 			for {
 				// Repeat because qubes-setup-dnat-to-ns runs when new VM is connected.
 				if err := fixIptables(); err != nil {
-					kill(child)
+					child.Kill()
 					log.Fatalf("Failed to fix iptables rules: %s.", err)
 				}
 				time.Sleep(IPTABLES_WAIT * time.Second)
@@ -419,10 +409,7 @@ func main() {
 	log.Println("pia-connect: openvpn started. Starting DNS server.")
 	go func() {
 		if err := RunDNS(); err != nil {
-			kill(child)
-			fmt.Println("Have you forgotten:")
-			fmt.Println("  sudo setcap cap_net_bind_service=+ep pia-connect")
-			fmt.Println("?")
+			child.Kill()
 			log.Fatalf("Failed to run DNS server: %s.", err)
 		}
 	}()

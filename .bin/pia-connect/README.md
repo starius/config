@@ -12,9 +12,7 @@ Install Go. You can use tool [gohere][gohere] for this.
 
 ```
 $ go get github.com/starius/config/.bin/pia-connect
-$ sudo setcap "cap_net_bind_service=+ep" "$(which pia-connect)"
-# or run the tool as root ^^
-$ pia-connect
+$ sudo pia-connect
 ```
 
 The tool will ask you to choose Regional Gateways for PIA (like "nl" for
@@ -35,8 +33,8 @@ rebuilding the tool from source.
 [gohere]: https://github.com/starius/gohere
 [pia]: https://privateinternetaccess.com/
 
-The tool creates the following files in `~/.cache/pia-connect/` directory,
-all are accessible only for the user:
+The tool creates the following files in `~root/.cache/pia-connect/`
+directory, all are accessible only for the user:
 
   * `auth.txt` user credentials;
   * `zones.txt` is list of zones chosen to connect to;
@@ -68,7 +66,7 @@ $ go generate
 
 ```
 $ pia-connect
-Creating file /home/user/.cache/pia-connect/auth.txt
+Creating file /root/.cache/pia-connect/auth.txt
 Username and password will be stored in plaintext in the file.
 If you are uncomfortable with this, press Ctrl+C.
 Enter username: p0123456
@@ -84,7 +82,7 @@ North America: us-california,us-east,us-midwest,ca,ca-toronto
 Europe: italy,nl,ro,germany,fi,no,denmark,swiss,sweden
 Asia: aus,aus-melbourne,nz,kr,hk,sg,japan,in
 Please choose zones (for instance nl,brazil): us-california,us-east,us-midwest,ca,ca-toronto
-Chosen zones were saved to file /home/user/.cache/pia-connect/zones.txt
+Chosen zones were saved to file /root/.cache/pia-connect/zones.txt
 2017/03/26 10:20:30 Using VPN server: 1.2.3.4.
 Sun Mar 26 10:20:30 2017 OpenVPN 2.3.10 built on Aug  1 2013
 Sun Mar 26 10:20:30 2017 library versions: OpenSSL 1.0.0
