@@ -48,6 +48,21 @@ The following files are not expected to be edited by human:
     to connect to [PIA][pia] using stong crypto;
   * `config.ovpn` is config for `openvpn`.
 
+## Using on Qubes OS
+
+  * Create a ProxyVM.
+  * Edit its firewall rules: block everything except UDP port 1197.
+  * Put the binary somewhere in the VM, e.g. to the home directory.
+  * Run `sudo ./pia-connect -cache /home/user/pia-cache`. The option is needed
+    because /root (home directory of the root user) is not persisted
+    over VM restarts in Qubes OS.
+  * Go through the setup process of `pia-connect`, make sure the
+    connection works.
+  * Put the following line to `/rw/config/rc.local`:
+    `/home/user/pia-connect -cache /home/user/pia-cache &> /home/user/vpn$(date +%s).log`
+  * `chmod +x /rw/config/rc.local`
+  * Restart the ProxyVM.
+
 ## For developers
 
 To collect a lot of server addresses, build the tool and then run:
