@@ -30,6 +30,7 @@ endif
 
 au FileType make set noet
 au FileType go set noet
+au FileType proto set sw=2 ts=2
 
 match ErrorMsg /\%<81v.\%>77v/
 2match ErrorMsg /\s\+$/
