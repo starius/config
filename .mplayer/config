@@ -1,5 +1,4 @@
 [default]
-# Write your default config options here!
 ass=yes
 vf=ass,screenshot
 cache=1000
