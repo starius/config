@@ -5,4 +5,4 @@ expand=osd=1 # https://lists.mplayerhq.hu/pipermail/mplayer-users/2007-March/065
 cache=1000
 alang=j
 heartbeat-cmd="xscreensaver-command -deactivate"
-
+zoom=true
