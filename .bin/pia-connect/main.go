@@ -34,6 +34,7 @@ var (
 	cacheDir0    = flag.String("cache", "~/.cache/pia-connect", "Directory to store password and server addresses.")
 	dryRun       = flag.Bool("dry", false, "Run 'vmstat 5' instead of openvpn.")
 	skipIptables = flag.Bool("skip-iptables", false, "Do not change iptables needed to accept DNS on QubesOS.")
+	skipDNS      = flag.Bool("skip-dns", false, "Do not run proxy DNS server.")
 	updateWait   = flag.Duration("update-wait", 60*time.Second, "Time to wait before updating servers cache.")
 	genServers   = flag.Bool("gen-servers", false, "Generate servers.go from cache/servers.json.")
 	updateAll    = flag.Bool("update-all-zones", false, "Update cache for all zones, not only chosen zones.")
@@ -406,13 +407,16 @@ func main() {
 			}
 		}()
 	}
-	log.Println("pia-connect: openvpn started. Starting DNS server.")
-	go func() {
-		if err := RunDNS(); err != nil {
-			child.Kill()
-			log.Fatalf("Failed to run DNS server: %s.", err)
-		}
-	}()
+	log.Println("pia-connect: openvpn started.")
+	if !*skipDNS {
+		log.Println("pia-connect: Starting DNS server.")
+		go func() {
+			if err := RunDNS(); err != nil {
+				child.Kill()
+				log.Fatalf("Failed to run DNS server: %s.", err)
+			}
+		}()
+	}
 	log.Printf("pia-connect: waiting %s.\n", *updateWait)
 	time.Sleep(*updateWait)
 	log.Println("pia-connect: updating server addresses cache.")
