@@ -24,10 +24,13 @@
 .goroot
 .protobuf-root
 .rust-root
-.git-root
 .cargo
+.git-root
 .fontconfig
 .wine
+.nodejs-root
+.npm
+node_modules
 pkg
 bin
 

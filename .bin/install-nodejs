@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -xue
+
+V="0.10.32"
+CHECKSUM="c2120d0e3d2d191654cb11dbc0a33a7216d53732173317681da9502be0030f10"
+NODEJS_PREFIX="${HOME}/.nodejs-root"
+SRCCACHE="${HOME}/.cache/nodejs-src"
+
+SRCFNAME="node-v${V}.tar.gz"
+URL="http://nodejs.org/dist/v${V}/${SRCFNAME}"
+
+mkdir -p "$SRCCACHE"
+if [ ! -f "${SRCCACHE}/${SRCFNAME}" ]; then
+    wget -O "${SRCCACHE}/${SRCFNAME}" "$URL"
+fi
+echo "${CHECKSUM}  ${SRCCACHE}/${SRCFNAME}" | sha256sum -c
+
+T=$(mktemp -d)
+
+SRCDIR="${T}/src"
+mkdir "$SRCDIR"
+tar -C "$SRCDIR" -xf "${SRCCACHE}/${SRCFNAME}"
+
+cd "${SRCDIR}/node-v${V}" && ./configure --prefix="$NODEJS_PREFIX"
+make -C "${SRCDIR}/node-v${V}" -j 4
+make -C "${SRCDIR}/node-v${V}" install
+
+rm -rf "$T"

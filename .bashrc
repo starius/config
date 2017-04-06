@@ -105,3 +105,5 @@ export PATH=$HOME/.cmake-root/bin:$PATH
 export PATH=$HOME/.rust-root/bin:$PATH
 
 export PATH=$HOME/.git-root/bin:$PATH
+
+export PATH=$HOME/.nodejs-root/bin:$PATH
