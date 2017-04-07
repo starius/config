@@ -2,8 +2,8 @@
 
 set -xue
 
-V="0.10.32"
-CHECKSUM="c2120d0e3d2d191654cb11dbc0a33a7216d53732173317681da9502be0030f10"
+V="6.10.2"
+CHECKSUM="9b897dd6604d50ae5fff25fd14b1c4035462d0598735799e0cfb4f17cb6e0d19"
 NODEJS_PREFIX="${HOME}/.nodejs-root"
 SRCCACHE="${HOME}/.cache/nodejs-src"
 
@@ -21,6 +21,9 @@ T=$(mktemp -d)
 SRCDIR="${T}/src"
 mkdir "$SRCDIR"
 tar -C "$SRCDIR" -xf "${SRCCACHE}/${SRCFNAME}"
+
+# Patch to compile with GCC 4.7
+cd "${SRCDIR}" && patch -u -p1 < $HOME/.bin/nodejs.patch
 
 cd "${SRCDIR}/node-v${V}" && ./configure --prefix="$NODEJS_PREFIX"
 make -C "${SRCDIR}/node-v${V}" -j 4

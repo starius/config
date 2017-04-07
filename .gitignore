@@ -30,6 +30,7 @@
 .wine
 .nodejs-root
 .npm
+.node-gyp
 node_modules
 pkg
 bin

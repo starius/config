@@ -1,0 +1,105 @@
+diff --git a/node-v6.10.2/deps/v8/src/compiler/instruction-selector.cc b/node-v6.10.2/deps/v8/src/compiler/instruction-selector.cc
+index b7162fe..9a75e83 100644
+--- a/node-v6.10.2/deps/v8/src/compiler/instruction-selector.cc
++++ b/node-v6.10.2/deps/v8/src/compiler/instruction-selector.cc
+@@ -5,6 +5,7 @@
+ #include "src/compiler/instruction-selector.h"
+ 
+ #include <limits>
++#define SIZE_MAX (std::numeric_limits<size_t>::max())
+ 
+ #include "src/base/adapters.h"
+ #include "src/compiler/instruction-selector-impl.h"
+diff --git a/node-v6.10.2/deps/v8/src/compiler/x64/code-generator-x64.cc b/node-v6.10.2/deps/v8/src/compiler/x64/code-generator-x64.cc
+index 2e4eccb..adcaaba 100644
+--- a/node-v6.10.2/deps/v8/src/compiler/x64/code-generator-x64.cc
++++ b/node-v6.10.2/deps/v8/src/compiler/x64/code-generator-x64.cc
+@@ -12,6 +12,9 @@
+ #include "src/x64/assembler-x64.h"
+ #include "src/x64/macro-assembler-x64.h"
+ 
++#include <limits>
++#define INT64_MIN (std::numeric_limits<int64_t>::min())
++
+ namespace v8 {
+ namespace internal {
+ namespace compiler {
+diff --git a/node-v6.10.2/src/inspector_socket.cc b/node-v6.10.2/src/inspector_socket.cc
+index 6edc082..cdb52cd 100644
+--- a/node-v6.10.2/src/inspector_socket.cc
++++ b/node-v6.10.2/src/inspector_socket.cc
+@@ -1,3 +1,6 @@
++#include <limits>
++#define SIZE_MAX (std::numeric_limits<size_t>::max())
++
+ #include "inspector_socket.h"
+ #include "util.h"
+ #include "util-inl.h"
+diff --git a/node-v6.10.2/src/node_contextify.cc b/node-v6.10.2/src/node_contextify.cc
+index b8b60e9..a74664d 100644
+--- a/node-v6.10.2/src/node_contextify.cc
++++ b/node-v6.10.2/src/node_contextify.cc
+@@ -43,6 +43,8 @@ using v8::UnboundScript;
+ using v8::Value;
+ using v8::WeakCallbackInfo;
+ 
++void dummy_event_listener(const Debug::EventDetails&) {
++}
+ 
+ class ContextifyContext {
+  protected:
+@@ -254,7 +256,6 @@ class ContextifyContext {
+     Environment* env = Environment::GetCurrent(args);
+     if (debug_context.IsEmpty()) {
+       // Force-load the debug context.
+-      auto dummy_event_listener = [] (const Debug::EventDetails&) {};
+       Debug::SetDebugEventListener(args.GetIsolate(), dummy_event_listener);
+       debug_context = Debug::GetDebugContext(args.GetIsolate());
+       CHECK(!debug_context.IsEmpty());
+diff --git a/node-v6.10.2/src/stream_base.cc b/node-v6.10.2/src/stream_base.cc
+index 3ed622d..d121a78 100644
+--- a/node-v6.10.2/src/stream_base.cc
++++ b/node-v6.10.2/src/stream_base.cc
+@@ -27,6 +27,9 @@ using v8::Object;
+ using v8::String;
+ using v8::Value;
+ 
++StreamBase::~StreamBase() = default;
++StreamResource::~StreamResource() = default;
++
+ template int StreamBase::WriteString<ASCII>(
+     const FunctionCallbackInfo<Value>& args);
+ template int StreamBase::WriteString<UTF8>(
+diff --git a/node-v6.10.2/src/stream_base.h b/node-v6.10.2/src/stream_base.h
+index faddee8..49cd1b9 100644
+--- a/node-v6.10.2/src/stream_base.h
++++ b/node-v6.10.2/src/stream_base.h
+@@ -149,7 +149,7 @@ class StreamResource {
+ 
+   StreamResource() : bytes_read_(0) {
+   }
+-  virtual ~StreamResource() = default;
++  virtual ~StreamResource();
+ 
+   virtual int DoShutdown(ShutdownWrap* req_wrap) = 0;
+   virtual int DoTryWrite(uv_buf_t** bufs, size_t* count);
+@@ -238,7 +238,7 @@ class StreamBase : public StreamResource {
+   explicit StreamBase(Environment* env) : env_(env), consumed_(false) {
+   }
+ 
+-  virtual ~StreamBase() = default;
++  virtual ~StreamBase();
+ 
+   // One of these must be implemented
+   virtual AsyncWrap* GetAsyncWrap();
+diff --git a/node-v6.10.2/src/string_search.h b/node-v6.10.2/src/string_search.h
+index abc69ed..b904e49 100644
+--- a/node-v6.10.2/src/string_search.h
++++ b/node-v6.10.2/src/string_search.h
+@@ -1,3 +1,6 @@
++#include <limits>
++#define SIZE_MAX (std::numeric_limits<size_t>::max())
++
+ // Copyright 2011 the V8 project authors. All rights reserved.
+ // Use of this source code is governed by a BSD-style license that can be
+ // found in the LICENSE file.
