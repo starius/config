@@ -35,7 +35,7 @@ var (
 	dryRun       = flag.Bool("dry", false, "Run 'vmstat 5' instead of openvpn.")
 	skipIptables = flag.Bool("skip-iptables", false, "Do not change iptables needed to accept DNS on QubesOS.")
 	skipDNS      = flag.Bool("skip-dns", false, "Do not run proxy DNS server.")
-	updateWait   = flag.Duration("update-wait", 60*time.Second, "Time to wait before updating servers cache.")
+	updateWait   = flag.Duration("update-wait", 10*time.Second, "Time to wait before updating servers cache.")
 	genServers   = flag.Bool("gen-servers", false, "Generate servers.go from cache/servers.json.")
 	updateAll    = flag.Bool("update-all-zones", false, "Update cache for all zones, not only chosen zones.")
 )
