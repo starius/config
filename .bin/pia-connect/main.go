@@ -15,6 +15,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/howeyc/gopass"
@@ -382,6 +383,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to make/check auth.txt: %s.", err)
 	}
+	var once1, once2 sync.Once
+runChild:
 	server, err := chooseServerAndCheck(cacheDir)
 	if err != nil {
 		log.Fatalf("Failed to choose server: %s.", err)
@@ -396,26 +399,31 @@ func main() {
 		log.Fatalf("Failed to run openvpn: %s.", err)
 	}
 	if !*skipIptables && !*dryRun {
-		go func() {
-			for {
-				// Repeat because qubes-setup-dnat-to-ns runs when new VM is connected.
-				if err := fixIptables(); err != nil {
-					child.Kill()
-					log.Fatalf("Failed to fix iptables rules: %s.", err)
+		once1.Do(func() {
+			go func() {
+				for {
+					// Repeat because qubes-setup-dnat-to-ns
+					// runs when new VM is connected.
+					if err := fixIptables(); err != nil {
+						child.Kill()
+						log.Fatalf("Failed to fix iptables rules: %s.", err)
+					}
+					time.Sleep(IPTABLES_WAIT * time.Second)
 				}
-				time.Sleep(IPTABLES_WAIT * time.Second)
-			}
-		}()
+			}()
+		})
 	}
 	log.Println("pia-connect: openvpn started.")
 	if !*skipDNS {
-		log.Println("pia-connect: Starting DNS server.")
-		go func() {
-			if err := RunDNS(); err != nil {
-				child.Kill()
-				log.Fatalf("Failed to run DNS server: %s.", err)
-			}
-		}()
+		once2.Do(func() {
+			log.Println("pia-connect: Starting DNS server.")
+			go func() {
+				if err := RunDNS(); err != nil {
+					child.Kill()
+					log.Fatalf("Failed to run DNS server: %s.", err)
+				}
+			}()
+		})
 	}
 	log.Printf("pia-connect: waiting %s.\n", *updateWait)
 	time.Sleep(*updateWait)
@@ -427,5 +435,6 @@ func main() {
 	if _, err := child.Wait(); err != nil {
 		log.Fatalf("Wait: %s.", err)
 	}
-	os.Exit(0)
+	time.Sleep(time.Second)
+	goto runChild
 }
