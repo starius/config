@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# sudo apt-get install libtool-bin libtool automake git
+
 set -xue
 
 PB_ROOT="${HOME}/.protobuf-root"
