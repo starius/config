@@ -26,6 +26,7 @@
 .rust-root
 .cargo
 .git-root
+.wget-root
 .fontconfig
 .wine
 .nodejs-root

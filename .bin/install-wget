@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -xue
+
+V="1.19.1"
+CHECKSUM="0c950b9671881222a4d385b013c9604e98a8025d1988529dfca0e93617744cd2"
+WGET_PREFIX="${HOME}/.wget-root"
+SRCCACHE="${HOME}/.cache/wget-src"
+
+SRCFNAME="wget-${V}.tar.xz"
+URL="https://ftp.gnu.org/gnu/wget/${SRCFNAME}"
+
+mkdir -p "$SRCCACHE"
+if [ ! -f "${SRCCACHE}/${SRCFNAME}" ]; then
+    wget -O "${SRCCACHE}/${SRCFNAME}" "$URL"
+fi
+echo "${CHECKSUM}  ${SRCCACHE}/${SRCFNAME}" | sha256sum -c
+
+T=$(mktemp -d)
+
+SRCDIR="${T}/src"
+mkdir "$SRCDIR"
+tar -C "$SRCDIR" -xf "${SRCCACHE}/${SRCFNAME}"
+
+cd "${SRCDIR}/wget-${V}" && ./configure --with-ssl=openssl --prefix="$WGET_PREFIX"
+make -C "${SRCDIR}/wget-${V}" -j 4
+make -C "${SRCDIR}/wget-${V}" install
+
+rm -rf "$T"
