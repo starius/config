@@ -3330,10 +3330,11 @@ if __name__ == '__main__':
         print('Usage: mnemonic.py [ru] [128] random|hex-string|mnemonic')
     elif len( sys.argv ) == 2:
         if sys.argv[1] == 'random':
-            import random
+            from random import SystemRandom
+            cryptogen = SystemRandom()
             chars = int(BITS / 8 * 2)
             ABC = '0123456789abcdef'
-            value = ''.join(random.choice(ABC) for i in range(chars))
+            value = ''.join(cryptogen.choice(ABC) for i in range(chars))
             print(value)
             print(hex2mnemonic(value))
         elif ' ' in sys.argv[1]:
