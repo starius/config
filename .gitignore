@@ -8,6 +8,7 @@
 .lesshst
 .lua_history
 .gore
+.wget-hsts
 
 # keys
 .ssh
