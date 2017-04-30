@@ -18,8 +18,6 @@ verb 1
 reneg-sec 0
 crl-verify CRL_FILE
 
-tun-mtu 1350
-mssfix
-sndbuf 0
-rcvbuf 0
+tun-mtu 1500
+mssfix 1300
 `
