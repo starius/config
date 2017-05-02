@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# sudo apt-get install libtool-bin libtool automake git
+
+set -xue
+
+PB_SRC="${HOME}/src/github.com/google/protobuf"
+LUA_PB="${HOME}/src/github.com/indygreg/lua-protobuf"
+
+# Lua
+if [ ! -d "$LUA_PB" ]; then
+    mkdir -p "$LUA_PB"
+    git clone https://github.com/indygreg/lua-protobuf "$LUA_PB"
+fi
+cd "$LUA_PB"
+python setup.py install --user
+# https://github.com/indygreg/lua-protobuf#missing-plugin_pb2-python-module
+# Put this file to ~/.local/bin/plugin_pb2.py
+T=$(mktemp -d)
+protoc \
+    -I"${PB_SRC}/src" \
+    --python_out "$T" \
+    "${PB_SRC}/src/google/protobuf/compiler/plugin.proto"
+cp "${T}/google/protobuf/compiler/plugin_pb2.py" "$HOME/.local/bin"
+rm -r "$T"
+sed -i 's/google.protobuf.compiler.plugin_pb2/plugin_pb2/' \
+    $(grep -l google.protobuf.compiler.plugin_pb2 -r $HOME/.local/lib)
+# Test
+HELLOWORLD_OUT=$(mktemp -d)
+mkdir -p "$HELLOWORLD_OUT"
+HELLOWORLD="${GOPATH}/src/google.golang.org/grpc/examples/helloworld/helloworld"
+protoc \
+    -I "$HELLOWORLD" \
+    --lua_out "$HELLOWORLD_OUT" \
+    "${HELLOWORLD}/helloworld.proto"
+rm -r "$HELLOWORLD_OUT"

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -xue
+
+PB_SRC="${HOME}/src/github.com/google/protobuf"
+
+# Python
+cd "${PB_SRC}/python"
+python setup.py install --user
