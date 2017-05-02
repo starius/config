@@ -7,6 +7,7 @@ set -xue
 PB_ROOT="${HOME}/.protobuf-root"
 PB_SRC="${HOME}/src/github.com/google/protobuf"
 LUA_PB="${HOME}/src/github.com/indygreg/lua-protobuf"
+GRPC_SRC="${HOME}/src/github.com/grpc/grpc"
 
 # protobuf itself
 if [ ! -d "$PB_SRC" ]; then
@@ -19,6 +20,21 @@ T=$(mktemp -d)
 cd "$T" && "${PB_SRC}/configure" --prefix "$PB_ROOT"
 make -j 4
 make install
+rm -r "$T"
+
+# gRPC
+
+if [ ! -d "$GRPC_SRC" ]; then
+    git clone -b $(curl -L http://grpc.io/release) https://github.com/grpc/grpc "$GRPC_SRC"
+fi
+cd "$GRPC_SRC"
+git submodule update --init
+T=$(mktemp -d)
+# https://github.com/grpc/grpc/issues/10948
+sed 's@.emplace("", true)@[""] = true@' -i src/cpp/server/health/default_health_check_service.cc
+# W_SHADOW= b/c https://github.com/grpc/grpc/issues/10945
+make -j 4 prefix="$PB_ROOT" W_SHADOW=
+make install prefix="$PB_ROOT"
 rm -r "$T"
 
 # Go (needs ./install-go)
