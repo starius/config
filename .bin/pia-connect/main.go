@@ -33,7 +33,7 @@ const (
 
 var (
 	cacheDir0    = flag.String("cache", "~/.cache/pia-connect", "Directory to store password and server addresses.")
-	countryZone  = flag.String("country", nil, "Preferred country for this launch.")
+	countryZone  = flag.String("country", "", "Preferred country for this launch.")
 	dryRun       = flag.Bool("dry", false, "Run 'vmstat 5' instead of openvpn.")
 	skipIptables = flag.Bool("skip-iptables", false, "Do not change iptables needed to accept DNS on QubesOS.")
 	skipDNS      = flag.Bool("skip-dns", false, "Do not run proxy DNS server.")
@@ -118,6 +118,13 @@ func printZones() {
 }
 
 func getZones(cacheDir string) ([]string, error) {
+	if *countryZone != "" {
+		zones, err := ParseZones(*countryZone)
+		if err != nil {
+			return nil, err
+		}
+		return zones, nil
+	}
 	zonesFile := filepath.Join(cacheDir, "zones.txt")
 	zonesBytes, err := ioutil.ReadFile(zonesFile)
 	if err == nil {
