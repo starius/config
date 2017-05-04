@@ -33,6 +33,7 @@ const (
 
 var (
 	cacheDir0    = flag.String("cache", "~/.cache/pia-connect", "Directory to store password and server addresses.")
+	countryZone  = flag.String("country", nil, "Preferred country for this launch.")
 	dryRun       = flag.Bool("dry", false, "Run 'vmstat 5' instead of openvpn.")
 	skipIptables = flag.Bool("skip-iptables", false, "Do not change iptables needed to accept DNS on QubesOS.")
 	skipDNS      = flag.Bool("skip-dns", false, "Do not run proxy DNS server.")
