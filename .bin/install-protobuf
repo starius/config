@@ -22,8 +22,8 @@ make install
 rm -r "$T"
 
 # gRPC
-
 if [ ! -d "$GRPC_SRC" ]; then
+    mkdir -p "$GRPC_SRC"
     git clone -b $(curl -L http://grpc.io/release) https://github.com/grpc/grpc "$GRPC_SRC"
 fi
 cd "$GRPC_SRC"
