@@ -30,6 +30,9 @@
 .wget-root
 .fontconfig
 .wine
+.ruby-root
+.ruby-build-root
+.gem
 .nodejs-root
 .npm
 .node-gyp

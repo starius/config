@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -xue
+
+RB_ROOT="${HOME}/.ruby-build-root"
+RB_SRC="${HOME}/src/github.com/rbenv/ruby-build"
+RUBY_ROOT="${HOME}/.ruby-root"
+
+if [ ! -d "$RB_SRC" ]; then
+    mkdir -p "$RB_SRC"
+    git clone https://github.com/rbenv/ruby-build "$RB_SRC"
+fi
+cd "$RB_SRC"
+git reset --hard 365dd1f1faf9d288797ad59b3db6618df10ce650
+PREFIX="$RB_ROOT" ./install.sh
+
+ruby-build 2.2.0 "$RUBY_ROOT"
+
+gem install jekyll bundler github-pages
