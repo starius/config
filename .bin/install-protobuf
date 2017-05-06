@@ -19,6 +19,7 @@ T=$(mktemp -d)
 cd "$T" && "${PB_SRC}/configure" --prefix "$PB_ROOT"
 make -j 4
 make install
+cd "$HOME"
 rm -r "$T"
 
 # gRPC
@@ -34,6 +35,7 @@ sed 's@.emplace("", true)@[""] = true@' -i src/cpp/server/health/default_health_
 # W_SHADOW= b/c https://github.com/grpc/grpc/issues/10945
 make -j 4 prefix="$PB_ROOT" W_SHADOW=
 make install prefix="$PB_ROOT"
+cd "$HOME"
 rm -r "$T"
 
 # Go (needs ./install-go)
