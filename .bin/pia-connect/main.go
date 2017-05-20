@@ -203,6 +203,7 @@ func chooseServer(cacheDir string) (string, error) {
 }
 
 func chooseServerAndCheck(cacheDir string) (string, error) {
+	wait := 1 * time.Second
 	for i := 0; i < 10; i++ {
 		server, err := chooseServer(cacheDir)
 		if err != nil {
@@ -216,7 +217,8 @@ func chooseServerAndCheck(cacheDir string) (string, error) {
 			return server, nil
 		}
 		log.Printf("Server %s is not working. Retrying...", server)
-		time.Sleep(1 * time.Second)
+		time.Sleep(wait)
+		wait *= 2
 	}
 	return "", fmt.Errorf("all servers tried seem to be down")
 }
