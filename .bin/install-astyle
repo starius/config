@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -xue
+
+V="3.0"
+CHECKSUM="983e4fe87f20427ddf0d06fa5ba046b5ee95347f9ada33a681af3892426a4ff3"
+SRCCACHE="${HOME}/.cache/astyle-src"
+
+SRCFNAME="astyle_${V}_linux.tar.gz"
+URL="https://sourceforge.net/projects/astyle/files/astyle/astyle%203.0/${SRCFNAME}/download"
+
+mkdir -p "$SRCCACHE"
+if [ ! -f "${SRCCACHE}/${SRCFNAME}" ]; then
+    wget -O "${SRCCACHE}/${SRCFNAME}" "$URL"
+fi
+echo "${CHECKSUM}  ${SRCCACHE}/${SRCFNAME}" | sha256sum -c
+
+T=$(mktemp -d)
+
+SRCDIR="${T}/src"
+mkdir "$SRCDIR"
+tar -C "$SRCDIR" -xf "${SRCCACHE}/${SRCFNAME}"
+
+cd "$SRCDIR/astyle/build/gcc"
+make
+cp bin/astyle "${HOME}/.bin"
+
+rm -r "$T"
