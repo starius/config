@@ -20,4 +20,8 @@ crl-verify CRL_FILE
 
 tun-mtu 1500
 mssfix 1300
+
+ping 10
+ping-exit 60
+ping-restart 0
 `
