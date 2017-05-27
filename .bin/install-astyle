@@ -5,6 +5,7 @@ set -xue
 V="3.0"
 CHECKSUM="983e4fe87f20427ddf0d06fa5ba046b5ee95347f9ada33a681af3892426a4ff3"
 SRCCACHE="${HOME}/.cache/astyle-src"
+ASTYLE_PREFIX="${HOME}/.astyle-root"
 
 SRCFNAME="astyle_${V}_linux.tar.gz"
 URL="https://sourceforge.net/projects/astyle/files/astyle/astyle%203.0/${SRCFNAME}/download"
@@ -22,7 +23,7 @@ mkdir "$SRCDIR"
 tar -C "$SRCDIR" -xf "${SRCCACHE}/${SRCFNAME}"
 
 cd "$SRCDIR/astyle/build/gcc"
-make
-cp bin/astyle "${HOME}/.bin"
+make -j 4 prefix="$ASTYLE_PREFIX"
+make install prefix="$ASTYLE_PREFIX"
 
 rm -r "$T"
