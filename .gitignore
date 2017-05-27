@@ -28,6 +28,7 @@
 .cargo
 .git-root
 .wget-root
+.astyle-root
 .fontconfig
 .wine
 .ruby-root
