@@ -39,6 +39,7 @@ var (
 	skipDNS      = flag.Bool("skip-dns", false, "Do not run proxy DNS server.")
 	updateWait   = flag.Duration("update-wait", 10*time.Second, "Time to wait before updating servers cache.")
 	genServers   = flag.Bool("gen-servers", false, "Generate servers.go from cache/servers.json.")
+	check        = flag.Bool("check-servers", false, "Check and filter servers in cache/servers.json.")
 	updateAll    = flag.Bool("update-all-zones", false, "Update cache for all zones, not only chosen zones.")
 )
 
@@ -158,7 +159,7 @@ func getZones(cacheDir string) ([]string, error) {
 	return zones, nil
 }
 
-func getZone2servers(cacheDir string) (map[string][]string, error) {
+func getZone2servers(cacheDir string, addShipped bool) (map[string][]string, error) {
 	m := make(map[string][]string)
 	serversFile := filepath.Join(cacheDir, "servers.json")
 	serversBytes, err := ioutil.ReadFile(serversFile)
@@ -167,16 +168,18 @@ func getZone2servers(cacheDir string) (map[string][]string, error) {
 			return nil, fmt.Errorf("json.Unmarshal %s: %s", serversFile, err)
 		}
 	}
-	// Merge with servers shipped with the binary.
-	for zone, servers := range SERVERS {
-		set := make(map[string]bool)
-		for _, s := range m[zone] {
-			set[s] = true
-		}
-		for _, s := range servers {
-			if _, has := set[s]; !has {
-				m[zone] = append(m[zone], s)
+	if addShipped {
+		// Merge with servers shipped with the binary.
+		for zone, servers := range SERVERS {
+			set := make(map[string]bool)
+			for _, s := range m[zone] {
 				set[s] = true
+			}
+			for _, s := range servers {
+				if _, has := set[s]; !has {
+					m[zone] = append(m[zone], s)
+					set[s] = true
+				}
 			}
 		}
 	}
@@ -189,7 +192,7 @@ func chooseServer(cacheDir string) (string, error) {
 		return "", err
 	}
 	zone := zones[rand.Intn(len(zones))]
-	zone2servers, err := getZone2servers(cacheDir)
+	zone2servers, err := getZone2servers(cacheDir, true)
 	if err != nil {
 		return "", err
 	}
@@ -307,8 +310,20 @@ func fixIptables() error {
 	return nil
 }
 
+func saveServers(cacheDir string, m map[string][]string) error {
+	serversBytes, err := json.MarshalIndent(m, "", "    ")
+	if err != nil {
+		return fmt.Errorf("json.MarshalIndent: %s", err)
+	}
+	serversFile := filepath.Join(cacheDir, "servers.json")
+	if err := ioutil.WriteFile(serversFile, serversBytes, 0600); err != nil {
+		return fmt.Errorf("ioutil.WriteFile(%s): %s", serversFile, err)
+	}
+	return nil
+}
+
 func updateServersCache(cacheDir string) error {
-	m, err := getZone2servers(cacheDir)
+	m, err := getZone2servers(cacheDir, true)
 	if err != nil {
 		return err
 	}
@@ -340,19 +355,11 @@ func updateServersCache(cacheDir string) error {
 		}
 		time.Sleep(1 * time.Second)
 	}
-	serversBytes, err := json.MarshalIndent(m, "", "    ")
-	if err != nil {
-		return fmt.Errorf("json.MarshalIndent: %s", err)
-	}
-	serversFile := filepath.Join(cacheDir, "servers.json")
-	if err := ioutil.WriteFile(serversFile, serversBytes, 0600); err != nil {
-		return fmt.Errorf("ioutil.WriteFile(%s): %s", serversFile, err)
-	}
-	return nil
+	return saveServers(cacheDir, m)
 }
 
 func generateServers(cacheDir string) error {
-	m, err := getZone2servers(cacheDir)
+	m, err := getZone2servers(cacheDir, false)
 	if err != nil {
 		return err
 	}
@@ -367,6 +374,36 @@ func generateServers(cacheDir string) error {
 		return fmt.Errorf("ioutil.WriteFile(%s): %s", "servers.go", err)
 	}
 	return nil
+}
+
+func checkServerRetries(server string) bool {
+	for i := 0; i < 3; i++ {
+		if CheckServer(server) {
+			return true
+		}
+		time.Sleep(time.Second)
+	}
+	return false
+}
+
+func checkServers(cacheDir string) error {
+	m, err := getZone2servers(cacheDir, true)
+	if err != nil {
+		return err
+	}
+	m2 := make(map[string][]string)
+	for zone, servers := range m {
+		m2[zone] = []string{}
+		for _, server := range servers {
+			if checkServerRetries(server) {
+				log.Printf("%s OK", server)
+				m2[zone] = append(m2[zone], server)
+			} else {
+				log.Printf("%s FAIL", server)
+			}
+		}
+	}
+	return saveServers(cacheDir, m2)
 }
 
 func main() {
@@ -386,6 +423,13 @@ func main() {
 		err := generateServers(cacheDir)
 		if err != nil {
 			log.Fatalf("Failed to generate servers.go: %s.", err)
+		}
+		return
+	}
+	if *check {
+		err := checkServers(cacheDir)
+		if err != nil {
+			log.Fatalf("Failed to check servers: %s.", err)
 		}
 		return
 	}
