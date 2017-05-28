@@ -437,7 +437,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to make/check auth.txt: %s.", err)
 	}
-	var once1, once2 sync.Once
+	var once1, once2, once3 sync.Once
 runChild:
 	server, err := chooseServerAndCheck(cacheDir)
 	if err != nil {
@@ -452,6 +452,21 @@ runChild:
 	if err != nil {
 		log.Fatalf("Failed to run openvpn: %s.", err)
 	}
+	once3.Do(func() {
+		// Detect suspend-resume and restart the child immediately.
+		go func() {
+			t1 := time.Now()
+			for {
+				time.Sleep(3 * time.Second)
+				t2 := time.Now()
+				if t2.Sub(t1) > time.Minute {
+					log.Printf("Detected suspend-resume, restarting openvpn.")
+					child.Kill()
+				}
+				t1 = t2
+			}
+		}()
+	})
 	if !*skipIptables && !*dryRun {
 		once1.Do(func() {
 			go func() {
