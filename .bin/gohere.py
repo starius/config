@@ -7,6 +7,7 @@ import errno
 import hashlib
 import logging
 import os
+import platform
 import re
 import shutil
 import subprocess
@@ -494,6 +495,28 @@ def install_go(goroot_final, goroot):
         shutil.copytree(src, dst)
     logging.info('Go was installed to %s', goroot_final)
 
+def build_race(goroot):
+    # See https://github.com/golang/go/issues/20512
+    logging.info('Building Go race in %s', goroot)
+    go_binary = os.path.join(goroot, 'bin', 'go')
+    args = [go_binary, 'install', '-v', '-race', 'std']
+    go_process = subprocess.Popen(
+        args,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    (stdout_data, stderr_data) = go_process.communicate()
+    logging.info('Exit code is %d', go_process.returncode)
+    if not isinstance(stdout_data, str):
+        stdout_data = stdout_data.decode()
+    if not isinstance(stderr_data, str):
+        stderr_data = stderr_data.decode()
+    if go_process.returncode != 0:
+        logging.error('Failed to build Go.')
+        logging.error('stdout: %s', stdout_data)
+        logging.error('stderr: %s', stderr_data)
+        sys.exit(1)
+
 def get_from_cache_or_download(cache_root, version, tmp_dir):
     filename = get_filename(version)
     if cache_root:
@@ -523,7 +546,7 @@ def make_goroot_bootstrap(cache_root, tmp_dir):
     else:
         goroot_bootstrap = os.path.join(tmp_dir, subdir)
     logging.info('Building Go bootstrap in %s', goroot_bootstrap)
-    gohere(goroot_bootstrap, BOOTSTRAP_VERSION, cache_root)
+    gohere(goroot_bootstrap, BOOTSTRAP_VERSION, cache_root, race=False)
     logging.info('Go bootstrap was built in %s', goroot_bootstrap)
     return goroot_bootstrap
 
@@ -532,6 +555,7 @@ def gohere(
     version,
     cache_root=None,
     test=None,
+    race=True,
 ):
     if cache_root is None:
         cache_root = get_default_cache()
@@ -554,6 +578,8 @@ def gohere(
         patch_go(goroot_build, version)
         build_go(goroot, goroot_build, goroot_bootstrap, test)
         install_go(goroot, goroot_build)
+        if race:
+            build_race(goroot)
         logging.info('Go %s was built and installed to %s', version, goroot)
 
 def find_all_go_versions():
@@ -647,11 +673,13 @@ def main():
     if args.update_versions:
         update_versions()
     else:
+        race = (platform.system() != 'Windows')
         gohere(
             args.goroot,
             args.version,
             args.cache,
             args.test,
+            race=race,
         )
 
 if __name__ == '__main__':
