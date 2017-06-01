@@ -50,9 +50,6 @@ var COUNTRY2ZONES = map[string][]string{
 	"France": []string{
 		"france",
 	},
-	"Germany": []string{
-		"germany",
-	},
 	"Ireland": []string{
 		"ireland",
 	},

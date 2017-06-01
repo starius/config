@@ -140,7 +140,7 @@ func getZones(cacheDir string) ([]string, error) {
 	}
 	printZones()
 	fmt.Println("North America: us-california,us-east,us-midwest,ca,ca-toronto")
-	fmt.Println("Europe: italy,nl,ro,germany,fi,no,denmark,swiss,sweden")
+	fmt.Println("Europe: italy,nl,ro,fi,no,denmark,swiss,sweden")
 	fmt.Println("Asia: aus,aus-melbourne,nz,kr,hk,sg,japan,in")
 	fmt.Printf("Please choose zones (for instance nl,brazil): ")
 	reader := bufio.NewReader(os.Stdin)

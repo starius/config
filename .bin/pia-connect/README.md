@@ -92,9 +92,8 @@ The list of known countries and servers of PIA:
   Hong Kong: hk.  Japan: japan.  India: in.  Canada: ca-toronto,ca.  Norway: no.  Brazil: brazil.  New Zealand: nz.  France: france.
   Ireland: ireland.  Italy: italy.  Turkey: turkey.  Israel: israel.
   United States: us-california,us-east,us-midwest,us-chicago,us-texas,us-florida,us-seattle,us-west,us-siliconvalley,us-newyorkcity.
-  Germany: germany.
 North America: us-california,us-east,us-midwest,ca,ca-toronto
-Europe: italy,nl,ro,germany,fi,no,denmark,swiss,sweden
+Europe: italy,nl,ro,fi,no,denmark,swiss,sweden
 Asia: aus,aus-melbourne,nz,kr,hk,sg,japan,in
 Please choose zones (for instance nl,brazil): us-california,us-east,us-midwest,ca,ca-toronto
 Chosen zones were saved to file /root/.cache/pia-connect/zones.txt
