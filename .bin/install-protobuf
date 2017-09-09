@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# sudo apt-get install libtool-bin libtool automake git unzip g++ make
+# sudo apt-get install libtool-bin libtool automake git unzip g++ make curl
 
 set -xue
 
