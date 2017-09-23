@@ -23,7 +23,6 @@
 .local
 .luaroot
 .goroot
-.naclbin
 .protobuf-root
 .rust-root
 .cargo
@@ -41,6 +40,12 @@
 node_modules
 pkg
 bin
+
+# Results of install-nacl.
+.naclbin
+.gsutil
+.vpython-root
+.vpython_cipd_cache
 
 # default files with settings
 .profile
