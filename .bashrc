@@ -94,7 +94,8 @@ export PATH=$PATH:/usr/local/bin
 export PATH=$HOME/.bin:$PATH
 
 export GOPATH=$HOME
-export PATH=$HOME/.goroot/bin:$GOPATH/bin:$PATH
+export PATH=$HOME/.goroot/bin:$PATH
+export PATH=$GOPATH/bin:$PATH
 
 export PATH=$HOME/.luaroot/bin:$PATH
 
