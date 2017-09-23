@@ -97,6 +97,8 @@ export GOPATH=$HOME
 export PATH=$HOME/.goroot/bin:$HOME/.goroot/misc/nacl:$PATH
 export PATH=$GOPATH/bin:$PATH
 
+export PATH=$HOME/.naclbin:$PATH
+
 export PATH=$HOME/.luaroot/bin:$PATH
 
 export PATH=$HOME/.protobuf-root/bin:$PATH

@@ -23,6 +23,7 @@
 .local
 .luaroot
 .goroot
+.naclbin
 .protobuf-root
 .rust-root
 .cargo

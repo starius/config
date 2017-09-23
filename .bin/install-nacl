@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -xue
+
+# sudo apt-get install build-essential g++-multilib libc6-dev-i386
+
+# Download.
+# https://groups.google.com/d/msg/native-client-discuss/YWjTMxDAKos/HOG6OVJ-EQAJ
+T="$(mktemp -d)"
+git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git "${T}/depot_tools"
+mkdir "${T}/nacl"
+cd "${T}/nacl" && PATH="${T}/depot_tools:$PATH" && fetch nacl
+
+# Filter out all binary files to make sure they are not used in build.
+mkdir "${T}/nacl-clean"
+tar -cf- `find -type f | egrep '(\.h|\.c|\.cc|\.x|\.S|\.py|\.scons|scons|SConstruct)$'` \
+    | tar -C "${T}/nacl-clean" -xf-
+rm -rf "$T/nacl"
+
+# Build and install.
+# http://www.chromium.org/nativeclient/how-tos/build-tcb
+mkdir -p "${HOME}/.naclbin"
+for platform in 'x86-32' 'x86-64'; do
+    cd "${T}/nacl-clean/native_client" && \
+        ./scons --mode=opt-linux platform=${platform} sel_ldr ncval_new
+    # Copy target binaries.
+    staging="${T}/nacl-clean/native_client/scons-out/opt-linux-${platform}/staging/"
+    cp "$staging"/sel_ldr "${HOME}/.naclbin/sel_ldr_${platform/-/_}"
+    cp "$staging"/ncval_new "${HOME}/.naclbin/ncval_${platform/-/_}"
+done
+
+rm -rf "$T"
