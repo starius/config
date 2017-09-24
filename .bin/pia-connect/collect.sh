@@ -6,6 +6,8 @@
 # 8.8.8.8 https://developers.google.com/speed/public-dns/
 # 77.88.8.8 https://dns.yandex.ru
 # 80.80.80.80 http://freenom.world
+#
+# See more in https://en.wikipedia.org/wiki/Public_recursive_name_server
 
 while sleep 1; do
     UPSTREAM="$(shuf -e 8.8.8.8 77.88.8.8 80.80.80.80 | head -1 | awk '{$1=$1};1'):53"
