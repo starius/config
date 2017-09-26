@@ -45,7 +45,7 @@ The files above can be edited by human.
 The following files are not expected to be edited by human:
 
   * `ca.rsa.4096.crt` and `crl.rsa.4096.pem` is public crypto data needed
-    to connect to [PIA][pia] using stong crypto;
+    to connect to [PIA][pia] using strong crypto;
   * `config.ovpn` is config for `openvpn`.
 
 ## Using on Qubes OS

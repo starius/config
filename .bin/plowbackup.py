@@ -37,10 +37,10 @@ option --sites.
       of output file, just append new. Old commands may be wrong,
       but will not be removed. This mode is safer (for
       previous content of output file.
-    * write. Open file for writting. Previos content is
+    * write. Open file for writing. Previous content is
       removed (it can be reused depending on --reuse).
       You can lose previous content of file if error
-      happens before reused content writting (see --backup).
+      happens before reused content writing (see --backup).
     * verify. Read-only mode. Does not depend on --reuse.
       Opens script for verifying. Test commands and test sha256
       of downloaded files.
