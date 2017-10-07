@@ -53,7 +53,9 @@ VERSIONS = {
     '1.8.1': '33daf4c03f86120fdfdc66bddf6bfff4661c7ca11c5da473e537f4d69b470e57',
     '1.8.2': 'e10401faaa8ae29dbe87349c1814b07b1903d453f822215d7b274bbc335cbf79',
     '1.8.3': '5f5dea2447e7dcfdc50fa6b94c512e58bfba5673c039259fd843f68829d99fa6',
+    '1.8.4': 'abf1b2e5ae2a4845f3d2eac00c7382ff209e2c132dc35b7ce753da9b4f52e59f',
     '1.9': 'a4ab229028ed167ba1986825751463605264e44868362ca8e7accc8be057e993',
+    '1.9.1': 'a84afc9dc7d64fe0fa84d4d735e2ece23831a22117b50dafc75c1484f1cb550e',
 }
 BOOTSTRAP_VERSION = '1.4-bootstrap-20170531'
 MIN_VERSION_BUILT_WITH_GO = '1.5'
@@ -344,7 +346,7 @@ class TempDir(object):
 
 def version_tuple(version):
     if version == BOOTSTRAP_VERSION:
-        version = version.split('-')[0]
+        version = "1.4.9"
     return tuple(map(int, (version.split('.'))))
 
 def is_build_with_go(version):
@@ -624,7 +626,7 @@ def update_versions():
     known_versions = {
         match.group(1): match.group(2)
         for match
-        in re.finditer(r"'([0-9.]+)': '([0-9a-f]+)'", known_versions_text)
+        in re.finditer(r"'([0-9a-z.-]+)': '([0-9a-f]+)'", known_versions_text)
     }
     new_go_versions = set(all_go_versions) - set(known_versions)
     known_versions.update(find_checksums(new_go_versions))
