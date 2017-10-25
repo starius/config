@@ -1,0 +1,49 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "gznmiWaVDJj/SGsUrJb3QZmcgvU=",
+			"path": "github.com/facebookgo/inmem",
+			"revision": "12ecd81f72765d005682e0fdbe5be0fbe59e8793",
+			"revisionTime": "2016-02-25T19:54:38Z"
+		},
+		{
+			"checksumSHA1": "K6exl2ouL7d8cR2i378EzZOdRVI=",
+			"path": "github.com/howeyc/gopass",
+			"revision": "bf9dde6d0d2c004a008c27aaee91170c786f6db8",
+			"revisionTime": "2017-01-09T16:22:49Z"
+		},
+		{
+			"checksumSHA1": "fGtmBHQgT0NetWkz8WqC62i2NJ4=",
+			"path": "github.com/miekg/dns",
+			"revision": "822ae18e7187e1bbde923a37081f6c1b8e9ba68a",
+			"revisionTime": "2017-10-19T06:42:25Z"
+		},
+		{
+			"checksumSHA1": "AYjG78HsyaohvBTuzCgdxU48dFE=",
+			"path": "github.com/miekg/dns/internal/socket",
+			"revision": "822ae18e7187e1bbde923a37081f6c1b8e9ba68a",
+			"revisionTime": "2017-10-19T06:42:25Z"
+		},
+		{
+			"checksumSHA1": "nqWNlnMmVpt628zzvyo6Yv2CX5Q=",
+			"path": "golang.org/x/crypto/ssh/terminal",
+			"revision": "2509b142fb2b797aa7587dad548f113b2c0f20ce",
+			"revisionTime": "2017-10-23T14:45:55Z"
+		},
+		{
+			"checksumSHA1": "dgHycdFmYq++it3eZudxKGtufs8=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "5d0dd06d1ce1829b0399cf8fa0570970273401a6",
+			"revisionTime": "2017-10-25T15:31:58Z"
+		},
+		{
+			"checksumSHA1": "qY7qp+1iIG3LAlhS8+VcaG2fOaQ=",
+			"path": "golang.org/x/sys/windows",
+			"revision": "5d0dd06d1ce1829b0399cf8fa0570970273401a6",
+			"revisionTime": "2017-10-25T15:31:58Z"
+		}
+	],
+	"rootPath": "github.com/starius/config/.bin/pia-connect"
+}
