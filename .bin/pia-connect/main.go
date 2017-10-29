@@ -32,15 +32,15 @@ const (
 )
 
 var (
-	cacheDir0    = flag.String("cache", "~/.cache/pia-connect", "Directory to store password and server addresses.")
-	countryZone  = flag.String("country", "", "Preferred country for this launch.")
-	dryRun       = flag.Bool("dry", false, "Run 'vmstat 5' instead of openvpn.")
-	skipIptables = flag.Bool("skip-iptables", false, "Do not change iptables needed to accept DNS on QubesOS.")
-	skipDNS      = flag.Bool("skip-dns", false, "Do not run proxy DNS server.")
-	updateWait   = flag.Duration("update-wait", 10*time.Second, "Time to wait before updating servers cache.")
-	genServers   = flag.Bool("gen-servers", false, "Generate servers.go from cache/servers.json.")
-	check        = flag.Bool("check-servers", false, "Check and filter servers in cache/servers.json.")
-	updateAll    = flag.Bool("update-all-zones", false, "Update cache for all zones, not only chosen zones.")
+	cacheDir0      = flag.String("cache", "~/.cache/pia-connect", "Directory to store password and server addresses.")
+	countryZone    = flag.String("country", "", "Preferred country for this launch.")
+	dryRun         = flag.Bool("dry", false, "Run 'vmstat 5' instead of openvpn.")
+	changeIptables = flag.Bool("change-iptables", false, "Change iptables needed to accept DNS on QubesOS.")
+	runDNS         = flag.Bool("run-proxy-dns", false, "Run proxy DNS server.")
+	updateWait     = flag.Duration("update-wait", 10*time.Second, "Time to wait before updating servers cache.")
+	genServers     = flag.Bool("gen-servers", false, "Generate servers.go from cache/servers.json.")
+	check          = flag.Bool("check-servers", false, "Check and filter servers in cache/servers.json.")
+	updateAll      = flag.Bool("update-all-zones", false, "Update cache for all zones, not only chosen zones.")
 )
 
 func expandTilde(path string) (string, error) {
@@ -467,7 +467,7 @@ runChild:
 			}
 		}()
 	})
-	if !*skipIptables && !*dryRun {
+	if *changeIptables && !*dryRun {
 		once1.Do(func() {
 			go func() {
 				for {
@@ -483,7 +483,7 @@ runChild:
 		})
 	}
 	log.Println("pia-connect: openvpn started.")
-	if !*skipDNS {
+	if *runDNS {
 		once2.Do(func() {
 			log.Println("pia-connect: Starting DNS server.")
 			go func() {
