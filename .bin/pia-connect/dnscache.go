@@ -13,7 +13,7 @@ import (
 
 var (
 	timeout   = flag.Duration("dns-timeout", 60*time.Second, "Timeout for proxified DNS requests.")
-	upstream  = flag.String("dns-upstream", "8.8.8.8:53", "Upstream DNS server.")
+	upstream  = flag.String("dns-upstream", "209.222.18.222:53", "Upstream DNS server.")
 	listenOn  = flag.String("dns-listen", "0.0.0.0:53", "Where to run local DNS server.")
 	cacheSize = flag.Int("dns-cache", 1000, "Number of records in DNS cache (0 to disable).")
 )
