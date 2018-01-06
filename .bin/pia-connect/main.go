@@ -36,7 +36,7 @@ var (
 	countryZone    = flag.String("country", "", "Preferred country for this launch.")
 	dryRun         = flag.Bool("dry", false, "Run 'vmstat 5' instead of openvpn.")
 	changeIptables = flag.Bool("change-iptables", false, "Change iptables needed to accept DNS on QubesOS.")
-	runDNS         = flag.Bool("run-proxy-dns", false, "Run proxy DNS server.")
+	runDNS         = flag.Bool("run-proxy-dns", false, "Run proxy DNS server as expected on QubesOS.")
 	updateWait     = flag.Duration("update-wait", 10*time.Second, "Time to wait before updating servers cache.")
 	genServers     = flag.Bool("gen-servers", false, "Generate servers.go from cache/servers.json.")
 	check          = flag.Bool("check-servers", false, "Check and filter servers in cache/servers.json.")
