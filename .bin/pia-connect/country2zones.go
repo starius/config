@@ -13,14 +13,17 @@ var COUNTRY2ZONES = map[string][]string{
 		"us-west",
 		"us-siliconvalley",
 		"us-newyorkcity",
+		"us-atlanta",
 	},
 	"United Kingdom": []string{
 		"uk-london",
 		"uk-southampton",
+		"uk-manchester",
 	},
 	"Canada": []string{
 		"ca-toronto",
 		"ca",
+		"ca-vancouver",
 	},
 	"Australia": []string{
 		"aus",
@@ -53,11 +56,20 @@ var COUNTRY2ZONES = map[string][]string{
 	"Germany": []string{
 		"germany",
 	},
+	"Belgium": []string{
+		"belgium",
+	},
+	"Austria": []string{
+		"austria",
+	},
 	"Ireland": []string{
 		"ireland",
 	},
 	"Italy": []string{
 		"italy",
+	},
+	"Spain": []string{
+		"spain",
 	},
 	"Romania": []string{
 		"ro",
