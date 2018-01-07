@@ -139,8 +139,8 @@ func getZones(cacheDir string) ([]string, error) {
 		return nil, fmt.Errorf("file %s exists but can't be read: %s", zonesFile, err)
 	}
 	printZones()
-	fmt.Println("North America: us-california,us-east,us-midwest,ca,ca-toronto")
-	fmt.Println("Europe: italy,nl,ro,germany,fi,no,denmark,swiss,sweden")
+	fmt.Println("North America: us-atlanta,us-california,us-east,us-midwest,ca,ca-toronto,ca-vancouver")
+	fmt.Println("Europe: austria,belgium,italy,nl,ro,germany,fi,no,denmark,spain,swiss,sweden")
 	fmt.Println("Asia: aus,aus-melbourne,nz,kr,hk,sg,japan,in")
 	fmt.Printf("Please choose zones (for instance nl,brazil): ")
 	reader := bufio.NewReader(os.Stdin)
