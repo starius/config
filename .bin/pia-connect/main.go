@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"log"
 	"math/rand"
+	"net"
 	"os"
 	"os/exec"
 	"os/user"
@@ -365,6 +366,11 @@ func generateServers(cacheDir string) error {
 	}
 	var perZone []string
 	for zone, servers := range m {
+		sort.Slice(servers, func(i, j int) bool {
+			a := net.ParseIP(servers[i])
+			b := net.ParseIP(servers[j])
+			return bytes.Compare(a, b) == -1
+		})
 		perZone = append(perZone, fmt.Sprintf(`%q: %#v`, zone, servers))
 	}
 	sort.Strings(perZone)
