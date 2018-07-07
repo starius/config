@@ -77,9 +77,6 @@ var COUNTRY2ZONES = map[string][]string{
 	"Turkey": []string{
 		"turkey",
 	},
-	"South Korea": []string{
-		"kr",
-	},
 	"Hong Kong": []string{
 		"hk",
 	},
