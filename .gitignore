@@ -71,3 +71,6 @@ Videos
 .xsession-errors
 .xsettingsd
 .mozilla
+
+# rand https://askubuntu.com/a/379947
+.rnd
