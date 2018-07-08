@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"net"
 	"strings"
 	"time"
@@ -65,7 +66,21 @@ func CheckServer(server string) bool {
 	return true
 }
 
-func getFreshServers(zone string) ([]string, error) {
+func getFreshServers(zone string) (servers []string, err error) {
+	sleep := time.Second
+	for i := 0; i < 10; i++ {
+		servers, err = getFreshServersImpl(zone)
+		if err == nil {
+			return servers, nil
+		}
+		log.Printf("getFreshServers(%q): waiting %s before retry", zone, sleep)
+		time.Sleep(sleep)
+		sleep *= 2
+	}
+	return nil, err
+}
+
+func getFreshServersImpl(zone string) ([]string, error) {
 	client := dns.Client{
 		ReadTimeout:  *timeout,
 		WriteTimeout: *timeout,
