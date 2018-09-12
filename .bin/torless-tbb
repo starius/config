@@ -2,10 +2,13 @@
 
 rm Browser/TorBrowser/Data/Browser/profile.default/extensions/tor-launcher@torproject.org.xpi
 
-conf=Browser/TorBrowser/Data/Browser/profile.default/preferences/extension-overrides.js
+conf=Browser/TorBrowser/Data/Browser/profile.default/prefs.js
 cat >> $conf <<EOL
 pref("extensions.torbutton.settings_method", "transparent");
 pref("extensions.torbutton.use_privoxy", false);
 pref("network.proxy.socks_remote_dns", false);
 pref("network.proxy.type", 0);
 EOL
+
+# Workaround to prevent firefox from overriding prefs.js content.
+chmod 500 Browser/TorBrowser/Data/Browser/profile.default/prefs.js
