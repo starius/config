@@ -30,10 +30,7 @@ fi
 cd "$GRPC_SRC"
 git submodule update --init
 T=$(mktemp -d)
-# https://github.com/grpc/grpc/issues/10948
-sed 's@.emplace("", true)@[""] = true@' -i src/cpp/server/health/default_health_check_service.cc
-# W_SHADOW= b/c https://github.com/grpc/grpc/issues/10945
-make -j 4 prefix="$PB_ROOT" W_SHADOW=
+make -j 4 prefix="$PB_ROOT"
 make install prefix="$PB_ROOT"
 cd "$HOME"
 rm -r "$T"
