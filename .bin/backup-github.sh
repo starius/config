@@ -1,8 +1,10 @@
 #!/bin/sh
 
+set -xue
+
 user=$1
 url="https://api.github.com/users/$user/repos?per_page=10000"
-repos=$(curl $url|grep '"name"'|sed 's/.*: "\(.*\)",/\1/')
+repos=$(curl $url|grep '"full_name"'|sed -e 's/.*: "\(.*\)",/\1/' -e "s@$user/@@")
 for repo in $repos; do
     git clone "https://github.com/$user/$repo"
     git --git-dir "$repo/.git" gc --aggressive
