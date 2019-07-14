@@ -38,8 +38,6 @@
 .npm
 .node-gyp
 node_modules
-pkg
-bin
 pprof
 
 # Results of install-nacl.
@@ -51,8 +49,8 @@ pprof
 # default files with settings
 .profile
 
-# sources
-src
+# Go
+go
 
 # GUI
 Desktop
