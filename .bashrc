@@ -93,6 +93,8 @@ export PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
 export PATH=$PATH:/usr/local/bin
 export PATH=$HOME/.bin:$PATH
 
+export PATH=$HOME/bin:$PATH
+
 export GOPATH=$HOME/go
 export PATH=$HOME/.goroot/bin:$HOME/.goroot/misc/nacl:$PATH
 export PATH=$GOPATH/bin:$PATH
