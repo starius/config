@@ -51,6 +51,9 @@ pprof
 
 # Go
 go
+bin
+pkg
+src
 
 # GUI
 Desktop
