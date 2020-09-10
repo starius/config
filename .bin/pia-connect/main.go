@@ -364,8 +364,17 @@ func generateServers(cacheDir string) error {
 	if err != nil {
 		return err
 	}
+	knownZones := make(map[string]bool)
+	for _, zones := range COUNTRY2ZONES {
+		for _, zone := range zones {
+			knownZones[zone] = true
+		}
+	}
 	var perZone []string
 	for zone, servers := range m {
+		if !knownZones[zone] {
+			continue
+		}
 		sort.Slice(servers, func(i, j int) bool {
 			a := net.ParseIP(servers[i])
 			b := net.ParseIP(servers[j])
