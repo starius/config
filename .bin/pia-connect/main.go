@@ -39,6 +39,7 @@ var (
 	dryRun         = flag.Bool("dry", false, "Run 'vmstat 5' instead of openvpn.")
 	changeIptables = flag.Bool("change-iptables", false, "Change iptables needed to accept DNS on QubesOS.")
 	runDNS         = flag.Bool("run-proxy-dns", false, "Run proxy DNS server as expected on QubesOS.")
+	updateServers  = flag.Bool("update-servers", true, "Update servers.json.")
 	updateWait     = flag.Duration("update-wait", 10*time.Second, "Time to wait before updating servers cache.")
 	genServers     = flag.Bool("gen-servers", false, "Generate servers.go from cache/servers.json.")
 	check          = flag.Bool("check-servers", false, "Check and filter servers in cache/servers.json.")
@@ -529,13 +530,18 @@ runChild:
 			}()
 		})
 	}
-	log.Printf("pia-connect: waiting %s.\n", *updateWait)
-	time.Sleep(*updateWait)
-	log.Println("pia-connect: updating server addresses cache.")
-	if err := updateServersCache(cacheDir); err != nil {
-		log.Printf("Failed to update server addresses cache: %s.", err)
+
+	if *updateServers {
+		log.Printf("pia-connect: waiting %s.\n", *updateWait)
+		time.Sleep(*updateWait)
+		log.Println("pia-connect: updating server addresses cache.")
+		if err := updateServersCache(cacheDir); err != nil {
+			log.Printf("Failed to update server addresses cache: %s.", err)
+		}
+		log.Println("pia-connect: updating finished.")
 	}
-	log.Println("pia-connect: updating finished. Waiting for child process.")
+
+	log.Println("pia-connect: Waiting for child process.")
 	if _, err := child.Wait(); err != nil {
 		log.Fatalf("Wait: %s.", err)
 	}
