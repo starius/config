@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"math/rand"
@@ -265,16 +266,35 @@ func systemOutput(cmd string, args ...string) ([]byte, error) {
 	return c.Output()
 }
 
+type LogsChecker struct {
+	openvpn *os.Process
+}
+
+var badLogPattern = []byte("Authenticate/Decrypt packet error: bad packet ID (may be a replay)")
+
+func (c *LogsChecker) Write(p []byte) (n int, err error) {
+	if bytes.Contains(p, badLogPattern) && c.openvpn != nil {
+		log.Printf("OpenVPN got stuck, need to restart.")
+		c.openvpn.Kill()
+	}
+	return len(p), nil
+}
+
 func runOpenVpn(configFile string) (*os.Process, error) {
 	c := exec.Command("openvpn", "--config", configFile)
 	if *dryRun {
 		c = exec.Command("vmstat", "5")
 	}
-	c.Stdout = os.Stdout
-	c.Stderr = os.Stdout
+
+	logsChecker := &LogsChecker{}
+	writer := io.MultiWriter(os.Stdout, logsChecker)
+	c.Stdout = writer
+	c.Stderr = writer
 	if err := c.Start(); err != nil {
 		return nil, fmt.Errorf("exec.Cmd.Start: %s", err)
 	}
+	logsChecker.openvpn = c.Process
+
 	return c.Process, nil
 }
 
