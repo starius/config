@@ -20,4 +20,5 @@ crl-verify CRL_FILE
 
 tun-mtu 1500
 mssfix 1300
+replay-window 16384 60
 `
