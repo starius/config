@@ -5,8 +5,11 @@
 from __future__ import print_function
 
 import argparse
+import contextlib
 import hashlib
+import inspect
 import json
+import locale
 import os
 import platform
 import re
@@ -21,9 +24,10 @@ import textwrap
 import zipfile
 
 try:
-    from urllib2 import urlopen
+    from urllib2 import urlopen, URLError
 except ImportError:
     from urllib.request import urlopen
+    from urllib.error import URLError
 
 if os.name == "nt":
     try:
@@ -31,7 +35,7 @@ if os.name == "nt":
     except ImportError:
         import winreg
 
-hererocks_version = "Hererocks 0.10.0"
+hererocks_version = "Hererocks 0.20.0"
 __all__ = ["main"]
 
 opts = None
@@ -150,7 +154,7 @@ def write_activation_scripts():
         "LOCATION_DQ": opts.location.replace("\\", "\\\\").replace('"', '\\"'),
         "LOCATION_SQ": opts.location.replace("'", "'\\''"),
         "LOCATION_NESTED_SQ": opts.location.replace("'", "'\\''").replace("'", "'\\''"),
-        "LOCATION_PAREN": re.sub("[&,=()]", "^\g<0>", opts.location)
+        "LOCATION_PAREN": re.sub("[&,=()]", r"^\g<0>", opts.location)
     }
 
     for template_name in template_names:
@@ -161,9 +165,7 @@ def write_activation_scripts():
             script_handle.write(script)
 
 def is_executable(path):
-    return (os.path.exists(path) and
-            os.access(path, os.F_OK | os.X_OK) and
-            not os.path.isdir(path))
+    return os.path.exists(path) and os.access(path, os.F_OK | os.X_OK) and not os.path.isdir(path)
 
 def program_exists(prog):
     path = os.environ.get("PATH", os.defpath)
@@ -223,11 +225,13 @@ def get_default_cache():
             return os.path.join(home, ".cache", "hererocks")
 
 def download(url, filename):
-    response = urlopen(url)
+    response = urlopen(url, timeout=opts.timeout)
     data = response.read()
 
     with open(filename, "wb") as out:
         out.write(data)
+
+default_encoding = locale.getpreferredencoding()
 
 def run(*args, **kwargs):
     """Execute a command.
@@ -257,7 +261,7 @@ def run(*args, **kwargs):
             return ""
 
         if not live_output:
-            sys.stdout.write(exception.output.decode("UTF-8"))
+            sys.stdout.write(exception.output.decode(default_encoding, "ignore"))
 
         sys.exit("Error: got exitcode {} from command {}".format(
             exception.returncode, " ".join(args)))
@@ -265,9 +269,9 @@ def run(*args, **kwargs):
         sys.exit("Error: couldn't run {}: is {} in PATH?".format(" ".join(args), args[0]))
 
     if opts.verbose and capture:
-        sys.stdout.write(output.decode("UTF-8"))
+        sys.stdout.write(output.decode(default_encoding, "ignore"))
 
-    return capture and output.decode("UTF-8").strip()
+    return capture and output.decode(default_encoding, "ignore").strip()
 
 def get_output(*args):
     return run(get_output=True, *args)
@@ -414,6 +418,14 @@ def sha256_of_file(filename):
 
     return hashlib.sha256(contents).hexdigest()
 
+def strip_extensions(filename):
+    if filename.endswith(".zip"):
+        return filename[:-len(".zip")]
+    elif filename.endswith(".tar.gz"):
+        return filename[:-len(".tar.gz")]
+    else:
+        return filename
+
 class Program(object):
     def __init__(self, version):
         version = self.translations.get(version, version)
@@ -423,7 +435,6 @@ class Program(object):
             self.source = "release"
             self.fetched = False
             self.version = version
-            self.fixed_version = version
             self.version_suffix = " " + version
         elif "@" in version:
             # Version from a git repo.
@@ -492,15 +503,6 @@ class Program(object):
         if need_checkout and ref != "master":
             run("git", "checkout", ref)
 
-    def get_download_name(self):
-        return self.name + "-" + self.fixed_version + ("-win32" if self.win32_zip else "")
-
-    def get_file_name(self):
-        return self.get_download_name() + (".zip" if self.win32_zip else ".tar.gz")
-
-    def get_download_url(self):
-        return self.downloads + "/" + self.get_file_name()
-
     def fetch(self):
         if self.fetched:
             return
@@ -513,24 +515,30 @@ class Program(object):
             return
 
         if opts.downloads is None:
-            archive_name = os.path.join(temp_dir, self.get_file_name())
+            archive_name = os.path.join(temp_dir, self.get_download_name())
         else:
             if not os.path.exists(opts.downloads):
                 os.makedirs(opts.downloads)
 
-            archive_name = os.path.join(opts.downloads, self.get_file_name())
+            archive_name = os.path.join(opts.downloads, self.get_download_name())
 
-        url = self.get_download_url()
-        message = "Fetching {} from {}".format(self.title, url)
-
-        if not opts.downloads or not os.path.exists(archive_name):
-            print(message)
-            download(url, archive_name)
+        if opts.downloads and os.path.exists(archive_name):
+            print("Fetching {}{} (cached)".format(self.title, self.version_suffix))
         else:
-            print(message + " (cached)")
+            for url in self.get_download_urls():
+                print("Fetching {}{} from {}".format(self.title, self.version_suffix, url))
+
+                try:
+                    download(url, archive_name)
+                except URLError as error:
+                    print("Download failed: {}".format(str(error.reason)))
+                else:
+                    break
+            else:
+                sys.exit(1)
 
         print("Verifying SHA256 checksum")
-        expected_checksum = self.checksums[self.get_file_name()]
+        expected_checksum = self.checksums[self.get_download_name()]
         observed_checksum = sha256_of_file(archive_name)
         if expected_checksum != observed_checksum:
             message = "SHA256 checksum mismatch for {}\nExpected: {}\nObserved: {}".format(
@@ -541,14 +549,14 @@ class Program(object):
             else:
                 sys.exit("Error: " + message)
 
-        if self.win32_zip:
+        if archive_name.endswith(".zip"):
             archive = zipfile.ZipFile(archive_name)
         else:
             archive = tarfile.open(archive_name, "r:gz")
 
         archive.extractall(temp_dir)
         archive.close()
-        os.chdir(os.path.join(temp_dir, self.get_download_name()))
+        os.chdir(os.path.join(temp_dir, strip_extensions(self.get_download_name())))
         self.fetched = True
 
     def set_identifiers(self):
@@ -582,6 +590,8 @@ class Lua(Program):
     def __init__(self, version):
         super(Lua, self).__init__(version)
 
+        self.source_files_prefix = self.get_source_files_prefix()
+
         if self.source == "release":
             self.major_version = self.major_version_from_version()
         else:
@@ -600,8 +610,28 @@ class Lua(Program):
         self.add_compat_cflags_and_redefines()
 
     @staticmethod
-    def major_version_from_source():
-        with open(os.path.join("src", "lua.h")) as lua_h:
+    def get_source_files_prefix():
+        return "src"
+
+    def get_source_file_path(self, file_name):
+        if self.source_files_prefix is None:
+            return file_name
+        else:
+            return os.path.join(self.source_files_prefix, file_name)
+
+    @contextlib.contextmanager
+    def in_source_files_prefix(self):
+        if self.source_files_prefix is not None:
+            start_dir = os.getcwd()
+            os.chdir(self.source_files_prefix)
+
+        yield
+
+        if self.source_files_prefix is not None:
+            os.chdir(start_dir)
+
+    def major_version_from_source(self):
+        with open(self.get_source_file_path("lua.h")) as lua_h:
             for line in lua_h:
                 match = re.match(r"^\s*#define\s+LUA_VERSION_NUM\s+50(\d)\s*$", line)
 
@@ -661,6 +691,10 @@ class Lua(Program):
             os.path.join(module_path, "?", "init.lua")
         ]
         module_path_parts.insert(0 if local_paths_first else 2, os.path.join(".", "?.lua"))
+
+        if self.major_version in ["5.3", "5.4"]:
+            module_path_parts.append(os.path.join(".", "?", "init.lua"))
+
         self.package_path = ";".join(module_path_parts)
 
         cmodule_path = os.path.join(opts.location, "lib", "lua", self.major_version)
@@ -684,14 +718,15 @@ class Lua(Program):
         ])
 
     def patch_redefines(self):
+        luaconf_path = self.get_source_file_path("luaconf.h")
         redefines = "\n".join(self.redefines)
 
-        with open(os.path.join("src", "luaconf.h"), "rb") as luaconf_h:
+        with open(luaconf_path, "rb") as luaconf_h:
             luaconf_src = luaconf_h.read()
 
         body, _, tail = luaconf_src.rpartition(b"#endif")
 
-        with open(os.path.join("src", "luaconf.h"), "wb") as luaconf_h:
+        with open(luaconf_path, "wb") as luaconf_h:
             luaconf_h.write(body)
             luaconf_h.write(redefines.encode("UTF-8"))
             luaconf_h.write(b"\n#endif")
@@ -840,39 +875,46 @@ class Patch(object):
 class RioLua(Lua):
     name = "lua"
     title = "Lua"
-    downloads = "http://www.lua.org/ftp"
-    win32_zip = False
+    base_download_urls = ["http://www.lua.org/ftp", "http://webserver2.tecgraf.puc-rio.br/lua/mirror/ftp"]
+    work_base_download_url = "http://www.lua.org/work"
     default_repo = "https://github.com/lua/lua"
     versions = [
         "5.1", "5.1.1", "5.1.2", "5.1.3", "5.1.4", "5.1.5",
         "5.2.0", "5.2.1", "5.2.2", "5.2.3", "5.2.4",
-        "5.3.0", "5.3.1", "5.3.2", "5.3.3"
+        "5.3.0", "5.3.1", "5.3.2", "5.3.3", "5.3.4", "5.3.5",
+        "5.4.0", "5.4.0-work1", "5.4.0-work2"
     ]
     translations = {
-        "5": "5.3.3",
+        "5": "5.3.5",
         "5.1": "5.1.5",
         "5.1.0": "5.1",
         "5.2": "5.2.4",
-        "5.3": "5.3.3",
-        "^": "5.3.3",
-        "latest": "5.3.3"
+        "5.3": "5.3.5",
+        "5.4": "5.4.0-work2",
+        "5.4.0": "5.4.0-work2",
+        "^": "5.3.5",
+        "latest": "5.3.5"
     }
     checksums = {
-        "lua-5.1.tar.gz"  : "7f5bb9061eb3b9ba1e406a5aa68001a66cb82bac95748839dc02dd10048472c1",
-        "lua-5.1.1.tar.gz": "c5daeed0a75d8e4dd2328b7c7a69888247868154acbda69110e97d4a6e17d1f0",
-        "lua-5.1.2.tar.gz": "5cf098c6fe68d3d2d9221904f1017ff0286e4a9cc166a1452a456df9b88b3d9e",
-        "lua-5.1.3.tar.gz": "6b5df2edaa5e02bf1a2d85e1442b2e329493b30b0c0780f77199d24f087d296d",
-        "lua-5.1.4.tar.gz": "b038e225eaf2a5b57c9bcc35cd13aa8c6c8288ef493d52970c9545074098af3a",
-        "lua-5.1.5.tar.gz": "2640fc56a795f29d28ef15e13c34a47e223960b0240e8cb0a82d9b0738695333",
-        "lua-5.2.0.tar.gz": "cabe379465aa8e388988073d59b69e76ba0025429d2c1da80821a252cdf6be0d",
-        "lua-5.2.1.tar.gz": "64304da87976133196f9e4c15250b70f444467b6ed80d7cfd7b3b982b5177be5",
-        "lua-5.2.2.tar.gz": "3fd67de3f5ed133bf312906082fa524545c6b9e1b952e8215ffbd27113f49f00",
-        "lua-5.2.3.tar.gz": "13c2fb97961381f7d06d5b5cea55b743c163800896fd5c5e2356201d3619002d",
-        "lua-5.2.4.tar.gz": "b9e2e4aad6789b3b63a056d442f7b39f0ecfca3ae0f1fc0ae4e9614401b69f4b",
-        "lua-5.3.0.tar.gz": "ae4a5eb2d660515eb191bfe3e061f2b8ffe94dce73d32cfd0de090ddcc0ddb01",
-        "lua-5.3.1.tar.gz": "072767aad6cc2e62044a66e8562f51770d941e972dc1e4068ba719cd8bffac17",
-        "lua-5.3.2.tar.gz": "c740c7bb23a936944e1cc63b7c3c5351a8976d7867c5252c8854f7b2af9da68f",
-        "lua-5.3.3.tar.gz": "5113c06884f7de453ce57702abaac1d618307f33f6789fa870e87a59d772aca2",
+        "lua-5.1.tar.gz"        : "7f5bb9061eb3b9ba1e406a5aa68001a66cb82bac95748839dc02dd10048472c1",
+        "lua-5.1.1.tar.gz"      : "c5daeed0a75d8e4dd2328b7c7a69888247868154acbda69110e97d4a6e17d1f0",
+        "lua-5.1.2.tar.gz"      : "5cf098c6fe68d3d2d9221904f1017ff0286e4a9cc166a1452a456df9b88b3d9e",
+        "lua-5.1.3.tar.gz"      : "6b5df2edaa5e02bf1a2d85e1442b2e329493b30b0c0780f77199d24f087d296d",
+        "lua-5.1.4.tar.gz"      : "b038e225eaf2a5b57c9bcc35cd13aa8c6c8288ef493d52970c9545074098af3a",
+        "lua-5.1.5.tar.gz"      : "2640fc56a795f29d28ef15e13c34a47e223960b0240e8cb0a82d9b0738695333",
+        "lua-5.2.0.tar.gz"      : "cabe379465aa8e388988073d59b69e76ba0025429d2c1da80821a252cdf6be0d",
+        "lua-5.2.1.tar.gz"      : "64304da87976133196f9e4c15250b70f444467b6ed80d7cfd7b3b982b5177be5",
+        "lua-5.2.2.tar.gz"      : "3fd67de3f5ed133bf312906082fa524545c6b9e1b952e8215ffbd27113f49f00",
+        "lua-5.2.3.tar.gz"      : "13c2fb97961381f7d06d5b5cea55b743c163800896fd5c5e2356201d3619002d",
+        "lua-5.2.4.tar.gz"      : "b9e2e4aad6789b3b63a056d442f7b39f0ecfca3ae0f1fc0ae4e9614401b69f4b",
+        "lua-5.3.0.tar.gz"      : "ae4a5eb2d660515eb191bfe3e061f2b8ffe94dce73d32cfd0de090ddcc0ddb01",
+        "lua-5.3.1.tar.gz"      : "072767aad6cc2e62044a66e8562f51770d941e972dc1e4068ba719cd8bffac17",
+        "lua-5.3.2.tar.gz"      : "c740c7bb23a936944e1cc63b7c3c5351a8976d7867c5252c8854f7b2af9da68f",
+        "lua-5.3.3.tar.gz"      : "5113c06884f7de453ce57702abaac1d618307f33f6789fa870e87a59d772aca2",
+        "lua-5.3.4.tar.gz"      : "f681aa518233bc407e23acf0f5887c884f17436f000d453b2491a9f11a52400c",
+        "lua-5.3.5.tar.gz"      : "0c2eed3f960446e1a3e4b9a1ca2f3ff893b6ce41942cf54d5dd59ab4b3b058ac",
+        "lua-5.4.0-work1.tar.gz": "ada03980481110bfde44b3bd44bde4b03d72c84318b34d657b5b5a91ddb3912c",
+        "lua-5.4.0-work2.tar.gz": "68b7e8f1ff561b9a7e1c29de26ff99ac2a704773c0965a4fe1800b7657d5a057",
     }
     all_patches = {
         "When loading a file, Lua may call the reader function again after it returned end of input": """
@@ -984,6 +1026,171 @@ class RioLua(Lua):
                  else {
                    luaK_setoneret(ls->fs, &e);  /* close last expression */
                    luaK_storevar(ls->fs, &lh->v, &e);
+        """,
+        "Checking a format for os.date may read past the format string": """
+            loslib.c:
+            @@ -263,1 +263,2 @@
+            -  for (option = LUA_STRFTIMEOPTIONS; *option != '\\0'; option += oplen) {
+            +  int convlen = (int)strlen(conv);
+            +  for (option = LUA_STRFTIMEOPTIONS; *option != '\\0' && oplen <= convlen; option += oplen) {
+        """,
+        "Lua can generate wrong code in functions with too many constants": """
+            lcode.c:
+            @@ -1017,8 +1017,8 @@
+             */
+             static void codebinexpval (FuncState *fs, OpCode op,
+                                        expdesc *e1, expdesc *e2, int line) {
+            -  int rk1 = luaK_exp2RK(fs, e1);  /* both operands are "RK" */
+            -  int rk2 = luaK_exp2RK(fs, e2);
+            +  int rk2 = luaK_exp2RK(fs, e2);  /* both operands are "RK" */
+            +  int rk1 = luaK_exp2RK(fs, e1);
+               freeexps(fs, e1, e2);
+               e1->u.info = luaK_codeABC(fs, op, 0, rk1, rk2);  /* generate opcode */
+               e1->k = VRELOCABLE;  /* all those operations are relocatable */
+        """,
+        "Wrong code generated for a 'goto' followed by a label inside an 'if'": """
+            lparser.c:
+            @@ -1392,7 +1392,7 @@
+                 luaK_goiffalse(ls->fs, &v);  /* will jump to label if condition is true */
+                 enterblock(fs, &bl, 0);  /* must enter block before 'goto' */
+                 gotostat(ls, v.t);  /* handle goto/break */
+            -    skipnoopstat(ls);  /* skip other no-op statements */
+            +    while (testnext(ls, ';')) {}  /* skip semicolons */
+                 if (block_follow(ls, 0)) {  /* 'goto' is the entire block? */
+                   leaveblock(fs);
+                   return;  /* and that is it */
+        """,
+        "Lua does not check GC when creating error messages": """
+            ldebug.c:
+            @@ -653,6 +653,7 @@
+               CallInfo *ci = L->ci;
+               const char *msg;
+               va_list argp;
+            +  luaC_checkGC(L);  /* error message uses memory */
+               va_start(argp, fmt);
+               msg = luaO_pushvfstring(L, fmt, argp);  /* format message */
+               va_end(argp);
+        """,
+        "Dead keys with nil values can stay in weak tables": """
+            lgc.c:
+            @@ -643,8 +643,9 @@
+                 for (n = gnode(h, 0); n < limit; n++) {
+                   if (!ttisnil(gval(n)) && (iscleared(g, gkey(n)))) {
+                     setnilvalue(gval(n));  /* remove value ... */
+            -        removeentry(n);  /* and remove entry from table */
+                   }
+            +      if (ttisnil(gval(n)))  /* is entry empty? */
+            +        removeentry(n);  /* remove entry from table */
+                 }
+               }
+             }
+        """,
+        "lua_pushcclosure should not call the garbage collector when n is zero": """
+            lapi.c:
+            @@ -533,6 +533,7 @@
+               lua_lock(L);
+               if (n == 0) {
+                 setfvalue(L->top, fn);
+            +    api_incr_top(L);
+               }
+               else {
+                 CClosure *cl;
+            @@ -546,9 +547,9 @@
+                   /* does not need barrier because closure is white */
+                 }
+                 setclCvalue(L, L->top, cl);
+            +    api_incr_top(L);
+            +    luaC_checkGC(L);
+               }
+            -  api_incr_top(L);
+            -  luaC_checkGC(L);
+               lua_unlock(L);
+             }
+        """,
+        "Lua crashes when building sequences with more than 2^30 elements": """
+            ltable.c:
+            @@ -223,7 +223,9 @@
+               unsigned int na = 0;  /* number of elements to go to array part */
+               unsigned int optimal = 0;  /* optimal size for array part */
+               /* loop while keys can fill more than half of total size */
+            -  for (i = 0, twotoi = 1; *pna > twotoi / 2; i++, twotoi *= 2) {
+            +  for (i = 0, twotoi = 1;
+            +       twotoi > 0 && *pna > twotoi / 2;
+            +       i++, twotoi *= 2) {
+                 if (nums[i] > 0) {
+                   a += nums[i];
+                   if (a > twotoi/2) {  /* more than half elements present? */
+        """,
+        "Table length computation overflows for sequences larger than 2^31 elements": """
+            ltable.h:
+            @@ -56,3 +56,3 @@
+             LUAI_FUNC int luaH_next (lua_State *L, Table *t, StkId key);
+            -LUAI_FUNC int luaH_getn (Table *t);
+            +LUAI_FUNC lua_Unsigned luaH_getn (Table *t);
+
+            ltable.c:
+            @@ -614,4 +614,4 @@
+
+            -static int unbound_search (Table *t, unsigned int j) {
+            -  unsigned int i = j;  /* i is zero or a present index */
+            +static lua_Unsigned unbound_search (Table *t, lua_Unsigned j) {
+            +  lua_Unsigned i = j;  /* i is zero or a present index */
+               j++;
+            @@ -620,3 +620,3 @@
+                 i = j;
+            -    if (j > cast(unsigned int, MAX_INT)/2) {  /* overflow? */
+            +    if (j > l_castS2U(LUA_MAXINTEGER) / 2) {  /* overflow? */
+                   /* table was built with bad purposes: resort to linear search */
+            @@ -630,3 +630,3 @@
+               while (j - i > 1) {
+            -    unsigned int m = (i+j)/2;
+            +    lua_Unsigned m = (i+j)/2;
+                 if (ttisnil(luaH_getint(t, m))) j = m;
+            @@ -642,3 +642,3 @@
+             */
+            -int luaH_getn (Table *t) {
+            +lua_Unsigned luaH_getn (Table *t) {
+               unsigned int j = t->sizearray;
+        """,
+        "Memory-allocation error when resizing a table can leave it in an inconsistent state":
+        """
+            ltable.c:
+            @@ -332,17 +332,34 @@
+             }
+
+
+            +typedef struct {
+            +  Table *t;
+            +  unsigned int nhsize;
+            +} AuxsetnodeT;
+            +
+            +
+            +static void auxsetnode (lua_State *L, void *ud) {
+            +  AuxsetnodeT *asn = cast(AuxsetnodeT *, ud);
+            +  setnodevector(L, asn->t, asn->nhsize);
+            +}
+            +
+            +
+             void luaH_resize (lua_State *L, Table *t, unsigned int nasize,
+                                                       unsigned int nhsize) {
+               unsigned int i;
+               int j;
+            +  AuxsetnodeT asn;
+               unsigned int oldasize = t->sizearray;
+               int oldhsize = allocsizenode(t);
+               Node *nold = t->node;  /* save old hash ... */
+               if (nasize > oldasize)  /* array part must grow? */
+                 setarrayvector(L, t, nasize);
+               /* create new hash part with appropriate size */
+            -  setnodevector(L, t, nhsize);
+            +  asn.t = t; asn.nhsize = nhsize;
+            +  if (luaD_rawrunprotected(L, auxsetnode, &asn) != LUA_OK) {  /* mem. error? */
+            +    setarrayvector(L, t, oldasize);  /* array back to its original size */
+            +    luaD_throw(L, LUA_ERRMEM);  /* rethrow memory error */
+            +  }
+               if (nasize < oldasize) {  /* array part must shrink? */
+                 t->sizearray = nasize;
+                 /* re-insert elements from vanishing slice */
         """
     }
     patches_per_version = {
@@ -999,7 +1206,18 @@ class RioLua(Lua):
                 "gmatch iterator fails when called from a coroutine different from the one that created it"
             ],
             "3": [
-                "Expression list with four or more expressions in a 'for' loop can crash the interpreter"
+                "Expression list with four or more expressions in a 'for' loop can crash the interpreter",
+                "Checking a format for os.date may read past the format string",
+                "Lua can generate wrong code in functions with too many constants"
+            ],
+            "4": [
+                "Wrong code generated for a 'goto' followed by a label inside an 'if'",
+                "Lua crashes when building sequences with more than 2^30 elements",
+                "Table length computation overflows for sequences larger than 2^31 elements",
+                "Lua does not check GC when creating error messages",
+                "Dead keys with nil values can stay in weak tables",
+                "lua_pushcclosure should not call the garbage collector when n is zero",
+                "Memory-allocation error when resizing a table can leave it in an inconsistent state"
             ]
         }
     }
@@ -1020,6 +1238,22 @@ class RioLua(Lua):
         else:
             self.dll_file = None
 
+    def get_download_name(self):
+        return "{}-{}.tar.gz".format(self.name, self.version)
+
+    def get_download_urls(self):
+        if self.version.startswith("5.4.0-work"):
+            return ["{}/{}".format(self.work_base_download_url, self.get_download_name())]
+        else:
+            return ["{}/{}".format(base_download_url, self.get_download_name()) for base_download_url in self.base_download_urls]
+
+    def get_source_files_prefix(self):
+        # When installing PUC-Rio Lua from a git repo or local sources,
+        # use directory structure of its GitHub mirror, where
+        # source files are direcly in project root instead of `src`.
+        if self.source == "release":
+            return "src"
+
     def set_identifiers(self):
         super(RioLua, self).set_identifiers()
 
@@ -1037,8 +1271,10 @@ class RioLua(Lua):
             self.compat = "none" if opts.compat == "none" else "default"
         elif self.major_version == "5.2":
             self.compat = "none" if opts.compat in ["none", "5.2"] else "default"
-        else:
+        elif self.major_version == "5.3":
             self.compat = "default" if opts.compat in ["default", "5.2"] else opts.compat
+        else:
+            self.compat = "default" if opts.compat in ["default", "5.3"] else opts.compat
 
     def add_compat_cflags_and_redefines(self):
         if self.major_version == "5.1":
@@ -1051,12 +1287,15 @@ class RioLua(Lua):
         elif self.major_version == "5.2":
             if self.compat == "default":
                 self.compat_cflags.append("-DLUA_COMPAT_ALL")
-        else:
+        elif self.major_version == "5.3":
             if self.compat in ["5.1", "all"]:
                 self.compat_cflags.append("-DLUA_COMPAT_5_1")
 
             if self.compat in ["default", "5.2", "all"]:
                 self.compat_cflags.append("-DLUA_COMPAT_5_2")
+        else:
+            if self.compat in ["default", "5.3", "all"]:
+                self.compat_cflags.append("-DLUA_COMPAT_5_3")
 
     def apply_patch(self, patch_name):
         patch = self.all_patches[patch_name]
@@ -1070,7 +1309,7 @@ class RioLua(Lua):
         regexps = [
             # Lua 5.1.x, but not Lua 5.1(.0)
             r'^\s*#define\s+LUA_RELEASE\s+"Lua 5\.1\.(\d)"\s*$',
-            # Lua 5.2.x and 5.3.x
+            # Lua 5.2.x+
             r'^\s*#define LUA_VERSION_RELEASE\s+"(\d)"\s*$'
         ]
 
@@ -1116,7 +1355,7 @@ class RioLua(Lua):
             applied, "" if applied == 1 else "es", len(patches)))
 
     def make(self):
-        if self.major_version == "5.3":
+        if self.major_version == "5.3" or self.major_version == "5.4":
             cc = ["gcc", "-std=gnu99"]
         else:
             cc = "gcc"
@@ -1175,88 +1414,96 @@ class RioLua(Lua):
         elif using_cl():
             cflags.insert(0, "-DLUA_BUILD_AS_DLL")
 
-        os.chdir("src")
-        self.handle_patches()
-        objs = []
-        luac_objs = ["luac" + objext(), "print" + objext()]
+        with self.in_source_files_prefix():
+            self.handle_patches()
+            objs = []
+            luac_objs = ["luac" + objext(), "print" + objext()]
 
-        for src in sorted(os.listdir(".")):
-            base, ext = os.path.splitext(src)
+            for src in sorted(os.listdir(".")):
+                base, ext = os.path.splitext(src)
 
-            if ext == ".c":
-                obj = base + objext()
-                objs.append(obj)
+                if ext == ".c":
+                    obj = base + objext()
+                    objs.append(obj)
 
-                cmd_suffix = src if using_cl() else ["-c", "-o", obj, src]
-                run(cc, static_cflags if obj in luac_objs else cflags, cmd_suffix)
+                    cmd_suffix = src if using_cl() else ["-c", "-o", obj, src]
+                    run(cc, static_cflags if obj in luac_objs else cflags, cmd_suffix)
 
-        lib_objs = [obj_ for obj_ in objs if obj_ not in luac_objs and (obj_ != "lua" + objext())]
-        luac_objs = ["luac" + objext()]
+            lib_objs = [obj_ for obj_ in objs if obj_ not in luac_objs and (obj_ != "lua" + objext())]
 
-        if "print" + objext() in objs:
-            luac_objs.append("print" + objext())
+            if not using_cl():
+                run("ar", "rcu", self.arch_file, lib_objs)
+                run("ranlib", self.arch_file)
 
-        if using_cl():
-            run("link", "/nologo", "/out:luac.exe", luac_objs, lib_objs)
+            built_luac_objs = [obj_ for obj_ in luac_objs if obj_ in objs]
 
-            if os.path.exists("luac.exe.manifest"):
-                run("mt", "/nologo", "-manifest", "luac.exe.manifest", "-outputresource:luac.exe")
-        else:
-            run("ar", "rcu", self.arch_file, lib_objs)
-            run("ranlib", self.arch_file)
-            run(cc, "-o", self.luac_file, luac_objs, self.arch_file, lflags)
+            # Handle the case when there are no source files for `luac`, likely because installing
+            # from a git repo that does not have them, like the default one.
+            if len(built_luac_objs) > 0:
+                if using_cl():
+                    run("link", "/nologo", "/out:luac.exe", built_luac_objs, lib_objs)
 
-        if opts.target == "mingw":
-            run(cc, "-shared", "-o", self.dll_file, lib_objs)
-            run("strip", "--strip-unneeded", self.dll_file)
-            run(cc, "-o", self.lua_file, "-s", "lua.o", self.dll_file)
-        elif using_cl():
-            run("link", "/nologo", "/DLL", "/out:" + self.dll_file, lib_objs)
+                    if os.path.exists("luac.exe.manifest"):
+                        run("mt", "/nologo", "-manifest", "luac.exe.manifest", "-outputresource:luac.exe")
+                else:
+                    run(cc, "-o", self.luac_file, built_luac_objs, self.arch_file, lflags)
 
-            if os.path.exists(self.dll_file + ".manifest"):
-                run("mt", "/nologo", "-manifest", self.dll_file + ".manifest",
-                    "-outputresource:" + self.dll_file)
+            if opts.target == "mingw":
+                run(cc, "-shared", "-o", self.dll_file, lib_objs)
+                run("strip", "--strip-unneeded", self.dll_file)
+                run(cc, "-o", self.lua_file, "-s", "lua.o", self.dll_file)
+            elif using_cl():
+                run("link", "/nologo", "/DLL", "/out:" + self.dll_file, lib_objs)
 
-            run("link", "/nologo", "/out:lua.exe", "lua.obj", self.arch_file)
+                if os.path.exists(self.dll_file + ".manifest"):
+                    run("mt", "/nologo", "-manifest", self.dll_file + ".manifest",
+                        "-outputresource:" + self.dll_file)
 
-            if os.path.exists("lua.exe.manifest"):
-                run("mt", "/nologo", "-manifest", "lua.exe.manifest", "-outputresource:lua.exe")
-        else:
-            run(cc, "-o", self.lua_file, "lua.o", self.arch_file, lflags)
+                run("link", "/nologo", "/out:lua.exe", "lua.obj", self.arch_file)
 
-        os.chdir("..")
+                if os.path.exists("lua.exe.manifest"):
+                    run("mt", "/nologo", "-manifest", "lua.exe.manifest", "-outputresource:lua.exe")
+            else:
+                run(cc, "-o", self.lua_file, "lua.o", self.arch_file, lflags)
 
     def make_install(self):
-        os.chdir("src")
-        copy_files(os.path.join(opts.location, "bin"),
-                   self.lua_file, self.luac_file, self.dll_file)
+        with self.in_source_files_prefix():
+            luac = self.luac_file
 
-        lua_hpp = "lua.hpp"
+            if not os.path.exists(luac):
+                luac = None
 
-        if not os.path.exists(lua_hpp):
-            lua_hpp = "../etc/lua.hpp"
+            copy_files(os.path.join(opts.location, "bin"),
+                       self.lua_file, luac, self.dll_file)
 
-        copy_files(os.path.join(opts.location, "include"),
-                   "lua.h", "luaconf.h", "lualib.h", "lauxlib.h", lua_hpp)
+            lua_hpp = "lua.hpp"
 
-        copy_files(os.path.join(opts.location, "lib"), self.arch_file)
+            if not os.path.exists(lua_hpp):
+                if self.source_files_prefix is None:
+                    lua_hpp = None
+                else:
+                    lua_hpp = "../etc/lua.hpp"
+
+            copy_files(os.path.join(opts.location, "include"),
+                       "lua.h", "luaconf.h", "lualib.h", "lauxlib.h", lua_hpp)
+
+            copy_files(os.path.join(opts.location, "lib"), self.arch_file)
 
 class LuaJIT(Lua):
     name = "LuaJIT"
     title = "LuaJIT"
-    downloads = "https://github.com/LuaJIT/LuaJIT/archive"
-    win32_zip = False
+    base_download_url = "https://github.com/LuaJIT/LuaJIT/archive"
     default_repo = "https://github.com/LuaJIT/LuaJIT"
     versions = [
-        "2.0.0", "2.0.1", "2.0.2", "2.0.3", "2.0.4",
-        "2.1.0-beta1", "2.1.0-beta2"
+        "2.0.0", "2.0.1", "2.0.2", "2.0.3", "2.0.4", "2.0.5",
+        "2.1.0-beta1", "2.1.0-beta2", "2.1.0-beta3"
     ]
     translations = {
-        "2": "2.0.4",
-        "2.0": "2.0.4",
-        "2.1": "2.1.0-beta2",
-        "^": "2.0.4",
-        "latest": "2.0.4"
+        "2": "2.0.5",
+        "2.0": "2.0.5",
+        "2.1": "2.1.0-beta3",
+        "^": "2.0.5",
+        "latest": "2.0.5"
     }
     checksums = {
         "LuaJIT-2.0.0.tar.gz"      : "778650811bdd9fc55bbb6a0e845e4c0101001ce5ca1ab95001f0d289c61760ab",
@@ -1264,19 +1511,18 @@ class LuaJIT(Lua):
         "LuaJIT-2.0.2.tar.gz"      : "7cf1bdcd89452f64ed994cff85ae32613a876543a81a88939155266558a669bc",
         "LuaJIT-2.0.3.tar.gz"      : "8da3d984495a11ba1bce9a833ba60e18b532ca0641e7d90d97fafe85ff014baa",
         "LuaJIT-2.0.4.tar.gz"      : "d2abdf16bd3556c41c0aaedad76b6c227ca667be8350111d037a4c54fd43abad",
+        "LuaJIT-2.0.5.tar.gz"      : "8bb29d84f06eb23c7ea4aa4794dbb248ede9fcb23b6989cbef81dc79352afc97",
         "LuaJIT-2.1.0-beta1.tar.gz": "3d10de34d8020d7035193013f07c93fc7f16fcf0bb28fc03f572a21a368a5f2a",
         "LuaJIT-2.1.0-beta2.tar.gz": "82e115b21aa74634b2d9f3cb3164c21f3cde7750ba3258d8820f500f6a36b651",
+        "LuaJIT-2.1.0-beta3.tar.gz": "409f7fe570d3c16558e594421c47bdd130238323c9d6fd6c83dedd2aaeb082a8",
     }
 
-    def __init__(self, version):
-        super(LuaJIT, self).__init__(version)
+    def get_download_name(self):
+        # v2.0.1 tag is broken, use v2.0.1-fixed.
+        return "{}-{}.tar.gz".format(self.name, "2.0.1-fixed" if self.version == "2.0.1" else self.version)
 
-        if self.source == "release" and self.version == "2.0.1":
-            # v2.0.1 tag is broken, use v2.0.1-fixed.
-            self.fixed_version = "2.0.1-fixed"
-
-    def get_download_url(self):
-        return self.downloads + "/v" + self.fixed_version + ".tar.gz"
+    def get_download_urls(self):
+        return ["{}/v{}.tar.gz".format(self.base_download_url, "2.0.1-fixed" if self.version == "2.0.1" else self.version)]
 
     @staticmethod
     def major_version_from_version():
@@ -1313,13 +1559,11 @@ class LuaJIT(Lua):
             cflags.extend(opts.cflags.split())
 
         if using_cl():
-            os.chdir("src")
+            with self.in_source_files_prefix():
+                if cflags:
+                    self.add_cflags_to_msvcbuild(" ".join(cflags))
 
-            if cflags:
-                self.add_cflags_to_msvcbuild(" ".join(cflags))
-
-            run("msvcbuild.bat")
-            os.chdir("..")
+                run("msvcbuild.bat")
         else:
             if opts.target == "mingw" and program_exists("mingw32-make"):
                 make = "mingw32-make"
@@ -1345,50 +1589,53 @@ class LuaJIT(Lua):
             target_arch_file = "lua51.lib"
             dll_file = "lua51.dll"
 
-        os.chdir("src")
-        copy_files(os.path.join(opts.location, "bin"), dll_file)
-        shutil.copy(luajit_file, os.path.join(opts.location, "bin", lua_file))
+        with self.in_source_files_prefix():
+            copy_files(os.path.join(opts.location, "bin"), dll_file)
+            shutil.copy(luajit_file, os.path.join(opts.location, "bin", lua_file))
 
-        copy_files(os.path.join(opts.location, "include"),
-                   "lua.h", "luaconf.h", "lualib.h", "lauxlib.h", "lua.hpp", "luajit.h")
+            copy_files(os.path.join(opts.location, "include"),
+                       "lua.h", "luaconf.h", "lualib.h", "lauxlib.h", "lua.hpp", "luajit.h")
 
-        copy_files(os.path.join(opts.location, "lib"))
+            copy_files(os.path.join(opts.location, "lib"))
 
-        if opts.target != "mingw":
-            shutil.copy(arch_file, os.path.join(opts.location, "lib", target_arch_file))
+            if opts.target != "mingw":
+                shutil.copy(arch_file, os.path.join(opts.location, "lib", target_arch_file))
 
-        if os.name != "nt":
-            shutil.copy(so_file, os.path.join(opts.location, "lib", target_so_file))
+            if os.name != "nt":
+                shutil.copy(so_file, os.path.join(opts.location, "lib", target_so_file))
 
-        jitlib_path = os.path.join(
-            opts.location, "share", "lua", self.major_version, "jit")
+            jitlib_path = os.path.join(
+                opts.location, "share", "lua", self.major_version, "jit")
 
-        if os.path.exists(jitlib_path):
-            remove_dir(jitlib_path)
+            if os.path.exists(jitlib_path):
+                remove_dir(jitlib_path)
 
-        copy_dir("jit", jitlib_path)
+            copy_dir("jit", jitlib_path)
 
 class LuaRocks(Program):
     name = "luarocks"
     title = "LuaRocks"
-    downloads = "http://keplerproject.github.io/luarocks/releases"
-    win32_zip = os.name == "nt"
-    default_repo = "https://github.com/keplerproject/luarocks"
+    base_download_url = "http://luarocks.github.io/luarocks/releases"
+    default_repo = "https://github.com/luarocks/luarocks"
     versions = [
         "2.0.8", "2.0.9", "2.0.10", "2.0.11", "2.0.12", "2.0.13",
         "2.1.0", "2.1.1", "2.1.2",
         "2.2.0", "2.2.1", "2.2.2",
-        "2.3.0"
+        "2.3.0",
+        "2.4.0", "2.4.1", "2.4.2", "2.4.3", "2.4.4",
+        "3.0.0", "3.0.1", "3.0.2"
     ]
     translations = {
-        "2": "2.3.0",
+        "2": "2.4.4",
         "2.0": "2.0.13",
         "2.1": "2.1.2",
         "2.2": "2.2.2",
         "2.3": "2.3.0",
-        "3": "@luarocks-3",
-        "^": "2.3.0",
-        "latest": "2.3.0"
+        "2.4": "2.4.4",
+        "3": "3.0.2",
+        "3.0": "3.0.2",
+        "^": "2.4.4",
+        "latest": "2.4.4"
     }
     checksums = {
         "luarocks-2.0.10.tar.gz"   : "11731dfe6e210a962cb2a857b8b2f14a9ab1043e13af09a1b9455b486401b46e",
@@ -1417,7 +1664,29 @@ class LuaRocks(Program):
         "luarocks-2.2.2-win32.zip" : "576721fb6fe224bbf5f60bd4c94c7c6f686889bb452ae1923a46d56f02df6588",
         "luarocks-2.3.0.tar.gz"    : "68e38feeb66052e29ad1935a71b875194ed8b9c67c2223af5f4d4e3e2464ed97",
         "luarocks-2.3.0-win32.zip" : "7aa02e7249906563a7ab8bb9db497cdeab0506328e4c8d45ffba120526dfec2a",
+        "luarocks-2.4.0.tar.gz"    : "44381c9128d036247d428531291d1ff9405ae1daa238581d3c15f96d899497c3",
+        "luarocks-2.4.0-win32.zip" : "13f92b46abc5d0362e2c3507f675b6d125b7c915680d48b62afa97b6b3e0f47a",
+        "luarocks-2.4.1.tar.gz"    : "e429e0af9764bfd5cb640cac40f9d4ed1023fa17c052dff82ed0a41c05f3dcf9",
+        "luarocks-2.4.1-win32.zip" : "c6cf36ca2e03b1a910e4dde9ac5c9360dc16f3f7afe50a978213d26728f4c667",
+        "luarocks-2.4.2.tar.gz"    : "0e1ec34583e1b265e0fbafb64c8bd348705ad403fe85967fd05d3a659f74d2e5",
+        "luarocks-2.4.2-win32.zip" : "63abc6f1240e0774f94bfe4150eaa5be06979c245db1dd5c8ddc4fb4570f7204",
+        "luarocks-2.4.3.tar.gz"    : "4d414d32fed5bb121c72d3ff1280b7f2dc9027a9bc012e41dfbffd5b519b362e",
+        "luarocks-2.4.3-win32.zip" : "08821ec39e7c3ad20f5b3d3e118ba8f1f5a7db6e6ad22e11eb5e8a2bdc95cbfb",
+        "luarocks-2.4.4.tar.gz"    : "3938df33de33752ff2c526e604410af3dceb4b7ff06a770bc4a240de80a1f934",
+        "luarocks-2.4.4-win32.zip" : "763d2fbe301b5f941dd5ea4aea485fb35e75cbbdceca8cc2f18726b75f9895c1",
+        "luarocks-3.0.0.tar.gz"    : "a43fffb997100f11cccb529a3db5456ce8dab18171a5cb3645f948147b6f64a1",
+        "luarocks-3.0.0-win32.zip" : "f5c6070f49f78ef61a2e5d6de353b34ef691ad4a6b45e065d5c85701a4a3a981",
+        "luarocks-3.0.1.tar.gz"    : "b989c4b60d6c9edcd65169e5e42fcffbd39cdbebe6b138fa5aea45102f8d9ec0",
+        "luarocks-3.0.1-win32.zip" : "af54263b8f71406d79556c880f3e2674e6690934a69cefbbdfd18710f05eeeaf",
+        "luarocks-3.0.2.tar.gz"    : "3836267eff2f85fb552234e966602b1e649c58f81f47c7de3785e071c8127f5a",
+        "luarocks-3.0.2-win32.zip" : "c9e93d7198f9ae7add331675d3d84fa1b61feb851814ee2a89b9930bd651bfb9",
     }
+
+    def get_download_name(self):
+        return "{}-{}{}".format(self.name, self.version, "-win32.zip" if os.name == "nt" else ".tar.gz")
+
+    def get_download_urls(self):
+        return ["{}/{}".format(self.base_download_url, self.get_download_name())]
 
     def is_luarocks_2_0(self):
         if self.source == "release":
@@ -1430,42 +1699,57 @@ class LuaRocks(Program):
 
         return False
 
-    @staticmethod
-    def get_cmake_generator(lua_identifiers):
-        lua_target = lua_identifiers["target"]
+    def get_cmake_generator(self):
+        lua_target = self.lua_identifiers["target"]
 
         if lua_target == "mingw":
             return "MinGW Makefiles"
         elif lua_target.startswith("vs"):
-            vs_year = lua_identifiers["vs year"]
-            vs_arch = lua_identifiers["vs arch"]
+            vs_year = self.lua_identifiers["vs year"]
+            vs_arch = self.lua_identifiers["vs arch"]
             vs_short_version = vs_year_to_version[vs_year][:-2]
             return "Visual Studio {} 20{}{}".format(
                 vs_short_version, vs_year, " Win64" if vs_arch == "x64" else "")
 
-    def build(self):
-        lua_identifiers = self.all_identifiers.get("lua", self.all_identifiers.get("LuaJIT"))
+    @staticmethod
+    def get_default_cflags():
+        if using_cl():
+            return "/nologo /MD /O2"
+        elif opts.target == "mingw":
+            return "-O2"
+        else:
+            return "-O2 -fPIC"
 
-        if lua_identifiers is None:
+    def get_config_path(self):
+        if os.name == "nt":
+            return os.path.join(
+                opts.location, "luarocks", "config-{}.lua".format(self.lua_identifiers["major version"]))
+        else:
+            return os.path.join(
+                opts.location, "etc", "luarocks", "config-{}.lua".format(self.lua_identifiers["major version"]))
+
+    def build(self):
+        self.lua_identifiers = self.all_identifiers.get("lua", self.all_identifiers.get("LuaJIT"))
+
+        if self.lua_identifiers is None:
             sys.exit("Error: can't install LuaRocks: Lua is not present in {}".format(opts.location))
 
         self.fetch()
 
         if os.name == "nt":
             print("Building and installing LuaRocks" + self.version_suffix)
-
             help_text = get_output("install.bat", "/?")
             args = [
                 "install.bat",
                 "/P", os.path.join(opts.location, "luarocks"),
                 "/LUA", opts.location,
-                "/FORCECONFIG", "/F"
+                "/F"
             ]
-            if lua_identifiers["target"] == "mingw":
+            if self.lua_identifiers["target"] == "mingw":
                 args += ["/MW"]
             # Since LuaRocks 2.0.13
             if "/LV" in help_text:
-                args += ["/LV", lua_identifiers["major version"]]
+                args += ["/LV", self.lua_identifiers["major version"]]
             # Since LuaRocks 2.1.2
             if "/NOREG" in help_text:
                 args += ["/NOREG", "/Q"]
@@ -1484,19 +1768,16 @@ class LuaRocks(Program):
                 else:
                     sys.exit("Error: can't find {} in {}".format(script, os.path.join(opts.location, "luarocks")))
 
-            cmake_generator = self.get_cmake_generator(lua_identifiers)
+            cmake_generator = self.get_cmake_generator()
 
             if cmake_generator is not None:
-                config_path = os.path.join(
-                    opts.location, "luarocks", "config-{}.lua".format(lua_identifiers["major version"]))
-
-                with open(config_path, "ab") as config_h:
-                    config_h.write('\r\ncmake_generator = "{}"\r\n'.format(cmake_generator).encode("UTF-8"))
+                with open(self.get_config_path(), "a") as config_h:
+                    config_h.write('\ncmake_generator = "{}"\n'.format(cmake_generator))
 
         else:
             print("Building LuaRocks" + self.version_suffix)
             run("./configure", "--prefix=" + opts.location,
-                "--with-lua=" + opts.location, "--force-config")
+                "--with-lua=" + opts.location)
 
             if self.is_luarocks_2_0():
                 run("make")
@@ -1507,6 +1788,10 @@ class LuaRocks(Program):
         if os.name != "nt":
             print("Installing LuaRocks" + self.version_suffix)
             run("make", "install")
+
+        if self.lua_identifiers["c flags"] != "":
+            with open(self.get_config_path(), "a") as config_h:
+                config_h.write('\nvariables = {{CFLAGS = "{} {}"}}\n'.format(self.get_default_cflags(), self.lua_identifiers["c flags"]))
 
 def get_manifest_name():
     return os.path.join(opts.location, "hererocks.manifest")
@@ -1614,7 +1899,7 @@ def setup_vs_and_rerun(vs_version, arch):
     argv_name = os.path.join(temp_dir, "argv")
     setup_output_name = os.path.join(temp_dir, "setup_out")
 
-    script_arg = '"{}"'.format(sys.argv[0])
+    script_arg = '"{}"'.format(inspect.getsourcefile(main))
 
     if sys.executable:
         script_arg = '"{}" {}'.format(sys.executable, script_arg)
@@ -1694,129 +1979,11 @@ class UseActualArgsFileAction(argparse.Action):
 
         main(args_content.split("\r\n")[1:])
 
-def main(argv=None):
-    parser = argparse.ArgumentParser(
-        description=hererocks_version + ", a tool for installing Lua and/or LuaRocks locally.",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter, add_help=False)
-    parser.add_argument(
-        "location", help="Path to directory in which Lua and/or LuaRocks will be installed. "
-        "Their binaries and activation scripts will be found in its 'bin' subdirectory. "
-        "Scripts from modules installed using LuaRocks will also turn up there. "
-        "If an incompatible version of Lua is already installed there it should be "
-        "removed before installing the new one.")
-    parser.add_argument(
-        "-l", "--lua", help="Version of standard PUC-Rio Lua to install. "
-        "Version can be specified as a version number, e.g. 5.2 or 5.3.1. "
-        "Versions 5.1.0 - 5.3.3 are supported, "
-        "'^' or 'latest' can be used to install the latest stable version. "
-        "If the argument contains '@', sources will be downloaded "
-        "from a git repo using URI before '@' and using part after '@' as git reference "
-        "to checkout, 'master' by default. "
-        "Default git repo is https://github.com/lua/lua which contains tags for most "
-        "unstable versions, i.e. Lua 5.3.2-rc1 can be installed using '@5.3.2-rc1' as version. "
-        "The argument can also be a path to local directory.")
-    parser.add_argument(
-        "-j", "--luajit", help="Version of LuaJIT to install. "
-        "Version can be specified in the same way as for standard Lua. "
-        "Versions 2.0.0 - 2.1.0-beta2 are supported. "
-        "When installing from the LuaJIT main git repo its URI can be left out, "
-        "so that '@458a40b' installs from a commit and '@' installs from the master branch.")
-    parser.add_argument(
-        "-r", "--luarocks", help="Version of LuaRocks to install. "
-        "As with Lua, a version number (in range 2.0.8 - 2.3.0), '^', git URI with reference or "
-        "a local path can be used. '3' can be used as a version number and installs from "
-        "the 'luarocks-3' branch of the standard LuaRocks git repo. "
-        "Note that Lua 5.2 is not supported in LuaRocks 2.0.8 "
-        "and Lua 5.3 is supported only since LuaRocks 2.2.0.")
-    parser.add_argument("--show", default=False, action="store_true",
-                        help="Instead of installing show programs already present in <location>")
-    parser.add_argument("-i", "--ignore-installed", default=False, action="store_true",
-                        help="Install even if requested version is already present.")
-    parser.add_argument(
-        "--compat", default="default", choices=["default", "none", "all", "5.1", "5.2"],
-        help="Select compatibility flags for Lua.")
-    parser.add_argument(
-        "--patch", default=False, action="store_true",
-        help="Apply latest PUC-Rio Lua patches from https://www.lua.org/bugs.html when available.")
-    parser.add_argument(
-        "--cflags", default=None,
-        help="Pass additional options to C compiler when building Lua or LuaJIT.")
-    parser.add_argument(
-        "--target", help="Select how to build Lua. "
-        "Windows-specific targets (mingw, vs, vs_XX and vsXX_YY) also affect LuaJIT. "
-        "vs, vs_XX and vsXX_YY targets compile using cl.exe. "
-        "vsXX_YY targets (such as vs15_32) always set up Visual Studio 20XX (YYbit). "
-        "vs_32 and vs_64 pick latest version supporting selected architecture. "
-        "vs target uses cl.exe that's already in PATH or sets up "
-        "latest available Visual Studio, preferring tools for host architecture. "
-        "It's the default target on Windows unless cl.exe is not in PATH but gcc is, "
-        "in which case mingw target is used. "
-        "macosx target uses cc and the remaining targets use gcc, passing compiler "
-        "and linker flags the same way Lua's Makefile does when running make <target>.",
-        choices=[
-            "linux", "macosx", "freebsd", "mingw", "posix", "generic", "mingw", "vs", "vs_32", "vs_64",
-            "vs08_32", "vs08_64", "vs10_32", "vs10_64", "vs12_32", "vs12_64",
-            "vs13_32", "vs13_64", "vs15_32", "vs15_64"
-        ], metavar="{linux,macosx,freebsd,mingw,posix,generic,mingw,vs,vs_XX,vsXX_YY}",
-        default=get_default_lua_target())
-    parser.add_argument("--no-readline", help="Don't use readline library when building standard Lua.",
-                        action="store_true", default=False)
-    parser.add_argument("--downloads",
-                        help="Cache downloads and default git repos in 'DOWNLOADS' directory.",
-                        default=get_default_cache())
-    parser.add_argument("--no-git-cache",
-                        help="Do not cache default git repos.",
-                        action="store_true", default=False)
-    parser.add_argument("--ignore-checksums",
-                        help="Ignore checksum mismatches for downloads.",
-                        action="store_true", default=False)
-    parser.add_argument("--builds",
-                        help="Cache Lua and LuaJIT builds in 'BUILDS' directory. "
-                        "A cached build is used when installing same program into "
-                        "same location with same options.", default=None)
-    parser.add_argument("--verbose", default=False, action="store_true",
-                        help="Show executed commands and their output.")
-    parser.add_argument("-v", "--version", help="Show program's version number and exit.",
-                        action="version", version=hererocks_version)
-    parser.add_argument("-h", "--help", help="Show this help message and exit.", action="help")
-
-    if os.name == "nt" and argv is None:
-        parser.add_argument("--actual-argv-file", action=UseActualArgsFileAction,
-                            # help="Load argv from a file, used when setting up cl toolchain."
-                            help=argparse.SUPPRESS)
-
-    global opts
-    opts = parser.parse_args(argv)
-    if not opts.lua and not opts.luajit and not opts.luarocks and not opts.show:
-        parser.error("nothing to do")
-
-    if opts.lua and opts.luajit:
-        parser.error("can't install both PUC-Rio Lua and LuaJIT")
-
-    if (opts.lua or opts.luajit or opts.luarocks) and opts.show:
-        parser.error("can't both install and show")
-
-    if opts.show:
-        if os.path.exists(opts.location):
-            all_identifiers = get_installed_identifiers()
-
-            if all_identifiers:
-                print("Programs installed in {}:".format(opts.location))
-
-                for program in [RioLua, LuaJIT, LuaRocks]:
-                    if program.name in all_identifiers:
-                        show_identifiers(all_identifiers[program.name])
-            else:
-                print("No programs installed in {}.".format(opts.location))
-        else:
-            print("Location does not exist.")
-
-        sys.exit(0)
-
+def install_programs(vs_already_set_up):
     global temp_dir
     temp_dir = tempfile.mkdtemp()
 
-    if (opts.lua or opts.luajit) and os.name == "nt" and argv is None and using_cl():
+    if (opts.lua or opts.luajit) and os.name == "nt" and not vs_already_set_up and using_cl():
         setup_vs(opts.target)
 
     start_dir = os.getcwd()
@@ -1861,6 +2028,133 @@ def main(argv=None):
 
     remove_dir(temp_dir)
     print("Done.")
+
+def show_location():
+    if os.path.exists(opts.location):
+        all_identifiers = get_installed_identifiers()
+
+        if all_identifiers:
+            print("Programs installed in {}:".format(opts.location))
+
+            for program in [RioLua, LuaJIT, LuaRocks]:
+                if program.name in all_identifiers:
+                    show_identifiers(all_identifiers[program.name])
+        else:
+            print("No programs installed in {}.".format(opts.location))
+    else:
+        print("{} does not exist.".format(opts.location))
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(
+        description=hererocks_version + ", a tool for installing Lua and/or LuaRocks locally.",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter, add_help=False)
+    parser.add_argument(
+        "location", help="Path to directory in which Lua and/or LuaRocks will be installed. "
+        "Their binaries and activation scripts will be found in its 'bin' subdirectory. "
+        "Scripts from modules installed using LuaRocks will also turn up there. "
+        "If an incompatible version of Lua is already installed there it should be "
+        "removed before installing the new one.")
+    parser.add_argument(
+        "-l", "--lua", help="Version of standard PUC-Rio Lua to install. "
+        "Version can be specified as a version number, e.g. 5.2 or 5.3.1. "
+        "Versions 5.1.0 - 5.3.5 and 5.4.0-work1 - 5.4.0-work2 are supported. "
+        "'latest' and '^' are aliases for 5.3.5. "
+        "If the argument contains '@', sources will be downloaded "
+        "from a git repo using URI before '@' and using part after '@' as git reference "
+        "to checkout, 'master' by default. "
+        "Default git repo is https://github.com/lua/lua. "
+        "The argument can also be a path to local directory. "
+        "When installing PUC-Rio Lua from a git repo or a local directory, "
+        "source files are expected to be in the root directory instead of 'src'. ")
+    parser.add_argument(
+        "-j", "--luajit", help="Version of LuaJIT to install. "
+        "Version can be specified in the same way as for standard Lua. "
+        "Versions 2.0.0 - 2.1.0-beta3 are supported. "
+        "'latest' and '^' are aliases for to 2.0.5. "
+        "Default git repo is https://github.com/luajit/luajit. ")
+    parser.add_argument(
+        "-r", "--luarocks", help="Version of LuaRocks to install. "
+        "Version can be specified in the same way as for standard Lua. "
+        "Versions 2.0.8 - 3.0.2 are supported. "
+        "'latest' and '^' are aliases for 2.4.4. "
+        "Default git repo is https://github.com/luarocks/luarocks. "
+        "Note that Lua 5.2 is not supported in LuaRocks 2.0.8, "
+        "Lua 5.3 is supported only since LuaRocks 2.2.0, and Lua 5.4 is supported only since "
+        "LuaRocks 3.0.0.")
+    parser.add_argument("--show", default=False, action="store_true",
+                        help="Show programs installed in <location>, possibly after installing new ones.")
+    parser.add_argument("-i", "--ignore-installed", default=False, action="store_true",
+                        help="Install even if requested version is already present.")
+    parser.add_argument(
+        "--compat", default="default", choices=["default", "none", "all", "5.1", "5.2"],
+        help="Select compatibility flags for Lua.")
+    parser.add_argument(
+        "--patch", default=False, action="store_true",
+        help="Apply latest PUC-Rio Lua patches from https://www.lua.org/bugs.html when available.")
+    parser.add_argument(
+        "--cflags", default=None,
+        help="Pass additional options to C compiler when building Lua or LuaJIT.")
+    parser.add_argument(
+        "--target", help="Select how to build Lua. "
+        "Windows-specific targets (mingw, vs, vs_XX and vsXX_YY) also affect LuaJIT. "
+        "vs, vs_XX and vsXX_YY targets compile using cl.exe. "
+        "vsXX_YY targets (such as vs15_32) always set up Visual Studio 20XX (YYbit). "
+        "vs_32 and vs_64 pick latest version supporting selected architecture. "
+        "vs target uses cl.exe that's already in PATH or sets up "
+        "latest available Visual Studio, preferring tools for host architecture. "
+        "It's the default target on Windows unless cl.exe is not in PATH but gcc is, "
+        "in which case mingw target is used. "
+        "macosx target uses cc and the remaining targets use gcc, passing compiler "
+        "and linker flags the same way Lua's Makefile does when running make <target>.",
+        choices=[
+            "linux", "macosx", "freebsd", "mingw", "posix", "generic", "mingw", "vs", "vs_32", "vs_64",
+            "vs08_32", "vs08_64", "vs10_32", "vs10_64", "vs12_32", "vs12_64",
+            "vs13_32", "vs13_64", "vs15_32", "vs15_64"
+        ], metavar="{linux,macosx,freebsd,mingw,posix,generic,mingw,vs,vs_XX,vsXX_YY}",
+        default=get_default_lua_target())
+    parser.add_argument("--no-readline", help="Don't use readline library when building standard Lua.",
+                        action="store_true", default=False)
+    parser.add_argument("--timeout",
+                        help="Download timeout in seconds.",
+                        type=int, default=60)
+    parser.add_argument("--downloads",
+                        help="Cache downloads and default git repos in 'DOWNLOADS' directory.",
+                        default=get_default_cache())
+    parser.add_argument("--no-git-cache",
+                        help="Do not cache default git repos.",
+                        action="store_true", default=False)
+    parser.add_argument("--ignore-checksums",
+                        help="Ignore checksum mismatches for downloads.",
+                        action="store_true", default=False)
+    parser.add_argument("--builds",
+                        help="Cache Lua and LuaJIT builds in 'BUILDS' directory. "
+                        "A cached build is used when installing same program into "
+                        "same location with same options.", default=None)
+    parser.add_argument("--verbose", default=False, action="store_true",
+                        help="Show executed commands and their output.")
+    parser.add_argument("-v", "--version", help="Show program's version number and exit.",
+                        action="version", version=hererocks_version)
+    parser.add_argument("-h", "--help", help="Show this help message and exit.", action="help")
+
+    if os.name == "nt" and argv is None:
+        parser.add_argument("--actual-argv-file", action=UseActualArgsFileAction,
+                            # help="Load argv from a file, used when setting up cl toolchain."
+                            help=argparse.SUPPRESS)
+
+    global opts
+    opts = parser.parse_args(argv)
+    if not opts.lua and not opts.luajit and not opts.luarocks and not opts.show:
+        parser.error("a version of Lua, LuaJIT, or LuaRocks needs to be specified unless --show is used")
+
+    if opts.lua and opts.luajit:
+        parser.error("can't install both PUC-Rio Lua and LuaJIT")
+
+    if opts.lua or opts.luajit or opts.luarocks:
+        install_programs(argv is not None)
+
+    if opts.show:
+        show_location()
+
     sys.exit(0)
 
 if __name__ == "__main__":
