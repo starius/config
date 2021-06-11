@@ -2,7 +2,7 @@
 
 set -xue
 
-hererocks.py ~/.luaroot --lua 5.1 --luarocks 2.3 --no-readline --patch
+hererocks.py ~/.luaroot --lua 5.3 --luarocks latest --no-readline --patch
 
 luarocks install busted
 luarocks install luaprompt
