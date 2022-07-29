@@ -98,7 +98,7 @@ export PATH=$HOME/bin:$PATH
 export GOPATH=$HOME
 export PATH=$HOME/.goroot/bin:$HOME/.goroot/misc/nacl:$PATH
 export PATH=$GOPATH/bin:$PATH
-# Install bash completion for Go: go get github.com/posener/complete/gocomplete
+# Install bash completion for Go: go install github.com/posener/complete/gocomplete@latest
 if [ -f $HOME/bin/gocomplete ]; then
     complete -C $HOME/bin/gocomplete go
 fi
