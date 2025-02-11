@@ -250,13 +250,16 @@ VERSIONS = {
     '1.23.4': 'ad345ac421e90814293a9699cca19dd5238251c3f687980bbcae28495b263531',
     '1.23.5': 'a6f3f4bbd3e6bdd626f79b668f212fbb5649daf75084fb79b678a0ae4d97423b',
     '1.23.6': '039c5b04e65279daceee8a6f71e70bd05cf5b801782b6f77c6e19e2ed0511222',
+    '1.24.0': 'd14120614acb29d12bcab72bd689f257eb4be9e0b6f88a8fb7e41ac65f8556e5',
 }
 BOOTSTRAP_VERSION = '1.4-bootstrap-20171003'
 BOOTSTRAP_VERSION_1_17_13 = '1.17.13'
 BOOTSTRAP_VERSION_1_20_14 = '1.20.14'
+BOOTSTRAP_VERSION_1_22_12 = '1.22.12'
 MIN_VERSION_BUILT_WITH_GO = '1.5'
 MIN_VERSION_BUILT_WITH_GO_1_17_13 = '1.20'
 MIN_VERSION_BUILT_WITH_GO_1_20_14 = '1.22'
+MIN_VERSION_BUILT_WITH_GO_1_22_12 = '1.24'
 RELOCATION_TYPE_42_VERSIONS = ('1.4.1', '1.4.2', '1.4.3')
 MIN_VERSION_WITHOUT_INCLUDE = '1.5'
 MIN_VERSION_GOENV_REQUIRED = '1.21.0'
@@ -569,6 +572,8 @@ def version_tuple(version):
     return tuple(map(int, (version.split('.'))))
 
 def is_build_with_go(version):
+    if version_tuple(version) >= version_tuple(MIN_VERSION_BUILT_WITH_GO_1_22_12):
+        return BOOTSTRAP_VERSION_1_22_12
     if version_tuple(version) >= version_tuple(MIN_VERSION_BUILT_WITH_GO_1_20_14):
         return BOOTSTRAP_VERSION_1_20_14
     if version_tuple(version) >= version_tuple(MIN_VERSION_BUILT_WITH_GO_1_17_13):
