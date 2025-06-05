@@ -64,6 +64,7 @@
           pkgs.util-linux
           pkgs.vim
           pkgs.tmux
+          pkgs.git
           pkgs.curl
           pkgs.wget
           pkgs.unzip
@@ -79,14 +80,36 @@
           pkgs.wireguard-tools
           pkgs.nettools
           pkgs.netcat-openbsd
+          pkgs.openssh
+          pkgs.autossh
+          pkgs.steghide
+          pkgs.mat2
+          pkgs.sshfs
+          pkgs.gocryptfs
+          pkgs.openvpn
+          pkgs.ffmpeg
+          pkgs.mosh
+          pkgs.qrencode
+          pkgs.qrscan
+          pkgs.qrtool
 
           # GUI.
           pkgs.xfce.xfce4-terminal
+          pkgs.xfce.ristretto
           pkgs.firefox
           pkgs.chromium
           pkgs.qbittorrent
           pkgs.telegram-desktop
           pkgs.keepassxc
+          pkgs.geany
+          pkgs.mplayer
+          pkgs.evince
+          pkgs.calibre
+          pkgs.gimp3
+          pkgs.inkscape
+          pkgs.abiword
+          pkgs.gnumeric
+          pkgs.gnuplot
 
           # Keybase.
           pkgs.keybase
@@ -96,6 +119,10 @@
 
           # Development.
           pkgs.go
+          pkgs.gotools
+          pkgs.golangci-lint
+          pkgs.cmakeCurses
+          pkgs.clang-tools
         ];
       };
 
