@@ -20,7 +20,7 @@ PROFILED_NIX="/etc/profile.d/99-qubes-nix.sh"
 echo "- Installing required system packages..."
 apt update
 apt install -y sudo curl qubes-core-agent-networking xz-utils \
-    qubes-core-agent-passwordless-root
+    qubes-core-agent-passwordless-root pipewire-qubes
 
 # Make sure that the current directory is writable by "user", othwerwise they
 # will fail to create "result-*" symlinks in "nix build" steps.

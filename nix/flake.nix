@@ -35,6 +35,14 @@
         export NIX_REMOTE=daemon
       '';
 
+      # Setup bash completion.
+      bashCompletionProfile = pkgs.writeTextDir "etc/profile.d/99-bash-completion.sh" ''
+        # Enable programmable completion features.
+        if [ -f ${pkgs.bash-completion}/etc/profile.d/bash_completion.sh ]; then
+          . ${pkgs.bash-completion}/etc/profile.d/bash_completion.sh
+        fi
+      '';
+
       # Fake root only for /etc .
       fakeRootEnv = pkgs.symlinkJoin {
         name = "qubes-fake-root";
@@ -42,6 +50,7 @@
           etcEnvironment
           x11KeyboardConf
           nixProfiled
+          bashCompletionProfile
         ];
       };
 
@@ -60,10 +69,18 @@
           pkgs.xorg.setxkbmap
           pkgs.xorg.xkbcomp
 
-          # Command line.
-          pkgs.util-linux
+          # Shell environment.
+          pkgs.bashInteractive
+          pkgs.bash-completion
           pkgs.vim
           pkgs.tmux
+          pkgs.openssh
+          pkgs.autossh
+          pkgs.mosh
+          pkgs.man
+
+          # Command line.
+          pkgs.util-linux
           pkgs.git
           pkgs.curl
           pkgs.wget
@@ -80,15 +97,12 @@
           pkgs.wireguard-tools
           pkgs.nettools
           pkgs.netcat-openbsd
-          pkgs.openssh
-          pkgs.autossh
           pkgs.steghide
           pkgs.mat2
           pkgs.sshfs
           pkgs.gocryptfs
           pkgs.openvpn
           pkgs.ffmpeg
-          pkgs.mosh
           pkgs.qrencode
           pkgs.qrscan
           pkgs.qrtool
@@ -96,13 +110,14 @@
           # GUI.
           pkgs.xfce.xfce4-terminal
           pkgs.xfce.ristretto
+          pkgs.xfce.thunar
           pkgs.firefox
           pkgs.chromium
           pkgs.qbittorrent
           pkgs.telegram-desktop
           pkgs.keepassxc
           pkgs.geany
-          pkgs.mplayer
+          (pkgs.mplayer.override { pulseSupport = true; })
           pkgs.evince
           pkgs.calibre
           pkgs.gimp3
@@ -123,6 +138,16 @@
           pkgs.golangci-lint
           pkgs.cmakeCurses
           pkgs.clang-tools
+          pkgs.gcc
+          pkgs.gdb
+          pkgs.valgrind
+
+          # Deployment.
+          pkgs.kubectl
+          pkgs.docker
+
+          # VMs and emulators.
+          (pkgs.wine.override { pulseaudioSupport = true; })
         ];
       };
 
