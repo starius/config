@@ -20,7 +20,13 @@ PROFILED_NIX="/etc/profile.d/99-qubes-nix.sh"
 echo "- Installing required system packages..."
 apt update
 apt install -y sudo curl qubes-core-agent-networking xz-utils \
-    qubes-core-agent-passwordless-root pipewire-qubes
+    qubes-core-agent-passwordless-root pipewire-qubes qubes-usb-proxy
+
+# Enable typing in Unicode in bash.
+echo "en_US.UTF-8 UTF-8" | tee /etc/locale.gen
+locale-gen
+localedef -i en_US -f UTF-8 en_US.UTF-8
+update-locale LANG=en_US.utf8
 
 # Make sure that the current directory is writable by "user", othwerwise they
 # will fail to create "result-*" symlinks in "nix build" steps.
@@ -33,7 +39,7 @@ echo "- Installing Nix multi-user daemon (if not installed)..."
 if [ ! -d "/nix/store" ]; then
     export USER=root
     export NIX_INSTALLER_NO_MODIFY_PROFILE=1
-    sh <(curl -L https://nixos.org/nix/install) --daemon --yes
+    ./nix-install.sh --daemon --yes
 fi
 
 # Enable Flakes globally.
