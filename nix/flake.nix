@@ -92,6 +92,7 @@
           pkgs.dnsutils
           pkgs.whois
           pkgs.p7zip
+          pkgs.bzip2
           pkgs.wireguard-tools
           pkgs.nettools
           pkgs.netcat-openbsd
@@ -123,6 +124,7 @@
           pkgs.abiword
           pkgs.gnumeric
           pkgs.gnuplot
+          pkgs.electrum
 
           # Keybase.
           pkgs.keybase
@@ -131,6 +133,7 @@
           pkgs.fuse
 
           # Development.
+          pkgs.gnumake
           pkgs.go
           pkgs.gotools
           pkgs.golangci-lint
