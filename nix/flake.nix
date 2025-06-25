@@ -12,6 +12,11 @@
       system = "x86_64-linux"; # For Qubes Debian minimal.
       pkgs = import nixpkgs { inherit system; };
 
+      # Create /etc/environment .
+      etcEnvironment = pkgs.writeTextDir "etc/environment" ''
+        QT_XCB_GL_INTEGRATION=none
+      '';
+
       # Create /etc/X11/xorg.conf.d/00-keyboard.conf .
       x11KeyboardConf = pkgs.writeTextDir "etc/X11/xorg.conf.d/00-keyboard.conf" ''
         Section "InputClass"
@@ -40,6 +45,7 @@
       fakeRootEnv = pkgs.symlinkJoin {
         name = "qubes-fake-root";
         paths = [
+          etcEnvironment
           x11KeyboardConf
           nixProfiled
           bashCompletionProfile
