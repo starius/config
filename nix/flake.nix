@@ -31,8 +31,8 @@
       # Setup bash completion.
       bashCompletionProfile = pkgs.writeTextDir "etc/profile.d/99-bash-completion.sh" ''
         # Enable programmable completion features.
-        if [ -f ${pkgs.bash-completion}/etc/profile.d/bash_completion.sh ]; then
-          . ${pkgs.bash-completion}/etc/profile.d/bash_completion.sh
+        if [ -f /nix/var/nix/profiles/default/etc/profile.d/bash_completion.sh ]; then
+          . /nix/var/nix/profiles/default/etc/profile.d/bash_completion.sh
         fi
       '';
 

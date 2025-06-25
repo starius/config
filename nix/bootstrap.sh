@@ -58,6 +58,16 @@ fi
 ' >> "$BASHRC_GLOBAL"
 fi
 
+# Make sure bash-completion is loaded in all shells.
+if ! grep -q "/nix/var/nix/profiles/default/etc/profile.d/bash_completion.sh" "$BASHRC_GLOBAL"; then
+    echo '
+# Enable programmable completion features in non-login shells.
+if [ -f /nix/var/nix/profiles/default/etc/profile.d/bash_completion.sh ]; then
+  . /nix/var/nix/profiles/default/etc/profile.d/bash_completion.sh
+fi
+' >> "$BASHRC_GLOBAL"
+fi
+
 echo "OK Nix daemon installed."
 
 # Switch to 'user' to build Flake.
