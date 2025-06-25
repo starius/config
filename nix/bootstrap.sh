@@ -46,6 +46,7 @@ fi
 mkdir -p /etc/nix
 if ! grep -q "experimental-features" "$NIX_CONF_FILE"; then
     echo "experimental-features = nix-command flakes" | tee -a "$NIX_CONF_FILE"
+    echo "trusted-users = root user" | tee -a "$NIX_CONF_FILE"
 fi
 
 # Make sure Nix is loaded in all shells.
