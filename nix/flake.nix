@@ -145,6 +145,7 @@
 
           # Deployment.
           pkgs.kubectl
+          pkgs.k9s
           pkgs.docker
 
           # VMs and emulators.
