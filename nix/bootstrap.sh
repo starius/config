@@ -102,4 +102,10 @@ APPS_DIR=$(readlink -f "$SCRIPT_DIR/result-apps")
 /nix/var/nix/profiles/default/bin/nix-env \
         --profile /nix/var/nix/profiles/default --set "$APPS_DIR"
 
+# Now clean the store.
+echo "- Running nix-collect-garbage -d ..."
+/nix/var/nix/profiles/default/bin/nix-collect-garbage -d
+echo "- Running nix store optimise ..."
+/nix/var/nix/profiles/default/bin/nix store optimise
+
 echo "OK System-wide Nix environment setup complete."
