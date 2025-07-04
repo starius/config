@@ -110,7 +110,7 @@
           pkgs.xfce.xfce4-terminal
           pkgs.xfce.ristretto
           pkgs.xfce.thunar
-          pkgs.firefox
+          pkgs.firefox-esr
           pkgs.chromium
           pkgs.qbittorrent
           pkgs.telegram-desktop
