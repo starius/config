@@ -87,6 +87,19 @@ nix build .#fake-root --out-link result-fake-root
 nix build .#apps --out-link result-apps
 
 echo "OK Flake build complete."
+
+echo "- Comparing binaries with expected values..."
+# Make a list of paths of all the packages of apps. Sort by package name.
+nix-store --query --requisites ./result-apps | sort -k 1.45 > paths.txt
+# Calculate all the hashes of paths (of outputs, not inputs).
+paste -d '\t' <(cat paths.txt) <(xargs nix-store --query --hash < paths.txt) > got-binary-hashes.txt
+# Compare with the expected values.
+if ! cmp "got-binary-hashes.txt" "want-binary-hashes.txt"; then
+    echo "!!! Mismatch of binary files in packages. Aborting."
+    exit 1
+fi
+echo "OK Binary files are correct!"
+
 EOF
 
 # Get the path to the Nix-built rsync.
