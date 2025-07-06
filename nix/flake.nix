@@ -125,6 +125,7 @@
           pkgs.gnumeric
           pkgs.gnuplot
           pkgs.electrum
+          pkgs.mindforger
 
           # Keybase.
           pkgs.keybase
