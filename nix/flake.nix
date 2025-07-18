@@ -2,7 +2,7 @@
   description = "Qubes Debian-Minimal Template Configuration (Pinned via Flake)";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/0f0fec6440f863b2e20f0351f3ad26beedf219a8"; # fixed nix in 2.29
+    nixpkgs.url = "github:NixOS/nixpkgs/f4dc8eb31fe34e77336d5a9988b948544f7131ff";
     home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs"; # Same pinned nixpkgs
   };
@@ -82,6 +82,7 @@
           pkgs.git
           pkgs.curl
           pkgs.wget
+          pkgs.zip
           pkgs.unzip
           pkgs.openssl
           pkgs.jq
@@ -105,9 +106,11 @@
           pkgs.qrencode
           pkgs.qrscan
           pkgs.qrtool
+          pkgs.opentimestamps-client
 
           # GUI.
           pkgs.xfce.xfce4-terminal
+          pkgs.lxterminal
           pkgs.xfce.ristretto
           pkgs.xfce.thunar
           pkgs.firefox
@@ -143,6 +146,8 @@
           pkgs.gcc
           pkgs.gdb
           pkgs.valgrind
+          pkgs.postgresql
+          pkgs.sqlite
 
           # Deployment.
           pkgs.kubectl
