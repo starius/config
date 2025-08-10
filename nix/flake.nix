@@ -2,7 +2,7 @@
   description = "Qubes Debian-Minimal Template Configuration (Pinned via Flake)";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/f4dc8eb31fe34e77336d5a9988b948544f7131ff";
+    nixpkgs.url = "github:NixOS/nixpkgs/71d53b44092c134834c1ece48c6aeb1eb77266ec";
     home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs"; # Same pinned nixpkgs
   };
