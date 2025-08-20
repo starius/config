@@ -1,0 +1,14 @@
+wss://nos.lol
+wss://nostr-1.nbo.angani.co
+wss://no.str.cr
+wss://nostr.einundzwanzig.space
+wss://nostr.massmux.com
+wss://nostr.middling.mydns.jp
+wss://nostr.mom
+wss://nostr.oxtr.dev
+wss://nostr.roundrockbitcoiners.com
+wss://nostr.vulpem.com
+wss://nostr.yael.at
+wss://relay.damus.io
+wss://relay.nostr.band
+wss://relay.snort.social
