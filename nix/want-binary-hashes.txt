@@ -143,6 +143,7 @@
 /nix/store/pydp0hb5hb6h908ll3clwj2m4ybw9qk7-dejavu-fonts-minimal-2.37	sha256:1fkxijysp5k0q49bai9b4wrmg85w4iix76cgq1kf7ph22qdjic5y
 /nix/store/r3q42y9hpwir4zkqgvj1z14z7j8hjw2x-desktop-file-utils-0.28	sha256:0lgc9jmhh9axy9pl4zambqwch5ylxryl8kvfgxrpnx1hxd42caqz
 /nix/store/3y665d2l6l3bp6apj012awks60wsx42i-diffutils-3.12	sha256:0qgxmpcsp5zn0f9xyrdspdkapgmdzfzhd5bw2r2i3n2q5c10plzh
+/nix/store/3wvc2pp111rpw77aniiccyi4xxgif5yp-discordo-0-unstable-2025-07-28	sha256:05l22ivva8f9clzls11mgchr5r20bfy8nfq15rxbvx71j55h63nd
 /nix/store/w93lrbvk67y6prc318i9paxp7yy954xz-djvulibre-3.5.28	sha256:10xj3jc4y29mckri5k7lmck3zl4b6x2pz3wzyfiz665cw5yln3qz
 /nix/store/dzjl978sqxibd1vd29pxa77zs0yhg13b-djvulibre-3.5.28-lib	sha256:1m8w1jd7lgxla4ywwpdbmcyy841ij37sw5wsf1d487b59x7zm3r4
 /nix/store/d74cr36jpviqfi468yz01kl8yjsik571-dns-root-data-2025-04-14	sha256:1svg8wvqhl7sr3jfzf2wr1g9wg27dl49i7k6sn2s0mwqharqlcf1
@@ -1201,7 +1202,7 @@
 /nix/store/zhd78lld2zqj8k0qj4h8vxf67glpyz84-qtwebengine-6.9.1	sha256:0i7vwlq735x5nvl2vs8rm5wrg6s7xq14mxkjh898afjdfk6fgma4
 /nix/store/byccjn8w1vpwryxg7b86106m10acmvh5-qtwebsockets-6.9.1	sha256:1m00lpdj0j7lciagsw1iknj4cfx6cxwidzvjp2nr288gkgcpqkpm
 /nix/store/7jlmz54x468nz52db0wfkc6j4i64wp09-qtx11extras-5.15.17	sha256:1glq4j1lgryh5n41lb0shcm5b5av28xkby6rmqfba8wxh28c3gqs
-/nix/store/p9dfhbfp702h110kfw0wv3b98d8dy9fq-qubes-template-env	sha256:0865by2bp1jz3fxp9pdx2aklcdq2c8v14aymdgg6wif616drla6r
+/nix/store/am4vsa59c7ffm9h195yrnj4hrzgz71g5-qubes-template-env	sha256:1xslgnyzjcmsnjzmy2djpgzb0078d2ckcd44mi73vsnc7p6cpy4f
 /nix/store/s4gn9xnjx7298wsxffgxiv3isx0j584k-rapidcheck-0-unstable-2023-12-14	sha256:0kkffnagcc91pj3b914n7v64ywldzjs7gj3vrbx3dcg1q26z5jky
 /nix/store/n0v183fjgvm7gj6b5fx3jzlqm521bycs-raptor2-2.0.16	sha256:0778rp130ak4s182qdnr0hxdhkck76hv0avq9j7xh88rhdblz90b
 /nix/store/qbcqjl7hlsrf1nv53zyjd0amc24g6ach-raptor2-2.0.16	sha256:0dx7bzj1s34vjcmqgynglggl0d83xbnr5iv468ixy3xbgh107d9x
@@ -1373,6 +1374,7 @@
 /nix/store/xjhqqdqccbbfp0wnnf3zn7y02krzqb18-wine-mono-8.1.0-x86.msi	sha256:0zvypayqm86xg4w0fjdbn8s9f7mpq1sf6gmq57xg2208a77505n3
 /nix/store/pvw3qj2w444gb4jgh9fn8ryncpmpw56w-wireguard-tools-1.0.20250521	sha256:0k1cs9xp1sp7fkxzj2x4ysvv4clsxp6y8wpnvg1xg6bss8v62r0i
 /nix/store/j07lf26bxnm4fggw2cm66xvns2yk21n8-wireguard-tools-1.0.20250521-man	sha256:1v717wyj4n73jb430srakgjmpl4hvcg7m0zpan2nvn00rbaxkmax
+/nix/store/jf0k5xgqhcp091sqs51bxzqzbfrjih2w-wl-clipboard-2.2.1	sha256:0hk52whskdy4il929sanbwnczwardy20apsqpkky5df8clivhrqd
 /nix/store/by3vg2lc1194a4linpynfcmwk3walvxr-woff2-1.0.2-lib	sha256:0jlcgp6dkiy199lq3zvj49z1w11dqrib6544apfi2ykx8hgnx4g0
 /nix/store/2qcx0j6i4js6pns00pq1pqgfxh92z5y1-wv-1.2.9	sha256:0wvc9h5miv7wrm6cnshc2jh9q39p48i4nwx49ikwjrli7kjwvhi1
 /nix/store/8pc095vhjzvz8ncdb52dy1wq6rwr5y0n-x264-0-unstable-2025-01-03-lib	sha256:04rmsv2yqhqkiw8yr4ryx2g8kdgmdfj6w63vd1w4rmsq4w515bp1
@@ -1399,6 +1401,7 @@
 /nix/store/24j9amj85jw3mwb7551nx3b4bnxcl81z-xkeyboard-config-2.45	sha256:0759rshjl7f6v88ng5682qddgig7d1fmdgkp7lnr1qqdv1d713y5
 /nix/store/ladb2476l43ybydsjgwslsi4ndp0vl2h-xkeyboard-config-2.45	sha256:19hnrwa1qn8h21nivms05j9kcpgl4g9y153sc9ywrakis1wr8qvj
 /nix/store/js5pxnzpiq4g0jg4flsjjpziviialjwx-xrandr-1.5.3	sha256:07iy3i6rkhdxb734lginpwq3q3nf778ac5fg71nw1h8s32zf8mas
+/nix/store/snrc1m35pvwdaqqczrv09sh58q1gs655-xsel-1.2.1	sha256:0zcv8yj4mcz1q1dwb3sbqbklm491k00n9w19qnkixd91z98sanhq
 /nix/store/7bvb1jdkqxg2nwvy9zj1z3d47100smc6-xvidcore-1.3.7	sha256:0xpkkyzd7iiv8fdh7m6bm7xzvxrmk9a63dmlmch0jy5hwcq6jrjm
 /nix/store/k867aprfzrfjxvc803kkcg8i7s4nh59c-xvidcore-1.3.7	sha256:08ra2pdk7kkcgb52s6wpy656lkni84cjkad9swppz00h9sv74z3k
 /nix/store/6wjrbgszrz5n93rf834i58k4fs33p5a4-xxHash-0.8.3	sha256:0pf9knmivrz68skhmlsj9gcc9yx36r98ka6pb979fxiwkvi3yjvd

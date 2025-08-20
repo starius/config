@@ -117,6 +117,7 @@
           pkgs.chromium
           pkgs.qbittorrent
           pkgs.telegram-desktop
+          pkgs.discordo
           pkgs.keepassxc
           pkgs.geany
           (pkgs.mplayer.override { pulseSupport = true; })
