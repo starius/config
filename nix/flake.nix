@@ -107,6 +107,7 @@
           pkgs.qrscan
           pkgs.qrtool
           pkgs.opentimestamps-client
+          pkgs.tor
 
           # GUI.
           pkgs.xfce.xfce4-terminal
