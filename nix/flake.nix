@@ -108,6 +108,7 @@
           pkgs.opentimestamps-client
           pkgs.tor
           pkgs.codex
+          pkgs.gemini-cli-bin
 
           # GUI.
           pkgs.xfce.xfce4-terminal
