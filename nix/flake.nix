@@ -2,12 +2,10 @@
   description = "Qubes Debian-Minimal Template Configuration (Pinned via Flake)";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/1a1c9a244c740aec75726c5aa56e30c49c6ca546";
-    home-manager.url = "github:nix-community/home-manager/release-25.05";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs"; # Same pinned nixpkgs
+    nixpkgs.url = "github:NixOS/nixpkgs/6d7ec06d6868ac6d94c371458fc2391ded9ff13d";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }:
+  outputs = { self, nixpkgs, ... }:
     let
       system = "x86_64-linux"; # For Qubes Debian minimal.
       pkgs = import nixpkgs { inherit system; };
@@ -56,9 +54,8 @@
       appEnv = pkgs.buildEnv {
         name = "qubes-template-env";
         paths = [
-          # Nix tools and home-manager.
+          # Nix tools.
           pkgs.nix
-          home-manager.packages.${system}.home-manager
 
           # Rsync is needed to sync fakeRootEnv to / .
           pkgs.rsync
