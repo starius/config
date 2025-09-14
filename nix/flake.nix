@@ -84,6 +84,7 @@
           pkgs.wget
           pkgs.zip
           pkgs.unzip
+          pkgs.unrar-free
           pkgs.openssl
           pkgs.jq
           pkgs.xxd
@@ -99,6 +100,7 @@
           pkgs.netcat-openbsd
           pkgs.steghide
           pkgs.mat2
+          pkgs.exiftool
           pkgs.sshfs
           pkgs.gocryptfs
           pkgs.openvpn
@@ -108,6 +110,7 @@
           pkgs.qrtool
           pkgs.opentimestamps-client
           pkgs.tor
+          pkgs.codex
 
           # GUI.
           pkgs.xfce.xfce4-terminal
