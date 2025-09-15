@@ -193,6 +193,7 @@
 /nix/store/s34p2i6228xim061g2iqq3z0va3532p3-ffmpeg-headless-7.1.1-data	sha256:14rgz02qm1qy7b3z3dgvqs7wc7fdaz3h16lp3xq6z05ammv6f07z
 /nix/store/j0kf0056nxz63by9hn741vfrk6z5b02x-ffmpeg-headless-7.1.1-lib	sha256:1dlvcn9z6kw17rap4xfblpcf2xid5rf8cgzcn4g4gdvvk60b8h76
 /nix/store/lx2q2i8rs3rkw3xks6fapmz3qxjvlx68-ffmpeg-headless-7.1.1-lib	sha256:0kmnvqkciyrh7dwqv4d4lxwmzak2mx2f5wybdvnbjizkg23b9518
+/nix/store/lyghrcqdyizczanricjssz3nixf3whps-fftw-double-3.3.10	sha256:1lqg5akgbw6x7ix7v1llg6sarg6v6dlghc7byw1c3vqbzdjy16gh
 /nix/store/c2pslcb62prhwlnrgva75crz285yzxi2-fftw-single-3.3.10	sha256:07mmvx9h5zjn51pra5863nf45z9w7wwfcx0lj0jgddh46i65djw6
 /nix/store/mkwlr78yl6hw8pxqyk1wh7i6ifm23s8n-fftw-single-3.3.10	sha256:1a6wa46frnd3k7r63bsbfvb3rryaylrdlg4jkgbs6qnxqs4bscb6
 /nix/store/r9j93qyzxvpww1gipzg744xx173p7kbh-fhsenv-ensure-gsettings-schemas-directory	sha256:0cwx1b8i7a61yjl2f8p7wqr3sgmkrm7f58dbpada0c1ns11wjvsh
@@ -381,6 +382,7 @@
 /nix/store/083x1zrd8rnrkq1plphxvc2vdzgk8dvj-icu4c-76.1-dev	sha256:0kwh4brv3y5d6ksjsmdh3l7xc03b04pd9xd7vgma2wnbj1f9kpv4
 /nix/store/sdjnfqf6q30wbfivyf8mjpkdv2mir12w-icu4c-77.1	sha256:06bn6v987bv4f07wa7hy9w0v3y5pj66bgl5bplk1z4mzh5iayzcb
 /nix/store/d856qa670fbb0g0h86lnsz6d02i6r5js-ijs-10.05.1	sha256:1jh7sqc4law9ida5ymx7p33jj3akljgfl99yjb40n6c1fp9l8wm5
+/nix/store/xvrvpcj3rw3fdv7chhxl39abip0mm8rj-imagemagick-7.1.2-3	sha256:0x7vf01i9ydkxihhhi1rbdm01qh5ksgpjz31whfx0bbzggk2iwyn
 /nix/store/qc2h0pp2piaw36s60n7g1nb113bx78xf-imath-3.2.1	sha256:0id3d6lpi9wdp40km7vjlhqc2wzs9hgdcs5gjf9kj34ja101s8j3
 /nix/store/s1vkif6v6fb6d5ki8ms35gfx3afd4v5s-imath-3.2.1	sha256:18cvkchird95yghaiiwl78kmh0b3k8grnmfi0kjpml1dk8bv8k77
 /nix/store/lrbz8lma1ym5k4xv13lkxn9z91ryfv5x-imlib2-1.12.5	sha256:16qiv147k7wcr4z1vj5akb2grrwzmqsxikyk11mwxda5mq0g4zn3
@@ -594,6 +596,7 @@
 /nix/store/c3aqf7vgpvzlhps9xcv92ifz4zc31hvh-libksba-1.6.7	sha256:0zxd93539lj8g6njkg2zq8xc2dxscwjz2w95gyh1b99cav4l0anv
 /nix/store/2sg4ag5qiqqyi671yzgcsgv8kbmkdd75-liblc3-1.1.3	sha256:1iz4lc5s7a6zgyj4psmhxfvwwnafj1f1ir98cbk2009d7fdim1l9
 /nix/store/gif45jjly7sx2py69d6rw9vd4kmb2wf7-liblc3-1.1.3	sha256:1y5snyy7dpcpn5qp77rkgbcdbyki6c7amyjcbvkljyak8i0m6rji
+/nix/store/q0pm2mgl5lq38x0bk759imhnqgg386nl-liblqr-1-0.4.2	sha256:14vyzwgibqrwygw6ymz7vjky320rb17c0cw43ibw1gh5qikm6b9p
 /nix/store/dimxcw4dp2882922wrvys5ax69vjv01j-libmad-0.15.1b	sha256:1mbhpy70kk304ffdav7s7i2giixqflcnxrb149gwqxlkplwnib3m
 /nix/store/km2w6c0agmlnpa8vrgdn1pmna0757k8q-libmad-0.15.1b	sha256:1zkv8xddkyc0asl2p898zh9dlkb87g26475h7ijdxmnc88rlq77w
 /nix/store/b7w33mi6sv6b1fsr66f3gkzbn3ixv5as-libmanette-0.2.12	sha256:150b9ldjvmkpjdyjkhf1g4hcz4482nwid01axpjidpfiligjd293
@@ -1200,7 +1203,7 @@
 /nix/store/3bf55vq9mg9n9kbs3zsm96hbijipcmcb-qtwebengine-6.9.2	sha256:0mbf9zbsda0jk1n0ppc0w6kx69yxjc2yb1mp4z0dlzhq4r25y4nf
 /nix/store/13yy1vqyfc12ai2vzi4jz8gm3i89ydp2-qtwebsockets-6.9.2	sha256:1b46blflr3j6la95bbpz8yhdss5xf2zp3d63006mif89lwjlyxrf
 /nix/store/g9dy256f156jf7lcxzkx4paz4xlwgmnp-qtx11extras-5.15.17	sha256:1hmxi6hrdd3d9rcwayc2cphrlxhk66gfbp0d0v9ybm61imfxik4j
-/nix/store/v1vcaddicx9gm5lv4bd60ah4s4b2r388-qubes-template-env	sha256:1xsx99fm4fwhcxccyjb2b3gx771yj12dx569lhkg85g9869b392q
+/nix/store/0nc4v389i3vwd8fkk2pdlnfd1a26faaz-qubes-template-env	sha256:1nimh59x9xj8p5d67yvhkkz2w2g7mmkdir7clw85cxc7w1gb7iz1
 /nix/store/0a02iiyvpzmnhm212kza3kgbg200zd9y-rapidcheck-0-unstable-2023-12-14	sha256:192zqfalz4ci7kf04z252r3z7c11x8n7cs0fri5hclmr9f4h659z
 /nix/store/74ny3apa7ylmb1xb7k6firqlhlcsss91-raptor2-2.0.16	sha256:0qcxgp50pi1q924q15qvq00zxlwkqf029m1fsg779b5cl5yhmj80
 /nix/store/chjrjg4flnn59qk3nra1w91xfqqi51px-raptor2-2.0.16	sha256:0vvr1720cfk215qnash9d5lsridy9373i2g4wrrchg0ndddjbjkr

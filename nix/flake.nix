@@ -102,6 +102,7 @@
           pkgs.gocryptfs
           pkgs.openvpn
           pkgs.ffmpeg
+          pkgs.imagemagick
           pkgs.qrencode
           pkgs.qrscan
           pkgs.qrtool
