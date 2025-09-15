@@ -68,6 +68,7 @@
           pkgs.bashInteractive
           pkgs.bash-completion
           pkgs.vim
+          pkgs.ed
           pkgs.tmux
           pkgs.openssh
           pkgs.autossh
