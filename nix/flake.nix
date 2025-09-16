@@ -77,6 +77,7 @@
 
           # Command line.
           pkgs.util-linux
+          pkgs.dateutils
           pkgs.git
           pkgs.curl
           pkgs.wget
