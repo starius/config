@@ -4,8 +4,8 @@ set nu showcmd
 syntax on
 filetype indent on
 set et
-set sw=4
-set ts=4
+set sw=8
+set ts=8
 set autoindent
 set smarttab
 
