@@ -153,6 +153,8 @@
           pkgs.valgrind
           pkgs.postgresql
           pkgs.sqlite
+          pkgs.rustc
+          pkgs.cargo
 
           # Deployment.
           pkgs.kubectl

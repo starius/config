@@ -84,6 +84,7 @@
 /nix/store/qqp9905idvzszhmkgnd468nbx3ydnk5s-cairo-1.18.4	sha256:1z6hw9xk7lz36iqsa6bhi03v6ng28kj84z9czp70ihc5h6yg19lz
 /nix/store/pj0dsc379l8xi9s88ivc40lvcd8zws7r-cairomm-1.14.5	sha256:1y5h8zxiyb4zwaddlji21vm8w9r22x4hl5f22256k6js7ip11p9s
 /nix/store/as7y0vbrxlhqskq8mjs0k1569xly5501-calibre-8.7.0	sha256:0h8l74gqgg6jn6vk337px56a079h8qbsswanfmdj9lldzpcz0s1i
+/nix/store/xq6ns6hdgl7fdshisp5mb65f1jlysm0h-cargo-1.89.0	sha256:1w7g7yby4qlzyp861hpv0f38jc84sla1z4ax4dnwfiyr3n2d878q
 /nix/store/1yi05abfqgjz0yw98av9api6fmp5mqgg-cdparanoia-III-10.2	sha256:1pfp02awcqyi9v4lmg862x3kvj23vflls3ajs3crfhiab3x2c5f9
 /nix/store/i77w0r7ii9r6vdwgavkckdlnsflyak29-cdparanoia-III-10.2	sha256:11md6rjaqgmk0p2hi90lf18i8pk15abfpwva36c9g03g766ciad0
 /nix/store/01jvqvinqbqjda91qvbprxi627sflsy3-cfitsio-4.6.2	sha256:1d1yyk6kh59p2s9v8b4h07ppmimxnh0yscy2rmfdaip1dx3lj2jr
@@ -821,6 +822,7 @@
 /nix/store/gz42kmkrky3w0jki988aa2x0pjhfj56m-linux-pam-1.7.1	sha256:1qg66wdi3kbsx6xiw33rngfp2dwkwga813yyn3k0l1wjq3qrs11n
 /nix/store/8q4kzx1i0707ly1ncf8s7i2k1xd5gc88-llhttp-9.3.0	sha256:1v00izx81w8di7i5dv40ccd047n8cbsq81x14r17d4599qz55514
 /nix/store/dpq7kddnm2v466hkbixdvws3hikqdaaq-llvm-19.1.7-lib	sha256:0chnfsr13x1f77zgwl2zy0j32wl567pzqbkydv7pibxf62y6wgxl
+/nix/store/d3bv4bj7klgfc1w1x01d91a1f4g7ywga-llvm-20.1.8-lib	sha256:0kl384y6zkr17a57z4r5dxwy1g8sv679kgdqif3cvzcxfdb9vb6v
 /nix/store/1qdisdbz44l31fp7c3j18rdw3yy39a5q-lowdown-2.0.2-lib	sha256:172d4hsm1x7zckbcak773k9pkyv3yrnlgzzsw755cpn6rpkjpwl4
 /nix/store/jy81bh32hxnl3fxfxg1i1av184nhf27h-lrdf-0.6.1	sha256:0ckckn8lnj5d94xh960m43qbklb3nszna6vcb22j2ag1kgvj3hj1
 /nix/store/w0gsxdfy8b9w5x13hhp8ah7knllvld2w-lrdf-0.6.1	sha256:0cj4zqmi7cxda66gnh22v19n0078dv955lba9j3sc4zqvgqwpwfg
@@ -1205,7 +1207,7 @@
 /nix/store/3bf55vq9mg9n9kbs3zsm96hbijipcmcb-qtwebengine-6.9.2	sha256:0mbf9zbsda0jk1n0ppc0w6kx69yxjc2yb1mp4z0dlzhq4r25y4nf
 /nix/store/13yy1vqyfc12ai2vzi4jz8gm3i89ydp2-qtwebsockets-6.9.2	sha256:1b46blflr3j6la95bbpz8yhdss5xf2zp3d63006mif89lwjlyxrf
 /nix/store/g9dy256f156jf7lcxzkx4paz4xlwgmnp-qtx11extras-5.15.17	sha256:1hmxi6hrdd3d9rcwayc2cphrlxhk66gfbp0d0v9ybm61imfxik4j
-/nix/store/ifj17w4pdhq8r3nxs3ksy2qhly1p6mcb-qubes-template-env	sha256:12n6z4z0axcfdxryqjvg5qhswzjfnjpk4lgb62fjwfijjmds7c3n
+/nix/store/izbz2m1fig52hidsj923x7p8iq0pcd2l-qubes-template-env	sha256:0wqi68s9dngzxxvnjrx30w72f3nccbh0rjk7klidifk4s2py544c
 /nix/store/0a02iiyvpzmnhm212kza3kgbg200zd9y-rapidcheck-0-unstable-2023-12-14	sha256:192zqfalz4ci7kf04z252r3z7c11x8n7cs0fri5hclmr9f4h659z
 /nix/store/74ny3apa7ylmb1xb7k6firqlhlcsss91-raptor2-2.0.16	sha256:0qcxgp50pi1q924q15qvq00zxlwkqf029m1fsg779b5cl5yhmj80
 /nix/store/chjrjg4flnn59qk3nra1w91xfqqi51px-raptor2-2.0.16	sha256:0vvr1720cfk215qnash9d5lsridy9373i2g4wrrchg0ndddjbjkr
@@ -1220,6 +1222,10 @@
 /nix/store/13ncbkscfpwf5ya9llzz4q0n3sgxi65s-rsync-3.4.1	sha256:19brcza57xmqf3mhfn48ldypajfh2g1b5cjp3dhsba2ngiw9fpjc
 /nix/store/is171q93mrq8j9cypl53zjryv1w2hgz9-rtmpdump-2.6	sha256:0j75wsvm5qdi4qzywfmjrammlksmg2cklp15m94k2s520lh65q7p
 /nix/store/rnpm4qxc0xcvmyh2qscgqp8dmqpv8nva-rtmpdump-2.6	sha256:151b3hkk653gn9mlkcxi7j6hm40ksx3v03gchjbqydxvyr1i2cbs
+/nix/store/lami1gbfhz609fd6d8pi91sxppvyvq8r-rustc-1.89.0	sha256:1vahvgv0mg8n5qsnb1mc02nkp3xhfqn1i24ri5b1l5vz79axa8r3
+/nix/store/xcny4dpp7iniddvw6gqm4qny1i4m6nnr-rustc-1.89.0-man	sha256:195fscqjlfb013yg64pjxli77k0djwy56nkmg1c6zagslw2vl232
+/nix/store/hcginxlb1vivl6v6vjmi61s96082270d-rustc-wrapper-1.89.0	sha256:1m7bxm18zic57qn2iwn6fl1w4r4rk7h5248c5pvbgc59w146kk2s
+/nix/store/1qas0d89hs3lzccywq1zhpwgf3rnh8p1-rustc-wrapper-1.89.0-man	sha256:19kz96hrr70vv11px8dlz90906hcqn997v1pmadf9gy97wn0x578
 /nix/store/wqa9drg4vqnzar966lqkm0q7m326jdf9-s2n-tls-1.5.24	sha256:1a8k4g35isam4c43m7x3nq8g64sav73qiiyly9v5x72s01vb012b
 /nix/store/h6rrvxzk2nazb0whkmzqrzzvi37fqn1r-samba-4.22.3	sha256:0g2mxwkq8aams6mf00a1791g4sbvy7cq0pbvh9gy00l0pi8xhifb
 /nix/store/6s5fmsj16g8y58ix3vcr3j2bd8vzypi6-sane-backends-1.4.0	sha256:1y88y2w5a01ngchv7b9ggxqn1zxdg4z34g184kg26b42a98l961m
