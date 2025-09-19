@@ -3,12 +3,17 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/6d7ec06d6868ac6d94c371458fc2391ded9ff13d";
+    rust-overlay.url = "github:oxalica/rust-overlay";
+    rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, ... }:
+  outputs = { self, nixpkgs, rust-overlay, ... }:
     let
       system = "x86_64-linux"; # For Qubes Debian minimal.
-      pkgs = import nixpkgs { inherit system; };
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [ (import rust-overlay) ];
+      };
 
       # Create /etc/environment .
       etcEnvironment = pkgs.writeTextDir "etc/environment" ''
@@ -153,8 +158,12 @@
           pkgs.valgrind
           pkgs.postgresql
           pkgs.sqlite
-          pkgs.rustc
-          pkgs.cargo
+          # Rust toolchain with musl target preinstalled (static builds).
+          (pkgs.rust-bin.stable.latest.default.override {
+            targets = [ "x86_64-unknown-linux-musl" ];
+          })
+          # Musl cross-compiler (for linking static binaries).
+          pkgs.pkgsCross.musl64.stdenv.cc
 
           # Deployment.
           pkgs.kubectl
