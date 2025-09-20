@@ -329,6 +329,7 @@
 /nix/store/mdd6cbrw28ygk8rg2xn8i69dxmpj1n27-graphite2-1.3.14	sha256:1gfixfj0i7jpsls924yi40a1ki2cw8m8652rc9q1g8ga9j9kxsbr
 /nix/store/75py9rqxqdb0csqh117an1z4v3zhrkhp-graphviz-12.2.1	sha256:0ln2mqz2h7vr3rr9bxl47qfgwl5v8c6rccgqs5i7hbgrp1rhzz3s
 /nix/store/kpv690v9v1bwsgsc4h8c7g3gff3krvyg-groff-1.23.0	sha256:0vcglwczh41lpi43n1kvyhghqa97lq45ml0fqkxpgwyqlq247ppl
+/nix/store/m6hcp34rbmhh2qyqg9wvl680gzwc7jcz-grpcurl-1.9.3	sha256:12cx1p83fhxlca1abv7ib6vgh3qjxb7nc8p0z4zgk0c16m6j6579
 /nix/store/4mnv8i8s1rg1j3ivmwz1xb23dc87qy60-gsettings-desktop-schemas-48.0	sha256:1ika0q5z1xikm7a87qdj3p9q30anyv6w584709s1hs880is9y18v
 /nix/store/fid0mwflhh27zihrfib3w839610y3s22-gsettings-desktop-schemas-48.0	sha256:0w2ck57r5aisyql7sipdd85rmgrrnsl05gp0phaff8xf16jag9b9
 /nix/store/s42dr7nb4s398y8l4snvsmnwq25q0qaa-gsl-2.8	sha256:0278sfp3b230b3hxbqzwmycj94siik835yzaravvi7ylal1yx787
@@ -862,8 +863,6 @@
 /nix/store/myf480ymsaj6vf7p5w4wsiyd38rzpb9q-mpg123-1.33.2	sha256:1s3z47xkrxqpihk2bwx4a6hmx0kc6sfrqr8cnrmwnhnw9n55jqy3
 /nix/store/0bgyzkydshdsayfnbp656s2wsqgys0wz-mplayer-1.5-unstable-2024-12-21	sha256:0y96xc6lv8g69i5k63jvkz32y0h1wyhcc8v3jv46dc4bm3g4fwd8
 /nix/store/yg95pqw1c4ff09jnvdkin69zps7rb6kf-mtdev-1.1.7	sha256:1cgya01136ax2gz93020waihxcv13n9fk62j0jzm6sc87yb00nnl
-/nix/store/7qqpplifjvm99342gr0g285sdhpskg7z-musl-1.2.5	sha256:0nkzpb4dsx9ldckjpwxc3hqwvibr7gpa2sxx5bfmfyr3kvgvz98m
-/nix/store/zn4cq4plss94d6a4rd4kr8c06y7gjznl-musl-1.2.5-bin	sha256:1yxwkwws6phbfwhjfczbjqpb7vyhvmfisfyqfx0y55ghiiqcwgvg
 /nix/store/ykzbw7q3nl5lvqprl2mmm1kxhd9yl2jj-musl-x86_64-unknown-linux-musl-1.2.5	sha256:16a1f4kckz0q35jm64y6xm1zb39mhmyqqy19kgx7kbgxz4axyv1h
 /nix/store/iydirzns4095h7y4lqjzm51jhkpj9q99-musl-x86_64-unknown-linux-musl-1.2.5-bin	sha256:0kc1mqcmmbbbp35z6bynsa62n7j2c0dkc9fcb2ky5nrhrc7l7yyq
 /nix/store/vkjq310qgmvndhwgynp61h7fihk31hqp-musl-x86_64-unknown-linux-musl-1.2.5-dev	sha256:12lf1jwjz6aar2j8ypvi2cx02igfffcsvr554p632vk5g73amrgg
@@ -1000,7 +999,9 @@
 /nix/store/hwp38fg5vf8wa7llv6ply06w2i5f8z3v-pixman-0.46.2	sha256:0h0dqr3smrgdyckgajpdyc30368y1cfdmhxxwsxigf69hy514pj5
 /nix/store/ssshfj3zgwnx3j77spypa7c5v5ixc5sc-pixman-0.46.2	sha256:13nz3vsqwb6ffhmrirjx12h9pk5vbaq4gy42g4yp7fddfl3gsllv
 /nix/store/4my6a75b8p1w734w7crqfw69jw7xarla-pkg-config-0.29.2	sha256:063hvzm69kwvn7cdxsp9f0aaffl14gi4qgjl15qlwg3a92147sc4
+/nix/store/w4p7in6p1g0fc6gfaikna8xs8z8xx60v-pkg-config-0.29.2-man	sha256:1xrangyy2q18dq033jj5gvi4v163gfxf6hrw1lsf334zc2p2w25g
 /nix/store/05h9vfzhqf7l6w1xczixici2ldw9y788-pkg-config-wrapper-0.29.2	sha256:1bia29awzjril87ys5bwh586sfi423184fb8gwz0xxjjc200c3mf
+/nix/store/4acmnq9dq7zd6rbpi3wigrkflxjcnr1c-pkg-config-wrapper-0.29.2-man	sha256:0rq2kanrk05wqyzi3iwwkn1gy3bdi37m1x6gc84rmj95r2sppfb7
 /nix/store/m56ryz6z3ida8zlg6ai55406kkv5w84g-podofo-0.10.5	sha256:16ky9zchc0wpyiiyzr3j03zmpsxpajfwnvk8qw48kdlq3rrh7lal
 /nix/store/xi1lf1yx2fs8224snkckpkc04vjcywdp-poly2tri-c-0.1.0	sha256:17cpq2p2r83kb59mdayyc0r6l1ylrf3hg7pb9dvshir5m7lr27kd
 /nix/store/1xhjamnq2nq8360i4213b5h21pkk75vc-poppler-data-0.4.12	sha256:122qy5w3j9zf7crk8a8dw1ycpnxmycsz74mxbdfim352fvwmvg0m
@@ -1216,7 +1217,7 @@
 /nix/store/3bf55vq9mg9n9kbs3zsm96hbijipcmcb-qtwebengine-6.9.2	sha256:0mbf9zbsda0jk1n0ppc0w6kx69yxjc2yb1mp4z0dlzhq4r25y4nf
 /nix/store/13yy1vqyfc12ai2vzi4jz8gm3i89ydp2-qtwebsockets-6.9.2	sha256:1b46blflr3j6la95bbpz8yhdss5xf2zp3d63006mif89lwjlyxrf
 /nix/store/g9dy256f156jf7lcxzkx4paz4xlwgmnp-qtx11extras-5.15.17	sha256:1hmxi6hrdd3d9rcwayc2cphrlxhk66gfbp0d0v9ybm61imfxik4j
-/nix/store/j4k9z99bbdfq6055mg55zp7fnxiikw2y-qubes-template-env	sha256:0gv0a8is9gvqk1fh1l2shz2vdcn9brkxzl23bmqmahb48nvvl1dd
+/nix/store/3ndf7vd5325mcicngwhc7lp1a4w2amw5-qubes-template-env	sha256:0wvgbf4dp08nbw129llfkha2k0qws73dcq8a3qra7m702f8600kq
 /nix/store/0a02iiyvpzmnhm212kza3kgbg200zd9y-rapidcheck-0-unstable-2023-12-14	sha256:192zqfalz4ci7kf04z252r3z7c11x8n7cs0fri5hclmr9f4h659z
 /nix/store/74ny3apa7ylmb1xb7k6firqlhlcsss91-raptor2-2.0.16	sha256:0qcxgp50pi1q924q15qvq00zxlwkqf029m1fsg779b5cl5yhmj80
 /nix/store/chjrjg4flnn59qk3nra1w91xfqqi51px-raptor2-2.0.16	sha256:0vvr1720cfk215qnash9d5lsridy9373i2g4wrrchg0ndddjbjkr

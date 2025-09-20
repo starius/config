@@ -85,6 +85,7 @@
           pkgs.dateutils
           pkgs.git
           pkgs.curl
+          pkgs.grpcurl
           pkgs.wget
           pkgs.zip
           pkgs.unzip
@@ -164,6 +165,7 @@
           })
           # Musl cross-compiler (for linking static binaries).
           pkgs.pkgsCross.musl64.stdenv.cc
+          pkgs.pkg-config
 
           # Deployment.
           pkgs.kubectl
