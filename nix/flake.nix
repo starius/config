@@ -83,6 +83,7 @@
           # Command line.
           pkgs.util-linux
           pkgs.dateutils
+          pkgs.ascii
           pkgs.git
           pkgs.curl
           pkgs.grpcurl
