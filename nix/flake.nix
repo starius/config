@@ -167,6 +167,8 @@
           # Musl cross-compiler (for linking static binaries).
           pkgs.pkgsCross.musl64.stdenv.cc
           pkgs.pkg-config
+          (pkgs.hyperscan.override { withStatic = true; })
+          pkgs.hyperscan.dev
 
           # Deployment.
           pkgs.kubectl
@@ -176,6 +178,7 @@
           # VMs and emulators.
           (pkgs.wine.override { pulseaudioSupport = true; })
           pkgs.appimage-run
+          pkgs.qemu-user
         ];
       };
 
