@@ -84,10 +84,12 @@
           pkgs.util-linux
           pkgs.dateutils
           pkgs.ascii
+          pkgs.file
           pkgs.git
           pkgs.curl
           pkgs.grpcurl
           pkgs.wget
+          pkgs.gzip
           pkgs.zip
           pkgs.unzip
           pkgs.unrar-free
