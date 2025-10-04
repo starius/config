@@ -157,6 +157,7 @@
           pkgs.cmakeCurses
           pkgs.clang-tools
           pkgs.gcc
+          pkgs.yasm
           pkgs.gdb
           pkgs.valgrind
           pkgs.postgresql
@@ -170,6 +171,7 @@
           pkgs.pkg-config
           (pkgs.hyperscan.override { withStatic = true; })
           pkgs.hyperscan.dev
+          pkgs.nixfmt-rfc-style
 
           # Deployment.
           pkgs.kubectl
