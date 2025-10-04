@@ -123,3 +123,5 @@ export PATH=$HOME/.nodejs-root/bin:$PATH
 
 export PATH=$HOME/.ruby-build-root/bin:$PATH
 export PATH=$HOME/.ruby-root/bin:$PATH
+
+export PATH=$HOME/nix/result-apps/bin:$PATH
