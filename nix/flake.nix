@@ -86,6 +86,7 @@
           pkgs.ascii
           pkgs.file
           pkgs.git
+          pkgs.git-lfs
           pkgs.curl
           pkgs.grpcurl
           pkgs.wget

@@ -274,6 +274,7 @@
 /nix/store/8dn88c3gkass1xkp90a1vjckai5c61wj-gimp-3.0.4	sha256:115663cp92sfgl72l2cpnn5nc92lyj397xpm90vsp6jbcj020iy5
 /nix/store/q1zaii9cirbfpmwr7d86hpppql3kjcpf-git-2.51.0	sha256:047gcbjkd3lbz1cv0njcrqnw9lawxz6lsmyjw36lf9d7fx9f7v2p
 /nix/store/vjjhqc2vixs1pfy4bh5qpqrvqg042vd4-git-2.51.0-doc	sha256:17z9bm3lmar59dc2m2syxl775hzj03rgjpibk81dz2z79kjl6q09
+/nix/store/ma5a8y8iidps488fagd7k280g2d0mpd7-git-lfs-3.7.0	sha256:1d2idh2s6r6bns01ccgb6hyligwc2q8vfxsail3954qjk03nkhvc
 /nix/store/fyldpwkr3kaayvjg07h4v51sffp25idx-git-minimal-2.51.0	sha256:0hk250hlcfcsns0qkcqpmc309g897lf86mrwmwzdh471pbhv66rq
 /nix/store/n68ck0h7qwk0c5wh6vbd6q79dcfvqbxr-gjs-1.84.2	sha256:1gqi7zw1i3zkizw1pcwhmc4ihc8ws9kj4hcpav8q9j1vxjakdz4l
 /nix/store/7pzqb9zcfqapl5bk0li7v2mvanhcb71i-glew-1.10.0	sha256:0938cggba01mwfs1ci0k9sbvav9fmy5clhig4m98aryp9z3y6a95
@@ -1227,7 +1228,7 @@
 /nix/store/3bf55vq9mg9n9kbs3zsm96hbijipcmcb-qtwebengine-6.9.2	sha256:0mbf9zbsda0jk1n0ppc0w6kx69yxjc2yb1mp4z0dlzhq4r25y4nf
 /nix/store/13yy1vqyfc12ai2vzi4jz8gm3i89ydp2-qtwebsockets-6.9.2	sha256:1b46blflr3j6la95bbpz8yhdss5xf2zp3d63006mif89lwjlyxrf
 /nix/store/g9dy256f156jf7lcxzkx4paz4xlwgmnp-qtx11extras-5.15.17	sha256:1hmxi6hrdd3d9rcwayc2cphrlxhk66gfbp0d0v9ybm61imfxik4j
-/nix/store/bjar2kf19barllnbdn7gxx91d8vf2v2d-qubes-template-env	sha256:0jn6np5sszjkw1wbgxnglv2wci1qqzwzggg1503r19mhr1z76v97
+/nix/store/dnkiljf0lxvv3rp2i5f853bk89qii7ly-qubes-template-env	sha256:0qamdsx3bs4hg8nm2w1bqli1sf66yqr8z98h1fcpnyw32zvipc5h
 /nix/store/0a02iiyvpzmnhm212kza3kgbg200zd9y-rapidcheck-0-unstable-2023-12-14	sha256:192zqfalz4ci7kf04z252r3z7c11x8n7cs0fri5hclmr9f4h659z
 /nix/store/74ny3apa7ylmb1xb7k6firqlhlcsss91-raptor2-2.0.16	sha256:0qcxgp50pi1q924q15qvq00zxlwkqf029m1fsg779b5cl5yhmj80
 /nix/store/chjrjg4flnn59qk3nra1w91xfqqi51px-raptor2-2.0.16	sha256:0vvr1720cfk215qnash9d5lsridy9373i2g4wrrchg0ndddjbjkr
