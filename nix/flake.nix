@@ -72,6 +72,8 @@
           # Shell environment.
           pkgs.bashInteractive
           pkgs.bash-completion
+          pkgs.zsh
+          pkgs.fish
           pkgs.vim
           pkgs.ed
           pkgs.tmux
@@ -121,6 +123,7 @@
           pkgs.tor
           pkgs.codex
           pkgs.gemini-cli-bin
+          pkgs.termsvg
 
           # GUI.
           pkgs.xfce.xfce4-terminal
