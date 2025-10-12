@@ -2,8 +2,8 @@
   description = "Qubes Debian-Minimal Template Configuration (Pinned via Flake)";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/647e5c14cbd5067f44ac86b74f014962df460840";
-    rust-overlay.url = "github:oxalica/rust-overlay";
+    nixpkgs.url = "github:NixOS/nixpkgs/870493f9a8cb0b074ae5b411b2f232015db19a65";
+    rust-overlay.url = "github:oxalica/rust-overlay/a8143c74e5ed8cdbca3c96d4362b6392577481ff";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
@@ -173,8 +173,6 @@
           # Musl cross-compiler (for linking static binaries).
           pkgs.pkgsCross.musl64.stdenv.cc
           pkgs.pkg-config
-          (pkgs.hyperscan.override { withStatic = true; })
-          pkgs.hyperscan.dev
           pkgs.nixfmt-rfc-style
 
           # Deployment.
