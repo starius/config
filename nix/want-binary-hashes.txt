@@ -25,6 +25,7 @@
 /nix/store/ahk8m69zlqnha2k49rdywfgzcablrik1-appstream-1.0.4	sha256:00qb5imh8ljwmkz3ljss0xbhhfvnpm0micld7dfcfdq4drds7d5j
 /nix/store/qjv3q6vw4hk18lrc17q61s2nh006x2za-appstream-glib-0.8.2	sha256:1vhibhnps8b7398cg23fm62mn41nnvd1vv6xl9xcxw4qq54da6z0
 /nix/store/291ja9bbdmy0vl2p9z1d1f34ai7si77p-ascii-3.30	sha256:0sk785fq4kykpiy3arbac4dcspiqj62bjajgqq610a806m27wbd9
+/nix/store/r83a5r34vfcs0cmsp0hs3092aiwycz65-asmfmt-1.3.2	sha256:1mm03i10gn25jx4bw0x4araxwn8grb2g69n8fwyvk9blilh9nkh7
 /nix/store/pa61d513jgzsg5azccqmfh5jls74qyrf-aspell-0.60.8.1	sha256:1m767pzkn7zw1m6ahx2iz5k3i0j722h7ahl4bixx2vrvn3z4w534
 /nix/store/0ydrc27d1l0li3bhgnbl6m6h1xlyfmy2-atkmm-2.28.4	sha256:1slcd3lj4wxbp985lidq3a4bbvr8rx2ws8cl1daw1vqf38wmvyvf
 /nix/store/86izvbvyd9kqpv3wrr9s3wn5bmy565di-at-spi2-core-2.56.2	sha256:0y7ip4q8crhwj71sfvkc7yyddlz80mzq56p2zq8r377zz37qzlfb
@@ -327,6 +328,7 @@
 /nix/store/5b655lqa98l9jzbag0nn5p13ilb2vkjw-gocryptfs-2.6.1	sha256:1ahx2ply2fhkl9qhyfjaqhwh8by8h9jc8lkpr0zfpsahqagnrp6s
 /nix/store/4fa4r4qlmzksb1175qsafyyyfb6sj7gq-goffice-0.10.59	sha256:18ss4l1wgvf6nhpbb9ppcxzm6mmybc2l3j7i8xxs0snrfmhnslwq
 /nix/store/s95zr6py9ppj3hpm295mdzs40q59177p-golangci-lint-2.5.0	sha256:0q1brid25dr6aaybv8mvbs44rh2vldz1nc53fka120f6ncxwsh55
+/nix/store/wjyrkv970fscd58zkxdc8z0043yk1ggg-goperf-0-unstable-2025-09-09	sha256:1zzlbzr41k6nsn6z5jivwz6j93pbdgkg2iibaqyrf3zri62fhv3m
 /nix/store/i16yjb9a9d9h1raibfapr42lg02inzfv-gotools-0.34.0	sha256:0cavli8fzyjph3mj48wvzf2k1i609n4c6grqbalxqdprrx2l6932
 /nix/store/z1zvjiqpbjsda6ng81bl0fsjf0b5lr2i-gperftools-2.17.2	sha256:0rc25b97n560mq3j24b2q5rakq8nwwzs1q8i7i7iki3rwbgcjb0v
 /nix/store/n0970aph0z4c55rn39626gxal7k294c3-graphene-1.10.8	sha256:0prb32sxkv2sg2h437i5wr9nraxs874nx12hca5zyyy0x5xm1n3k
@@ -1243,7 +1245,7 @@
 /nix/store/g80f4ldj6y460gd38k6crmzw51fdqvnk-qtwebengine-6.9.2	sha256:0h508mxq16s52y0im2ijgm9bdvj2k0rrcjwb881w0ik0sjwcihn2
 /nix/store/j3d7xbcb1kgz2xjf4x1h4gcwl5ngz4l8-qtwebsockets-6.9.2	sha256:0bhwsshygx9yhwp1h8dr8fp2z1sbzb9lxymjkzmq929v4a783pxw
 /nix/store/378bacwiybamla6jhdx2q2w3fdfn074g-qtx11extras-5.15.17	sha256:0pjzb3zibjawqiimzfidar9v7bmm2y0djmlg6agbjrv2ibjfpzi1
-/nix/store/mp5i0383qhadi4hg0ssrijvac0c422dn-qubes-template-env	sha256:0nmmk8p2jb2s86q2an9cbqp008p4xvyvpfjz81y4fq19gylhvfc0
+/nix/store/kbw3wc68z8yamwxdi4rvpfi0xlms6gk8-qubes-template-env	sha256:0klnsbgp1z6h8ykkzj4h7ncnm3ag0dqyv54sp54yfrm5whswzq7m
 /nix/store/ar607v1rlhs1j1fvzawd7dihymbz6z61-raptor2-2.0.16	sha256:01h06max3v0hv5qbn01ybpvqzgc160sclzcnmz2hjydwwbi1x7ll
 /nix/store/ccxwf18czcdc38x96sidvipxnc9xk1g9-raptor2-2.0.16	sha256:1q4zgq7yvvjsfzxc2apafmrc4bsn4fj166rdczhp5m6vhdyv27gz
 /nix/store/b24p04am0ja2wbad355b61im5kh10dvx-readline-8.3p1	sha256:1graipgvdw9iyw9lkf7a3z49dymqqkrjmjxcghmnbvsfvk5571vi

@@ -158,6 +158,8 @@
           pkgs.go
           pkgs.gotools
           pkgs.golangci-lint
+          pkgs.goperf
+          pkgs.asmfmt
           pkgs.cmakeCurses
           pkgs.clang-tools
           pkgs.gcc
