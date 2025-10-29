@@ -124,6 +124,7 @@
           pkgs.codex
           pkgs.gemini-cli-bin
           pkgs.termsvg
+          pkgs.ripgrep
 
           # GUI.
           pkgs.xfce.xfce4-terminal
