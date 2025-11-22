@@ -95,6 +95,7 @@
           pkgs.gzip
           pkgs.zip
           pkgs.unzip
+          pkgs.zstd
           pkgs.unrar-free
           pkgs.openssl
           pkgs.jq
@@ -125,6 +126,7 @@
           pkgs.gemini-cli-bin
           pkgs.termsvg
           pkgs.ripgrep
+          pkgs.ntfs3g
 
           # GUI.
           pkgs.xfce.xfce4-terminal
@@ -147,6 +149,7 @@
           pkgs.gnumeric
           pkgs.gnuplot
           #pkgs.electrum
+          pkgs.yt-dlp
 
           # Keybase.
           pkgs.keybase
@@ -155,6 +158,8 @@
           pkgs.fuse
 
           # Development.
+          pkgs.nodejs_24
+          pkgs.yarn
           pkgs.gnumake
           pkgs.go
           pkgs.gotools
