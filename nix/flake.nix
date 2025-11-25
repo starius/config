@@ -2,8 +2,8 @@
   description = "Qubes Debian-Minimal Template Configuration (Pinned via Flake)";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/a7fc11be66bdfb5cdde611ee5ce381c183da8386";
-    rust-overlay.url = "github:oxalica/rust-overlay/63d22578600f70d293aede6bc737efef60ebd97f";
+    nixpkgs.url = "github:NixOS/nixpkgs/ee09932cedcef15aaf476f9343d1dea2cb77e261";
+    rust-overlay.url = "github:oxalica/rust-overlay/7f3aa46dfa230ec2a4ca9281186a24771650ccd1";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
@@ -148,7 +148,7 @@
           pkgs.abiword
           pkgs.gnumeric
           pkgs.gnuplot
-          #pkgs.electrum
+          pkgs.electrum
           pkgs.yt-dlp
 
           # Keybase.
