@@ -158,6 +158,8 @@
           pkgs.fuse
 
           # Development.
+          pkgs.perf
+          pkgs.flamegraph
           pkgs.nodejs_24
           pkgs.yarn
           pkgs.gnumake
