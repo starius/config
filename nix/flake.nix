@@ -2,8 +2,8 @@
   description = "Qubes Debian-Minimal Template Configuration (Pinned via Flake)";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/ee09932cedcef15aaf476f9343d1dea2cb77e261";
-    rust-overlay.url = "github:oxalica/rust-overlay/7f3aa46dfa230ec2a4ca9281186a24771650ccd1";
+    nixpkgs.url = "github:NixOS/nixpkgs/a672be65651c80d3f592a89b3945466584a22069";
+    rust-overlay.url = "github:oxalica/rust-overlay/769156779b41e8787a46ca3d7d76443aaf68be6f";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
