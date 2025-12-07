@@ -134,7 +134,7 @@
           pkgs.xfce.ristretto
           pkgs.xfce.thunar
           pkgs.firefox
-          pkgs.chromium
+          pkgs.ungoogled-chromium
           pkgs.qbittorrent
           pkgs.telegram-desktop
           pkgs.discordo
