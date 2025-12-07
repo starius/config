@@ -67,6 +67,7 @@
 /nix/store/rmv4h4x475k2p321ln3pd0ddng7vv8k6-binutils-2.44-lib	sha256:06lsi8k4y73gf2cn203g6rdllq38mrv4dadkfd3zif4bnl6z0ggy
 /nix/store/l87z7vxm5gp0n21ddrlx4dmrrqg92a7w-binutils-wrapper-2.44	sha256:1srdcwddd7bc7qdccq89f5iarw21xrkihv4sx60k7grizr7j57m7
 /nix/store/xwydcyvlsa3cvssk0y5llgdhlhjvmqdm-binutils-wrapper-2.44	sha256:074srsmpls439pwid31b3q3n6fajh35av6cgmsap1pmkb7w3wczm
+/nix/store/f9igndag5hq8m01yixzxzfmsndg4yssf-bitcoin-30.0	sha256:0bik0r25br0n0qfw9mhraply8d66w8xvi2fr2fq4kg39zchk5hib
 /nix/store/k8aawsx66xjgd8qhdr24dqaq9s0w8av5-blas-3	sha256:1sgib5il0y5kc5rv4mysjp0i43j2i5xih9yqy0bbqw95lkvknihh
 /nix/store/467vmcdyvj23l7dsjixymf8x9z6yl983-blas-3-dev	sha256:1yw2ia3ah4h9c9p6537k1fm8sjyakk1s9f9gmvzn2q5ydnmjaf3a
 /nix/store/9xwxjkrwxjsvc5gs1l0syr4wbfvvvvcn-bluez-5.84	sha256:0i8vmwsd23mhk1pns8cqdj845kvm79px14fyl3mfik9h3k6p9ybn
@@ -88,6 +89,7 @@
 /nix/store/w245vnxnk15mnndd74hjbf061p1jq9xg-cairo-1.18.4	sha256:1a61g1c6xy35kf2kqi952ia14k7g835wifq0nc51hj6r3xh0rlx6
 /nix/store/q8syfzfcndzlj6ywkb72dxz0cam5y0pv-cairomm-1.14.5	sha256:1kqh27khx7snazi2zpz1axzpd0avd8h0a3325n7bgjz9fmm7ffzi
 /nix/store/8qildwgyjkpj8icsdi2ixidcfisymy0i-calibre-8.14.0	sha256:0k0zm18s9gcf7j5zlipw9p00xvz6pd0kd4prc2ajhn3ygicnw4kj
+/nix/store/8xjrdb1y9ng6w6yknzg9h6fkxd3sb824-capnproto-1.2.0	sha256:1n58v4d13vmdhy2i7p2c0fsqrffra5x67qf47vnn01q1fwss6s97
 /nix/store/27r2vkndmz7q6gni64l84j46igsz7km4-c-ares-1.34.5	sha256:054lbb5012din4kcfs4j7bxav9f4mf4ayrgnld8j912v2k30pzfs
 /nix/store/vm2hi3xxlfh3vfhnq7yz81wr2bmp33f2-c-ares-1.34.5	sha256:0hnl6ka5piasx63xk3p4yxqkxh4rhxni24xw1iv4briz7f0qjsrf
 /nix/store/ykfb83r038kgphgfc0smhkj0jw81q7x5-cargo-1.91.1-x86_64-unknown-linux-gnu	sha256:1phn6gxqg9mjayf92d6p02gk3agrz4hflz9d2ml7znr046dg2vw9
@@ -844,6 +846,7 @@
 /nix/store/vg0afp6lmdrs4li4q4viry8blf5pbjrr-libyaml-0.2.5	sha256:0kvjcsy6kjmg4zlvzwiwf983fbrx6ksfwxmjl8jh5zmf4kkq4ryh
 /nix/store/nrw01j9wwdbc4xgxfha8ipnbd5syrfyd-libyuv-1908	sha256:1m5ipcl4firxcrqr1ma2jfm0wlb6wcr6chljsv483xg90z5lv0ic
 /nix/store/y2i3bvh2vjzjacfzp47blbdpai3c6qxj-libyuv-1908	sha256:09zs2j263n3yidnza6ggk5w3xs0sxgxk4x9i3xn73ipalpp26nqb
+/nix/store/294r6xdv5nqvydzr14w7nxq0hqgh3li1-lightning-loop-0.31.5-beta	sha256:16i71aygw6spbq6ca5iymcq2dfbplip74dpk09a53mgndbcfsxjs
 /nix/store/ga8p9nydj19k7ld0r83kzwr4drvlpm55-lilv-0.24.26	sha256:1y16cw0n1r0061cn7pqysjjn85n3alkvbhv7cgwl646fb6xzfj2z
 /nix/store/wpmdd20zjmm98w4j14yzdza3bzvqr8yh-lilv-0.24.26	sha256:0m7igh64cb8w06p2vjyyhzvl3pjdsh8w4l09i5mm87hbjydrcws3
 /nix/store/7i6q3h1hi5q7ifls00if8lcapyyb9hby-linux-headers-6.16.7	sha256:04m0yd71vnjgwxmcb58z6yhznfwgib38cgmak3sp0yjvmrx16csv
@@ -852,6 +855,7 @@
 /nix/store/xz74mda9bgs5ybii69qz2sklamg2i6sp-linux-pam-1.7.1	sha256:015mlcnblx41nydi2z2sjlz8gch295k0qp74s47sy3mich7yq46p
 /nix/store/ib8knpqn913hw717wjkgrh49flndihrz-llhttp-9.3.0	sha256:0430b3j8jifrk028qrf52hk2qp4hrpv5ab2hp7xvnfz6j0kvdkdr
 /nix/store/swch85kls1srlrji1i0g28wpa4y607hk-llvm-21.1.2-lib	sha256:1gb41p3xnq5prcz6ps7rk5mbri4fy79dxdjy0466abk5m1m0fw9q
+/nix/store/8phn70hz5v48g1xqzvpnhrzz87mhi4rc-lnd-0.19.3-beta	sha256:0524yxwd9zvhkdb7qppvlx5v3n233vgjgq7k4ysf67bfxqzkcvym
 /nix/store/xhvjnvmha1zlz2l63g1wjaayxx3cgj0b-lowdown-2.0.4-lib	sha256:1jm98r683cz7p2s8fdd6w5vqsbixzbnc1mb4v9gv08wmjq84jjqp
 /nix/store/adyzk25062xqxig1pjfp5dy5wxf5gqif-lrdf-0.6.1	sha256:087jf1mjiw0sbnc5y7wnf63n5clr7f536b4bk1b1hb2cijic2ly1
 /nix/store/ap3w6wfprrw8hy7pbkg4syxghy42gisz-lrdf-0.6.1	sha256:13vnrb245qnwsmij8755q358b2mabgqnz1254lqmvdq5zn97x9jq
@@ -1267,7 +1271,7 @@
 /nix/store/qg7xhh3m6naiqb7rr4zx5hn9nmcajfgc-qtwebengine-6.10.1	sha256:1l5gl67vwpwkj0psmr1jx8j95pncmxxnkwgpprph4xx0vh7n8h4a
 /nix/store/l8g90dfbs6nhgpva53s2z7bjcdvqqypl-qtwebsockets-6.10.1	sha256:19l38ky8cxvr452gz4r9xin866grc0g1q1q6wavl2jjx1djybqqc
 /nix/store/l5wsjmfqafxmwl1sp34m520vd9rsp7l7-qtx11extras-5.15.18	sha256:1lpjnmy55j5lkjd3gi599734laz61rircyi9di19b4xmf3lyn16c
-/nix/store/2gn8w38kyfvb3fa7q62g6zjl3v17xvpm-qubes-template-env	sha256:19pknb87sqqp1lrvp0jy2bx92xbj2h15bxkzakavyh2sks4ygkwj
+/nix/store/ddhfqqgpx6ib6rmvgidyk744qiad9yyk-qubes-template-env	sha256:1dgdp330lwqg5kk1iak9mc3xk5p005a61k022spfbyq6n3cspa20
 /nix/store/98chaw4za3r00b7a0kxiv5nmzpgiznxi-raptor2-2.0.16	sha256:0cb2zazl12vm5x9kwp00xksprdgf2ycbhbkhx2l82sr9pvymd10h
 /nix/store/hn2lg9sd8f5q0bjmxsshpy4m9h9vp78z-raptor2-2.0.16	sha256:0fh43y3k5d7lamx1bfzhqrqdvdjbysmfdnjpxps87icrh1z06qr4
 /nix/store/41cgbkwax6pd1sgi8l81mamv6rvarryj-readline-8.3p1	sha256:08qcfvhbf5h3in1yjbvpkqps5s2qx9qy3s36k0cv0rhfsh68qp16
@@ -1498,6 +1502,7 @@
 /nix/store/zlh6dsw5sp3kdss5paqd897288zmn6p1-zbar-0.23.93-lib	sha256:1jjhpcdkw6i9znmkiwl7762rsgaq57x5ivqc8x7yjm81mwl7lv33
 /nix/store/hry3adf5b18qp7cw1pszgisznqyxggzb-zenity-4.2.1	sha256:0v75ig08bslp46wqw3jn3qj1s4a0xqd8nyi6sr5c81jqzfzr38gb
 /nix/store/zpswxsk3222i9gimxcjb6nh69ildpkzv-zenity-4.2.1	sha256:0jkf6rgzrslvr7niqsfarps3w8sypqaw6xrhnnfbc13j9nn4d81z
+/nix/store/137kvclqwjk2fskzchic4b1jjx5wcvnf-zeromq-4.3.5	sha256:1706rv8jxdnp3h6xqhbvjpkqc92ys5l377blf911wd17psnjc032
 /nix/store/95ic4g4gz9pn1ls8km80m8a8x0jrn8ph-zimg-3.0.6	sha256:0y6h036j0hcgrkzqs30cj468a30i6251vd8abj4697nnq1g5rdsl
 /nix/store/ddqj7vcvww78rxmcrwrjlv7rdm7b1m3a-zimg-3.0.6	sha256:01ps2h5qca2ayr0ifmcq85s2caknq9yrsqf38r1gg74airiv40dd
 /nix/store/lp7nvhk6jhhi2xyw50jlzk5r2rs9nj81-zip-3.0	sha256:17qdgwcfyy1a3sxzcjhm1hnsf36r3z99mn0g40bya1k2lj6mr88r

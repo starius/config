@@ -127,6 +127,9 @@
           pkgs.termsvg
           pkgs.ripgrep
           pkgs.ntfs3g
+          pkgs.bitcoin
+          pkgs.lnd
+          pkgs.lightning-loop
 
           # GUI.
           pkgs.xfce.xfce4-terminal
