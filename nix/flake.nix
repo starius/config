@@ -130,6 +130,7 @@
           pkgs.bitcoin
           pkgs.lnd
           pkgs.lightning-loop
+          pkgs.openai-whisper
 
           # GUI.
           pkgs.xfce.xfce4-terminal
