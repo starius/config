@@ -110,7 +110,6 @@
 /nix/store/mx1ffc2awv9rzn0vlkicdjw1xkv1skby-cmake-cursesUI-4.1.2	sha256:0sz05s8fzyq4wmw9s2snbs2ac2s1q4wh3a8y0kq570z04iqhmhj1
 /nix/store/vbc911nqx4x46ibhrlzv2467dnindp5a-cmake-cursesUI-4.1.2-man	sha256:0dj6plbs0va4pz6hrklx9yyf5dj6cihi6lw92f7w2g6q1qki5vz4
 /nix/store/1y7ipvg8lk0mb9rmy20rgfbdvqdkifn9-codex-0.65.0	sha256:0i403djf0z38n1zwqrnhig5lyc413awd3gki7r8rmiz10q170rx5
-/nix/store/kjkfxkp47qf0wia2hyilqyij1dzv8n5m-colordiff-1.0.21	sha256:1dl5sgi6nf68nwdrrgb1mnyqb7mw6hwbwpw35369ii1z8k23iyj1
 /nix/store/a7rbw0ymxzcfj355byxig3bnq8ysp1qi-compiler-rt-libc-21.1.2	sha256:0a0xxhnkrbxjwd037ad9qcfam33n2dzsw9cm4lnpshwbii2fvd02
 /nix/store/gj06hl0vb46kf66zpsss4gk5wphfh5lk-compiler-rt-libc-21.1.2-dev	sha256:1cidg5sh6n2nbkfm9idclw217frwrk62i16i7frk54n4bmkaibd0
 /nix/store/j3k9f5cp5mzvlflalj86hvc2427pn9m4-container-init	sha256:1bgwx3lr38jzrqk3xz9qdk67rcsr50my70ai1r47baagk2ddv739
@@ -1306,7 +1305,7 @@
 /nix/store/qg7xhh3m6naiqb7rr4zx5hn9nmcajfgc-qtwebengine-6.10.1	sha256:1l5gl67vwpwkj0psmr1jx8j95pncmxxnkwgpprph4xx0vh7n8h4a
 /nix/store/l8g90dfbs6nhgpva53s2z7bjcdvqqypl-qtwebsockets-6.10.1	sha256:19l38ky8cxvr452gz4r9xin866grc0g1q1q6wavl2jjx1djybqqc
 /nix/store/l5wsjmfqafxmwl1sp34m520vd9rsp7l7-qtx11extras-5.15.18	sha256:1lpjnmy55j5lkjd3gi599734laz61rircyi9di19b4xmf3lyn16c
-/nix/store/msfp6lsx4vl3d5cns6fbp0w1h2q1pnql-qubes-template-env	sha256:0v98xlyis3g3yc33ch2j4g4dw8lls74shp7gam0bymhkjakqzzgg
+/nix/store/smzxhs18312n4yafpbqi41hhzglranm5-qubes-template-env	sha256:0dczdbkqzaldjgk21q1776lp1sfc29vrgnc83gk60iappf9bpll0
 /nix/store/98chaw4za3r00b7a0kxiv5nmzpgiznxi-raptor2-2.0.16	sha256:0cb2zazl12vm5x9kwp00xksprdgf2ycbhbkhx2l82sr9pvymd10h
 /nix/store/hn2lg9sd8f5q0bjmxsshpy4m9h9vp78z-raptor2-2.0.16	sha256:0fh43y3k5d7lamx1bfzhqrqdvdjbysmfdnjpxps87icrh1z06qr4
 /nix/store/41cgbkwax6pd1sgi8l81mamv6rvarryj-readline-8.3p1	sha256:08qcfvhbf5h3in1yjbvpkqps5s2qx9qy3s36k0cv0rhfsh68qp16
@@ -1474,7 +1473,6 @@
 /nix/store/ikmrm3alnwx5q9l00fm28zp74p3g9495-wayland-1.24.0-man	sha256:1qs99cwkaas5yvs3dxk3wrizmvx849729jaila2n2xj5r0dz6lvb
 /nix/store/lcg79avabfbynip489xfh86pyr7w4pbh-wayland-protocols-1.45	sha256:0znw2r7bc2fy34x79ixj3sk0qp6paj4f2f5jfa2xzrclr5w3xq5h
 /nix/store/00n4qi7j08ml9qgklfn2fr769d9myzny-wayland-scanner-1.24.0	sha256:0i0imzg1ixiq57pasd61a58gycgxknvxywhqllrglvbirr0p9vw9
-/nix/store/mw52wl7lk47pfym71zz928am42hvqsa6-wdiff-1.2.2	sha256:1if7dr0qcrlidq6mz3xyx29rihfq9sdpqn332dma07ihakp096m1
 /nix/store/34022hq0h4n9lsmdza1r4wjwh2vh6srf-webkitgtk-2.50.2+abi=4.1	sha256:13ljpvzv60lxrlhvw6msk6wqqfyngdqzhfawymp9vim9kdxlgks5
 /nix/store/48dasiscm2hrrvy7r2lr07chr838vmj9-webp-pixbuf-loader-0.2.7	sha256:1qv8ai5wiqcbhxak5q4yww5s9gr832mjmzbff3s80prjp4mpm74c
 /nix/store/38hp8y95akghg6mxm4r60cd81lpi0dbb-webrtc-audio-processing-1.3	sha256:1sm6w8k0lqj4zmfkz54ylnhyxi1g34irgvr103ml3k4i51xnif6k
