@@ -89,6 +89,8 @@
           pkgs.file
           pkgs.git
           pkgs.git-lfs
+          pkgs.wdiff
+          pkgs.colordiff
           pkgs.curl
           pkgs.grpcurl
           pkgs.wget
