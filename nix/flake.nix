@@ -2,8 +2,8 @@
   description = "Qubes Debian-Minimal Template Configuration (Pinned via Flake)";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/a672be65651c80d3f592a89b3945466584a22069";
-    rust-overlay.url = "github:oxalica/rust-overlay/769156779b41e8787a46ca3d7d76443aaf68be6f";
+    nixpkgs.url = "github:NixOS/nixpkgs/76eec3925eb9bbe193934987d3285473dbcfad50";
+    rust-overlay.url = "github:oxalica/rust-overlay/03c6e38661c02a27ca006a284813afdc461e9f7e";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
@@ -12,7 +12,9 @@
       system = "x86_64-linux"; # For Qubes Debian minimal.
       pkgs = import nixpkgs {
         inherit system;
-        overlays = [ (import rust-overlay) ];
+        overlays = [
+          (import rust-overlay)
+        ];
       };
 
       # Create /etc/environment .
@@ -103,7 +105,6 @@
           pkgs.jq
           pkgs.xxd
           pkgs.dos2unix
-          pkgs.daemonize
           pkgs.graphviz
           pkgs.dnsutils
           pkgs.whois
@@ -111,7 +112,6 @@
           pkgs.bzip2
           pkgs.wireguard-tools
           pkgs.nettools
-          pkgs.netcat-openbsd
           pkgs.steghide
           pkgs.mat2
           pkgs.exiftool
@@ -135,10 +135,10 @@
           pkgs.openai-whisper
 
           # GUI.
-          pkgs.xfce.xfce4-terminal
+          pkgs.xfce4-terminal
           pkgs.lxterminal
-          pkgs.xfce.ristretto
-          pkgs.xfce.thunar
+          pkgs.ristretto
+          pkgs.thunar
           pkgs.firefox
           pkgs.ungoogled-chromium
           pkgs.qbittorrent
