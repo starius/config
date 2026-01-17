@@ -118,6 +118,7 @@
           pkgs.sshfs
           pkgs.gocryptfs
           pkgs.openvpn
+          pkgs.sing-box
           pkgs.ffmpeg
           pkgs.imagemagick
           pkgs.qrencode
