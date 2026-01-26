@@ -190,7 +190,10 @@
           # Musl cross-compiler (for linking static binaries).
           pkgs.pkgsCross.musl64.stdenv.cc
           pkgs.pkg-config
-          pkgs.nixfmt-rfc-style
+          pkgs.nixfmt
+          pkgs.autoconf
+          pkgs.automake
+          pkgs.libtool
 
           # Deployment.
           pkgs.kubectl
