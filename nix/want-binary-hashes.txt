@@ -341,6 +341,7 @@
 /nix/store/zp9ay900gym7xy9xd5r79sixzccxsc8x-gobject-introspection-wrapped-1.86.0-dev	sha256:1d6rsm5y1h4i4cwb27yr8xwq5b0lccykqwlfmc268mm85bgs4iv1
 /nix/store/cgwy76n1jnrszps40k4g4isvkq9832gn-gocryptfs-2.6.1	sha256:0za8va58cpasz74ijb6wg3niz5dqirdjq1xgns0iysb4nn9wknkr
 /nix/store/hsp155z25xvnvm73mmnv9nn6vp317bh4-goffice-0.10.59	sha256:02f5jr8ip4yvrvapnpmvd8swk9hy6fifikx70lkzmjn6fb3bs778
+/nix/store/d3yf280anjha41vqcr87mwy8gndv815n-go-grip-0.5.6	sha256:1kxn4iga1g1pl70icg9yy32m3g8yf3y8gpcgcfd2r97q7sw20zz9
 /nix/store/643gpb6qyxjl9lcrfr8gvfck2rj9zabd-golangci-lint-2.8.0	sha256:1klrflwxj643kxcwap8mybzbbp6jg47axdafxmh855zz21d6bq0p
 /nix/store/shjvgf2v0dc20iz8c6xxkgszh97jxi7c-goperf-0-unstable-2026-01-12	sha256:0nv5c6nnim7mj6xj60i4nhjxg9fgf2jgfkx8ffai2b60p2lh1bvf
 /nix/store/1vw4cs4yss51n2245136i58wicgjhq9a-gotools-0.34.0	sha256:15wx6vmwyrkjs2jlk9qyyqfphlsvh1rxg6ldvlhykpx0hia7sqb4
@@ -1307,7 +1308,7 @@
 /nix/store/0jpfv9k5rf0xvj8h316358f7xpimagqr-qtwebengine-6.10.1	sha256:1gq9if7jl7zfi6943ipivz4x14m0akc5s8facing9anhiy7bz3a8
 /nix/store/lw6dpb0jxrycsc9lzl1c9spmd7ikw9r7-qtwebsockets-6.10.1	sha256:0v8h3r0agsngm46cgsr5fakpcw75bi1ln0z0l06j96l6szwkp45v
 /nix/store/vjrv0r4k8ljk9wrzpwyfsnb0kfj03c0k-qtx11extras-5.15.18	sha256:1fpvjbzzmnzzv35822b7fs2idw6h3dra2ijc0dfy6885ymdq9kps
-/nix/store/7sgvj8f99j0gvrkygjbaivq76ywiyl42-qubes-template-env	sha256:00ysgd9pniwa26fj4gwgnvcvkphzhg68vyd0qj3f564bl910av6s
+/nix/store/s2kx08kl62n6bww84rp4mcywwj1pf8av-qubes-template-env	sha256:034qx1k61w053gjv41har4jawdr83qy2apwyk9ndf585kgw8fffq
 /nix/store/dgn0qb1hw4b2r57rkvyib7ikvybn7b7k-raptor2-2.0.16	sha256:1rw4avwnbs2xxirncswn2qvjkhbgm0bpff7dvs5c1dsrk38vm42j
 /nix/store/xcw3isahb34jjbapg5ra65wy1h9qbckv-raptor2-2.0.16	sha256:11616qwpii3ybl3xknkf2r1smbaab96v5b5j3wd4qyl0y0brw23q
 /nix/store/rwbz5078fm8m4m0i3xz4xdl20kix1jvi-readline-8.3p1	sha256:1277nb4y2jx32ifndxdi3s4g1kcw1graj8bk8xlckmdy724ravf6

@@ -157,6 +157,7 @@
           pkgs.gnuplot
           pkgs.electrum
           pkgs.yt-dlp
+          pkgs.go-grip
 
           # Keybase.
           pkgs.keybase
