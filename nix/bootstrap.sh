@@ -22,6 +22,9 @@ apt update
 apt install -y sudo curl qubes-core-agent-networking xz-utils \
     qubes-core-agent-passwordless-root pipewire-qubes qubes-usb-proxy
 
+echo "- Disabling RAM disk in /tmp..."
+systemctl mask tmp.mount
+
 # Enable typing in Unicode in bash.
 echo "en_US.UTF-8 UTF-8" | tee /etc/locale.gen
 locale-gen
