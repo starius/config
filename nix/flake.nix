@@ -127,6 +127,7 @@
           pkgs.tor
           pkgs.codex
           pkgs.gemini-cli-bin
+          pkgs.opencode
           pkgs.termsvg
           pkgs.ripgrep
           pkgs.ntfs3g
