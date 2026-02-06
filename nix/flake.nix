@@ -144,6 +144,7 @@
           pkgs.ungoogled-chromium
           pkgs.qbittorrent
           pkgs.telegram-desktop
+          pkgs.ayugram-desktop
           pkgs.discordo
           pkgs.keepassxc
           pkgs.geany
