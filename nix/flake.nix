@@ -68,8 +68,8 @@
           pkgs.rsync
 
           # Keyboard layout settings.
-          pkgs.xorg.setxkbmap
-          pkgs.xorg.xkbcomp
+          pkgs.setxkbmap
+          pkgs.xkbcomp
 
           # Shell environment.
           pkgs.bashInteractive
