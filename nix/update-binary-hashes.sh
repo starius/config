@@ -25,7 +25,7 @@ for arg in "$@"; do
   esac
 done
 
-nix build .#apps --out-link result-apps
+nix build .#apps --out-link result-apps --max-jobs 1 --cores 1
 
 echo "OK Flake build complete."
 

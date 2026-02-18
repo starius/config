@@ -87,7 +87,7 @@ cd $SCRIPT_DIR
 
 # Build programs and configs in / from Flake.
 nix build .#fake-root --out-link result-fake-root
-nix build .#apps --out-link result-apps
+nix build .#apps --out-link result-apps --max-jobs 1 --cores 1
 
 echo "OK Flake build complete."
 
