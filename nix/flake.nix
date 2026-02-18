@@ -5,9 +5,11 @@
     nixpkgs.url = "github:NixOS/nixpkgs/d6c71932130818840fc8fe9509cf50be8c64634f";
     rust-overlay.url = "github:oxalica/rust-overlay/a5f6d8a6a6868db2a3055cfe2b5dd01422780433";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
+    llm-agents.url = "github:numtide/llm-agents.nix/8b797c5c8a02c3f65b14a85b3d7673d421d06bca";
+    llm-agents.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, rust-overlay, ... }:
+  outputs = { self, nixpkgs, rust-overlay, llm-agents, ... }:
     let
       system = "x86_64-linux"; # For Qubes Debian minimal.
       pkgs = import nixpkgs {
@@ -16,6 +18,8 @@
           (import rust-overlay)
         ];
       };
+
+      pkgsllm = llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
 
       # Create /etc/environment .
       etcEnvironment = pkgs.writeTextDir "etc/environment" ''
@@ -125,7 +129,7 @@
           pkgs.qrtool
           pkgs.opentimestamps-client
           pkgs.tor
-          pkgs.codex
+          #pkgs.codex
           pkgs.gemini-cli-bin
           pkgs.opencode
           pkgs.termsvg
@@ -208,6 +212,9 @@
           (pkgs.wine.override { pulseaudioSupport = true; })
           pkgs.appimage-run
           pkgs.qemu-user
+
+          # Temp fix until https://github.com/NixOS/nixpkgs/pull/486323 is merged
+          pkgsllm.codex
         ];
       };
 
