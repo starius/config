@@ -76,6 +76,8 @@ echo "OK Nix daemon installed."
 
 # Switch to 'user' to build Flake.
 echo "- Switching to user 'user' to build Nix Flake..."
+# Exclude manually built packages from checksum matching.
+EXCLUDE_PKG_REGEX='-codex-'
 su - user <<EOF
 set -euo pipefail
 
@@ -94,10 +96,14 @@ echo "OK Flake build complete."
 echo "- Comparing binaries with expected values..."
 # Make a list of paths of all the packages of apps. Sort by package name.
 nix-store --query --requisites ./result-apps | sort -k 1.45 > paths.txt
+# Drop excluded packages before hashing.
+awk -v pat="$EXCLUDE_PKG_REGEX" '\$0 !~ pat' paths.txt > paths.filtered.txt
 # Calculate all the hashes of paths (of outputs, not inputs).
-paste -d '\t' <(cat paths.txt) <(xargs nix-store --query --hash < paths.txt) > got-binary-hashes.txt
+paste -d '\t' <(cat paths.filtered.txt) <(xargs nix-store --query --hash < paths.filtered.txt) > got-binary-hashes.txt
+# Filter expected values to match excluded packages.
+awk -v pat="$EXCLUDE_PKG_REGEX" '\$0 !~ pat' want-binary-hashes.txt > want-binary-hashes.filtered.txt
 # Compare with the expected values.
-if ! cmp "got-binary-hashes.txt" "want-binary-hashes.txt"; then
+if ! cmp "got-binary-hashes.txt" "want-binary-hashes.filtered.txt"; then
     echo "!!! Mismatch of binary files in packages. Aborting."
     exit 1
 fi
