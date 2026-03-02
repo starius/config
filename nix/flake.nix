@@ -2,10 +2,10 @@
   description = "Qubes Debian-Minimal Template Configuration (Pinned via Flake)";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/ac055f38c798b0d87695240c7b761b82fc7e5bc2";
-    rust-overlay.url = "github:oxalica/rust-overlay/23dd7fa91602a68bd04847ac41bc10af1e6e2fd2";
+    nixpkgs.url = "github:NixOS/nixpkgs/93178f6a00c22fcdee1c6f5f9ab92f2072072ea9";
+    rust-overlay.url = "github:oxalica/rust-overlay/458eea8d905c609e9d889423e6b8a1c7bc2f792c";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
-    llm-agents.url = "github:numtide/llm-agents.nix/8b797c5c8a02c3f65b14a85b3d7673d421d06bca";
+    llm-agents.url = "github:numtide/llm-agents.nix/1d3a236c67906c94ebd31d1ca852d53c4101e81c";
     llm-agents.inputs.nixpkgs.follows = "nixpkgs";
   };
 
@@ -156,7 +156,7 @@
           pkgs.geany
           (pkgs.mplayer.override { pulseSupport = true; })
           pkgs.evince
-          pkgs.calibre
+          # pkgs.calibre https://github.com/NixOS/nixpkgs/pull/494483
           pkgs.gimp3
           pkgs.inkscape
           pkgs.abiword
