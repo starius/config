@@ -213,6 +213,9 @@
           pkgs.appimage-run
           pkgs.qemu-user
 
+          # Games.
+          pkgs.vcmi
+
           # Temp fix until https://github.com/NixOS/nixpkgs/pull/486323 is merged
           pkgsllm.codex
         ];

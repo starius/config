@@ -77,6 +77,7 @@
 /nix/store/ypxd9dldr1j8lbg7a5ws42gqa2kizgyh-bluez-5.84	sha256:1dzc3nmzmqxi34fvdmbvlqd40mwz1g72x6z860s33g9p3q1i3al7
 /nix/store/85aw7nhdsqn5qbxkyrir0z4ks0ahakz6-boehm-gc-8.2.8	sha256:15bxjpq845mh9906cn12xgbamb1i7g3fbmn1dj2a33qbk0cqhrp7
 /nix/store/waar2jhcidhmcc0bzfrfh74d19k16fyy-boehm-gc-8.2.8	sha256:1089pqi0k9761m5ihgjrwrp8c0a2cid7b25gryid1qbbzrkyp3gh
+/nix/store/mjnr0xcfgrpz0d63ik5p0flzrnsfmbjp-boost-1.88.0	sha256:0bva5i78607hdnfxhcjzhb7a3v525shwzgfd2f3kkk10634bd8pj
 /nix/store/wrwzn9h21jzg24dilb15wsh0010idkk6-boost-1.89.0	sha256:0lh8padv4jmq3195mq4fqbynfbn09ymigasg4a3i1dmswfn2b07q
 /nix/store/ag87p13gmy9js3j7brcnwc027kbqwr4r-botan-3.10.0	sha256:0f88q2j85kscm9vks29yz172zij10x9qbgxralfc6m6kk8733khh
 /nix/store/3y8jfnbcv230kip514qh2wmfifihzvqp-brotli-1.2.0	sha256:1hmp473rdgw53m1agq9pnlm38jswhdnfj0as6da7xb2g69wwh07m
@@ -421,6 +422,7 @@
 /nix/store/lwxxcmkqwpdwyxz313xc89bxlri7c34z-inih-62	sha256:1r5hz17mv3mjdwzmvz1cw66iixdvpxfya1985qlypipl7cjkxlm8
 /nix/store/2wxjxkxnyxy72sz4cb2p8l7b8kj5clvy-inkscape-1.4.3	sha256:0k949ybihwxyaz5j68i7z1r1h8xk1281pgjrdvv1qww3w9ai917x
 /nix/store/1y2dzf0q3fd1s88bnjnmkjzwc9af8ac8-inkscape-1.4.3-man	sha256:15n203zjgmk63jvh27wxbk640y274y2gf4amazc24awp6drn24c4
+/nix/store/4xfh4ql6b0vya5br5aljb4h8yw4nqpaw-innoextract-1.9-unstable-2025-02-06	sha256:1zkpjvcg5hfy9lbi4j4x5ybdrm3iaccfylnaswa3wmncpl5w6jbq
 /nix/store/c9bn9jz0f89hhy5n1m7k4svlb79i33r5-iproute2-6.18.0	sha256:11283agv27rkdj33dzc7gsv71aqf4jmkpl21c6a4xy23j43skpdg
 /nix/store/s657hsrj1cknm7c4cbi87f6w7f3mlv11-iptables-1.8.11	sha256:0xk936yhpb92n0d591q6y933c75mvhwi4jwm15n4l970xwrz3g3y
 /nix/store/awipxzp05a9qqnwv47dpc6lfg9b0jdqq-iptables-1.8.11-lib	sha256:1xyylin10yzwv8fv480crnrvmaak1g83azypknbwyx158qakdk7j
@@ -717,6 +719,7 @@
 /nix/store/1dj6159jpaz6rkpsfa5iafshn849s0rq-libsoup-3.6.5	sha256:1agl9g38rbvx6xlg9lq1nf9xp8pisaccnga4p2nph0wlibi0jn4a
 /nix/store/rnb8vnzwm7yr9m8afwi4fznd6v4jl7cv-libsoup-3.6.5	sha256:1ayads8s20qpibkib6l276h0lzbzbfpvvnfiyxg5hb1wki2j9l7d
 /nix/store/1zyvmniwn09p01n5nyl648m360iwxq7x-libspectre-0.2.12	sha256:1mi0r1pn5838qgc0wvs5ww9h369h101c2ic32llb9cm0ckv2k71p
+/nix/store/bxh964qz552vaq9b3xmmm9xinwhrlx56-libsquish-1.15	sha256:1bkc2acpsaayb7li0r26p39b6jgavrfranza2xn2yw7p57a5h10n
 /nix/store/5s2j0wzd7dd7w4ln9ps3xjg6mg7rds3i-libsrtp-2.7.0	sha256:01ba2203i0prdzhzpd9c1v9gk6j3710323xmixd0yh6y5j4pnrs6
 /nix/store/kb7jpdb5xbqrwg4nizpl7ipzw3izh7ia-libsrtp-2.7.0	sha256:0jq2j932rj1pxblmhs6701smzbjj4l6mi9prnh4awq9bgcng645p
 /nix/store/0vbabmcmm6y59qhifk4b30dk393iljnc-libssh-0.11.3	sha256:18jbiflj5ihq8n3fbbnjmfv8djgw0wg9l0ahz4894c95jr3qbc86
@@ -866,6 +869,7 @@
 /nix/store/lji8nvrdqv0lai9cd34n5wz27sm7hx9s-lrdf-0.6.1	sha256:05k1nigl1f6rzsia3zyrlxkjylzb9bvhqkw5iyp9l6a5idrpax43
 /nix/store/51q2xspb85cqkhn9ckmkk3y83m2gbabk-lttng-ust-2.14.0	sha256:08fc79a498xykahgz2ny1f6as0xnfrcjlfbij8vf7knm38zfam04
 /nix/store/gdxzmk8437nhas8ihhjdgka56l2lzvr0-lttng-ust-2.14.0	sha256:0gl8y3zds31cg602hf0nnkh1zskjcwcapv3ld6x50prrbxd87zav
+/nix/store/7rk2ic67w77kvirns0c14151q253jxra-luajit-2.1.1741730670	sha256:1inqsp80as4a02mpmbgjpx6503n9fmz553z9cc5aqbnpg56i9lp9
 /nix/store/5z16nixwwgvjrsg8cpgfpvy7qsn1y52g-lvm2-2.03.38-lib	sha256:06xjiylh8k4x8qwim825zygyl46vgvk31jsl2pydhqkdj00vhchi
 /nix/store/dfgwv33wdcv6cc22h10kp8rd9mpsx59i-lvm2-2.03.38-lib	sha256:0i3f60d3pdm00rvylrks5yazfia0fgichp3mp81s70p7hxwgc1wc
 /nix/store/dawx2ansklyv3y06hy6pwnww4apihaiw-lxterminal-0.4.1	sha256:0zhn2rijpik1k29mls5ln08c1a7im3w4zhzf43gzrvi5lns8him1
@@ -1288,7 +1292,7 @@
 /nix/store/fa965xaq074a2c0v4d2ssrg02y5syl9v-qtwebengine-6.10.2	sha256:02h9y7ca98cngpp3lp45ljn4yjcz6wf0avdx7p14d40l3x0avij5
 /nix/store/izwi7r3cah702v3g669a007f1m4sdvy5-qtwebsockets-6.10.2	sha256:07zvjxpa1g796xjfvxar9d1zk1hvpdyxhvy0cpgasgb7qqamzqfb
 /nix/store/sn0s4ha89xdzxkz8fiyfy0vbmlk3lkly-qtx11extras-5.15.18	sha256:1jaam5i9b8wyplfh8lifmy5830915wvkrsxn9f6c8ach5zsldh7q
-/nix/store/55pnxvq2a7jjmai5q65qzcicj4f40b93-qubes-template-env	sha256:0phr9f8c37pamw1pnqq4zdp02h32im46ymlc0gxl2722p68yy1g6
+/nix/store/pjc1wc7qb3a7jqdz8v27k16n5njssjz8-qubes-template-env	sha256:0grwk8x2bc5kdm025z14v0mjnqjzzw1r0iavzr4a9j80a0aq67qm
 /nix/store/fp2h22l4mvkwlbdqpky9hqx8y0hviz8n-raptor2-2.0.16	sha256:1ql8bczmadz6yz02vjinx9w23m7c2hp4795p7xqrbq2zjh0v26xm
 /nix/store/zf83b4gi8gj1i0dckg0x8jh765gpq81c-raptor2-2.0.16	sha256:0vp2pyxmymcmpibnzmjqyijmvs6cf1s6bfz5js92nws731918a49
 /nix/store/d2231a3r3fgc0a40fx8ym82k162bajhj-readline-8.3p3	sha256:1p0lbgm7g5m2m8lll4yhx8ngdpvvavpg68fda4byhlyb6l7jwvsz
@@ -1417,6 +1421,7 @@
 /nix/store/2bjv8sp9612y2cnfinp2wgxy9fbadag6-unixODBC-2.3.12	sha256:1hbrw78fb4qiy3q0g66c0g860lag789irlfr8bg5qi32zkaph2y0
 /nix/store/9b51f94qkn759n1m88raz4f6rmwj31fc-unixODBC-2.3.12	sha256:1v3i0jsjggwlajxq19g8da5igxlvz263rkxsvbi2f3gla34mklb5
 /nix/store/kqfr279h1595ilpax4v1pwbd5bi7i6ng-unrar-free-0.3.3	sha256:08zr9aygwb1vpg9qq09ly9awl4nb80rj8zhcc3vpm0qkclsbdqrd
+/nix/store/rg5zyx00a0ln354qyangki373v555y70-unshield-1.6.2	sha256:1yv329lx3k753dah8nxn97slvhsc51rrfw1bhg31f3ap0hrf4fzz
 /nix/store/il6p2vnh5rh75cwmf770p01b0mcw0d4s-unzip-6.0	sha256:17bhm165l83wq45msw9h9dj0yygm34lwjmc89dp3izd4phwzxcck
 /nix/store/mzz8jbghczal2cv6y1dbminnb6vjhrm0-utf8proc-2.11.3	sha256:0labj3xc4p7hihq61fby492bp1n2dybw9j8vdrrd30cb9crgf66a
 /nix/store/ilk5qzvkadnj7lx58hfinfvl7jmhriq6-util-linux-2.41.3-bin	sha256:0fapljjsjs8v7dh1wsqxngr9x106w9nv9lwr50045rrwvm5390kk
@@ -1442,6 +1447,7 @@
 /nix/store/snc79y5x9dc390yw761m30wm4ya7q08k-v4l-utils-1.32.0	sha256:1f7r23fq80x37h8sf9wiwzlb73bwjx0ii2hfsbw4s90xw31nb8nv
 /nix/store/vqcf9grlks4b5h2j3ggxil4yaqs6jipw-valgrind-3.26.0	sha256:18b7pamvx9i6ibdc8mfq42waf2lfa1f03a39izi8a2yzsy7b198w
 /nix/store/prpmj0rxfwnbjkfzjq35l1j9laca2bcw-valgrind-3.26.0-man	sha256:0hqx0xfbh8xxlx080isiyz4zinal2pgfsj1zb75wgx15mg545ymz
+/nix/store/cq75blwcynvpwkyy727gfj4qxnlxv0c7-vcmi-1.7.2	sha256:02rfp96mr95jvwqf1w7qqv5hw8nphspkd2a7nganigy0p0ws5xwl
 /nix/store/27qd830s5yz7znpbqzh970jinnc3qrri-vid.stab-1.1.1-unstable-2025-08-21	sha256:02m2zyd2zrixsp2pzn5l1iv40zyyjrbfvng227c4czr95gj11p6w
 /nix/store/wdn5m8s62gsd8zd7gl0n2bsyxklpr4i7-vid.stab-1.1.1-unstable-2025-08-21	sha256:1wx4nsnjkwa263q4wmfna471dbqbna7ani8faps97bwpgddfzps9
 /nix/store/4crzj2ymd7wgpgq2zzjcmq534c7wdpyv-vim-9.1.2148	sha256:1wd4by3zkf8l95vlcih0z12pl5ndvwkp5hj9md0jp1z0s9bda0b2
