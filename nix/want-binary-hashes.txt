@@ -914,7 +914,7 @@
 /nix/store/zgbshk038s1wbpgrvkkppl3kcqx1zph9-openapv-0.2.1.0	sha256:1ygsfgqkn8x7bkkzkiw9xflwic78n76p02q1g7nbd07s30wni0f6
 /nix/store/di0phsxcsikcnbsa1c4jy1s6v5ghp2h0-openblas-0.3.30	sha256:09j875kv8fpf7frf7zfqlnc3spgasp1by6j2hcxymvlwdals4525
 /nix/store/r4p1yhddq2mpcm6aicj4r6g2zq1sq6n9-opencl-headers-2025.07.22	sha256:01jlpp8dqm48vj6s9wd83nra4j1jypj2xmhiif4gjnxz1a1y37fy
-/nix/store/bk8s5nlb7rgi8bgxfc71nm8dvpglzblf-opencode-1.2.13	sha256:166bbd4rw54ijmrbj4bwbf2nmikpkmm9ralxywcy859ir0dz1svl
+/nix/store/bk8s5nlb7rgi8bgxfc71nm8dvpglzblf-opencode-1.2.13	sha256:1yyjlngp00zir669yshabx4vnrx0kyhvfykkwlly377q9pllvm26
 /nix/store/dy600fd9qgilgc4vwkdfq8fzwyq6cm2l-opencore-amr-0.1.6	sha256:1zjprrzcc571wlhb3595hwyg3s32q7jr4hmrbwl4iyjvww9c8x9w
 /nix/store/h5a1x61nnl5l3198dz7nz8b9assvxw0z-opencore-amr-0.1.6	sha256:1h3nd1yzh6cssdc4rwnbmsdkhvwawd4a8305z7qjz83pyqjmjykk
 /nix/store/lirwr16cyy6nbfgcxpxsby0z65cb8yj0-openexr-2.5.10	sha256:0q3f9bxnmjzbynzdscmmh2l56m1zsslhlbcqqxd89g6rm9ia2q5x
