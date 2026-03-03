@@ -25,3 +25,29 @@ Create AppVM (say `torrent`) using `mynix` as `TemplaveVM`. It should work.
 
 When you need to add more packages, after changing nix files, just re-run
 `bootstrap.sh` script.
+
+## Try extra packages from pinned nixpkgs
+
+After `bootstrap.sh`, `nixpkgs` is pinned in the system flake registry to the
+same locked revision as this flake.
+
+Use:
+
+```bash
+nix shell nixpkgs#PACKAGE_NAME
+```
+
+Examples:
+
+```bash
+nix shell nixpkgs#htop
+nix shell nixpkgs#jq nixpkgs#ripgrep
+nix shell nixpkgs#yt-dlp --command yt-dlp --version
+```
+
+If you ever override your registry and want to force using this repo's pinned
+inputs directly:
+
+```bash
+nix shell --inputs-from path:/home/user/nix nixpkgs#PACKAGE_NAME
+```

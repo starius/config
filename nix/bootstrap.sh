@@ -124,6 +124,21 @@ APPS_DIR=$(readlink -f "$SCRIPT_DIR/result-apps")
 /nix/var/nix/profiles/default/bin/nix-env \
         --profile /nix/var/nix/profiles/default --set "$APPS_DIR"
 
+# Keep flake-pinned nixpkgs in the store across garbage collection.
+NIXPKGS_PATH="$(
+    cd "$SCRIPT_DIR"
+    /nix/var/nix/profiles/default/bin/nix eval --impure --raw \
+        --expr '(builtins.getFlake (toString ./.)).inputs.nixpkgs.outPath'
+)"
+mkdir -p /nix/var/nix/gcroots
+ln -sfn "$NIXPKGS_PATH" /nix/var/nix/gcroots/qubes-nixpkgs
+echo "- Pinned nixpkgs GC root: $NIXPKGS_PATH"
+# Make pinned nixpkgs the default flake registry entry.
+/nix/var/nix/profiles/default/bin/nix registry add \
+    --registry /etc/nix/registry.json \
+    nixpkgs path:/nix/var/nix/gcroots/qubes-nixpkgs
+echo "- Pinned nixpkgs flake registry: nixpkgs -> path:/nix/var/nix/gcroots/qubes-nixpkgs"
+
 # Now clean the store.
 echo "- Running nix-collect-garbage -d ..."
 /nix/var/nix/profiles/default/bin/nix-collect-garbage -d
