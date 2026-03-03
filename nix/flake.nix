@@ -210,7 +210,7 @@
 
           # VMs and emulators.
           (pkgs.wine.override { pulseaudioSupport = true; })
-          pkgs.appimage-run
+          # pkgs.appimage-run
           pkgs.qemu-user
 
           # Games.
