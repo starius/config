@@ -142,6 +142,7 @@
           pkgs.lightning-loop
           pkgs.openai-whisper
           pkgs.poppler-utils # pdftotext
+          pkgs.csvkit
 
           # GUI.
           pkgs.xfce4-terminal
