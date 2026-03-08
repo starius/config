@@ -97,6 +97,7 @@
           pkgs.file
           pkgs.git
           pkgs.git-lfs
+          pkgs.gh
           pkgs.wdiff
           pkgs.colordiff
           pkgs.curl
