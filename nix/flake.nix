@@ -2,14 +2,12 @@
   description = "Qubes Debian-Minimal Template Configuration (Pinned via Flake)";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/93178f6a00c22fcdee1c6f5f9ab92f2072072ea9";
-    rust-overlay.url = "github:oxalica/rust-overlay/458eea8d905c609e9d889423e6b8a1c7bc2f792c";
+    nixpkgs.url = "github:NixOS/nixpkgs/15c6719d8c604779cf59e03c245ea61d3d7ab69b";
+    rust-overlay.url = "github:oxalica/rust-overlay/e8046c1d9ccadd497c2344d8fa49dab62f22f7be";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
-    llm-agents.url = "github:numtide/llm-agents.nix/1d3a236c67906c94ebd31d1ca852d53c4101e81c";
-    llm-agents.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, rust-overlay, llm-agents, ... }:
+  outputs = { self, nixpkgs, rust-overlay, ... }:
     let
       system = "x86_64-linux"; # For Qubes Debian minimal.
       pkgs = import nixpkgs {
@@ -18,8 +16,6 @@
           (import rust-overlay)
         ];
       };
-
-      pkgsllm = llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
 
       # Create /etc/environment .
       etcEnvironment = pkgs.writeTextDir "etc/environment" ''
@@ -133,7 +129,7 @@
           pkgs.qrtool
           pkgs.opentimestamps-client
           pkgs.tor
-          #pkgs.codex
+          pkgs.codex
           pkgs.gemini-cli-bin
           pkgs.opencode
           pkgs.termsvg
@@ -221,9 +217,6 @@
 
           # Games.
           pkgs.vcmi
-
-          # Temp fix until https://github.com/NixOS/nixpkgs/pull/486323 is merged
-          pkgsllm.codex
         ];
       };
 
