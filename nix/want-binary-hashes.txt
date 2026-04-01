@@ -371,6 +371,7 @@
 /nix/store/gpsqqhqld5dxcgdx5jzssr42cq6cx7qf-harfbuzz-12.3.0	sha256:00zmr0vllv2j5c26j1cfz9cfjhqg3icc0b48jwvzypcs9m1mklb3
 /nix/store/v38q8136kg0blnqbd4kz32i8h2j12hz9-harfbuzz-12.3.0	sha256:11hkjidy7wcsa0rqgkl0rjnf5jip7wfrm9jmhns5fwfyblshsnrj
 /nix/store/ylv004dv2jqpw8n92b8id1dvfkw4c6y7-harfbuzz-icu-12.3.0	sha256:0ri8zi9cr1abzlddv2x8y6a4vgv3sqva3nxcfmnw0c5vri9w8v12
+/nix/store/3f60f7y56apym59b1cbikficdskqdm29-helm-0.9.0	sha256:13mwcqv7jp9bklcbk6cfdxrwsrl8l3a4fqifsq14mlvd3pmy4ppd
 /nix/store/yxc6n5fv0g498d6ibrcnsl5d109n0l69-hfst-ospell-0.5.4	sha256:0dwvkj3fpbcld5whrppnzjhrmybrcs650mgsy6clhq1hwba6bklp
 /nix/store/5pk09nz6ar8niq7agzsw3idhyam7qrqj-hicolor-icon-theme-0.18	sha256:1mxkcf83ig33kxf27gnmp7vfcjzq7ii87ny8rqhnhn2plmpfx833
 /nix/store/bg28rrjivid4rih8rn6j4mvsqmqgzpgg-hidapi-0.15.0	sha256:1xjhvig0j02543afzh90hn48yj1ima1ymsdl8m292rz9150dq2q4
@@ -1248,7 +1249,7 @@
 /nix/store/fa965xaq074a2c0v4d2ssrg02y5syl9v-qtwebengine-6.10.2	sha256:02h9y7ca98cngpp3lp45ljn4yjcz6wf0avdx7p14d40l3x0avij5
 /nix/store/izwi7r3cah702v3g669a007f1m4sdvy5-qtwebsockets-6.10.2	sha256:07zvjxpa1g796xjfvxar9d1zk1hvpdyxhvy0cpgasgb7qqamzqfb
 /nix/store/sn0s4ha89xdzxkz8fiyfy0vbmlk3lkly-qtx11extras-5.15.18	sha256:1jaam5i9b8wyplfh8lifmy5830915wvkrsxn9f6c8ach5zsldh7q
-/nix/store/c6cx96011xnzfq41mwcasd1xkv1j6y0r-qubes-template-env	sha256:0l1pd3ks5kdi5k43d2s33p775dwnr8p7s84cwmyp4x8gr1hcc5hx
+/nix/store/nj4kxd3l2md9y7v3czqah199xiwj9vzq-qubes-template-env	sha256:0kqvsawcy2w7y2lpmszrd86vpha0091gz355gjzg65rpn9ikakng
 /nix/store/fp2h22l4mvkwlbdqpky9hqx8y0hviz8n-raptor2-2.0.16	sha256:1ql8bczmadz6yz02vjinx9w23m7c2hp4795p7xqrbq2zjh0v26xm
 /nix/store/zf83b4gi8gj1i0dckg0x8jh765gpq81c-raptor2-2.0.16	sha256:0vp2pyxmymcmpibnzmjqyijmvs6cf1s6bfz5js92nws731918a49
 /nix/store/d2231a3r3fgc0a40fx8ym82k162bajhj-readline-8.3p3	sha256:1p0lbgm7g5m2m8lll4yhx8ngdpvvavpg68fda4byhlyb6l7jwvsz
@@ -1474,6 +1475,7 @@
 /nix/store/27fx8p4k6098wan3zahdbyj79ndcn03z-xz-5.8.2-bin	sha256:0l59rzrbph1i1mckgcp9f04rxydwcsn3ck2ckym9gpvy8h07xzqx
 /nix/store/1325i9h13fxafhs6khx9qzwshh2dz5yk-yarn-1.22.22	sha256:0gkxr3rkvp7nyjiki9klldnd69i8ly64i0w0w7y3v0lvfvkjwlrs
 /nix/store/hzg556wnafslzyl0jvwkcj054yjncyri-yasm-1.3.0	sha256:1mvb3f9j62d43z6dhwzgzfhabva1h7hvqqh9fc0i8x62cry4i5zx
+/nix/store/rjic2hjhbmlch7vj3dnpfc5gppg9l654-yq-go-4.52.4	sha256:0n9nlc9q6splll8wfba4sb0qf9z6ibphj04pl2s9akwwdq0czk3w
 /nix/store/kd7mkkz0vja3kaj8ckbxikbfj58f2267-yt-dlp-2026.02.21	sha256:0nxzsinkg6jsncd3slbb5slf23hpji1gsq4jqyhlqnpqkvi4jc9a
 /nix/store/gigg90xnhbw7d65y013lcx40qf3d3cal-zbar-0.23.93-lib	sha256:1bpy5w2amrj40qa4k1gzcb8c44v4mm9988684bprd4vkmhxfwshb
 /nix/store/2y2faybcp9a3qgnivfmg4iznqvjcq6pa-zenity-4.2.1	sha256:0clfn071nvx3z195x8xf9dy3awf727j811y3m9rcy253p9jqbwlg

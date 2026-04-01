@@ -110,6 +110,7 @@
           pkgs.unrar-free
           pkgs.openssl
           pkgs.jq
+          pkgs.yq-go
           pkgs.xxd
           pkgs.dos2unix
           pkgs.graphviz
@@ -211,6 +212,7 @@
           pkgs.kubectl
           pkgs.k9s
           pkgs.docker
+          pkgs.helm
 
           # VMs and emulators.
           (pkgs.wine.override { pulseaudioSupport = true; })
