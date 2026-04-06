@@ -133,11 +133,28 @@ NIXPKGS_PATH="$(
 mkdir -p /nix/var/nix/gcroots
 ln -sfn "$NIXPKGS_PATH" /nix/var/nix/gcroots/qubes-nixpkgs
 echo "- Pinned nixpkgs GC root: $NIXPKGS_PATH"
-# Make pinned nixpkgs the default flake registry entry.
+# Make pinned nixpkgs the default flake registry entry. Use the locked GitHub
+# flakeref instead of a path: entry because flake path references reject
+# symlinks, while GC roots are symlinks by design.
+JQ_BIN="/nix/var/nix/profiles/default/bin/jq"
+if [ ! -x "$JQ_BIN" ]; then
+    echo "!!! jq is missing from /nix/var/nix/profiles/default/bin. Aborting."
+    exit 1
+fi
+NIXPKGS_FLAKE_REF="$(
+    "$JQ_BIN" -er '
+        .nodes.nixpkgs.locked as $locked
+        | if $locked.type != "github" then
+            error("expected flake.lock nodes.nixpkgs.locked.type to be github")
+          else
+            "github:\($locked.owner)/\($locked.repo)/\($locked.rev)"
+          end
+    ' "$SCRIPT_DIR/flake.lock"
+)"
 /nix/var/nix/profiles/default/bin/nix registry add \
     --registry /etc/nix/registry.json \
-    nixpkgs path:/nix/var/nix/gcroots/qubes-nixpkgs
-echo "- Pinned nixpkgs flake registry: nixpkgs -> path:/nix/var/nix/gcroots/qubes-nixpkgs"
+    nixpkgs "$NIXPKGS_FLAKE_REF"
+echo "- Pinned nixpkgs flake registry: nixpkgs -> $NIXPKGS_FLAKE_REF"
 
 # Now clean the store.
 echo "- Running nix-collect-garbage -d ..."
