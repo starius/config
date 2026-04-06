@@ -29,8 +29,7 @@ When you need to add more packages, after changing nix files, just re-run
 ## Try extra packages from pinned nixpkgs
 
 After `bootstrap.sh`, `nixpkgs` is pinned in the system flake registry to the
-same locked GitHub revision as this flake. The `/nix/var/nix/gcroots/qubes-nixpkgs`
-symlink is still kept only as a GC root and for old-style `NIX_PATH` usage.
+same locked GitHub revision as this flake.
 
 Use:
 

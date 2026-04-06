@@ -36,8 +36,6 @@
       nixProfiled = pkgs.writeTextDir "etc/profile.d/99-qubes-nix.sh" ''
         export PATH=/nix/var/nix/profiles/default/bin:$PATH
         export NIX_REMOTE=daemon
-        # For old-style nix-shell / nix-build commands.
-        export NIX_PATH=nixpkgs=/nix/var/nix/gcroots/qubes-nixpkgs
       '';
 
       # Setup bash completion.
