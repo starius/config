@@ -26,6 +26,17 @@ Create AppVM (say `torrent`) using `mynix` as `TemplaveVM`. It should work.
 When you need to add more packages, after changing nix files, just re-run
 `bootstrap.sh` script.
 
+## Debian server mode
+
+On a regular Debian server, use:
+
+```bash
+./bootstrap.sh --server
+```
+
+This installs the shared command line and development environment without GUI
+packages and skips the Qubes-specific system setup.
+
 ## Try extra packages from pinned nixpkgs
 
 After `bootstrap.sh`, `nixpkgs` is pinned in the system flake registry to the
