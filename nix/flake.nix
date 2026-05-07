@@ -128,6 +128,7 @@
         pkgs.qrtool
         pkgs.opentimestamps-client
         pkgs.tor
+        pkgs.arti
         pkgs.codex
         pkgs.gemini-cli-bin
         pkgs.opencode
