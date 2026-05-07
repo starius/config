@@ -143,6 +143,7 @@
         pkgs.discordo
         pkgs.yt-dlp
         pkgs.go-grip
+        pkgs.irssi
 
         # Keybase.
         pkgs.keybase
@@ -216,6 +217,7 @@
         pkgs.gnumeric
         pkgs.gnuplot
         pkgs.electrum
+        pkgs.feather
         pkgs.keybase-gui
         (pkgs.wine.override { pulseaudioSupport = true; })
 
