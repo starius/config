@@ -219,6 +219,7 @@
         pkgs.gnuplot
         pkgs.electrum
         pkgs.feather
+        pkgs.sparrow
         pkgs.keybase-gui
         (pkgs.wine.override { pulseaudioSupport = true; })
 
