@@ -145,6 +145,7 @@
         pkgs.yt-dlp
         pkgs.go-grip
         pkgs.irssi
+        pkgs.kondo
 
         # Keybase.
         pkgs.keybase
