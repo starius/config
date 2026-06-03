@@ -182,6 +182,7 @@
         pkgs.autoconf
         pkgs.automake
         pkgs.libtool
+        pkgs.python314Packages.pip
 
         # Deployment.
         pkgs.kubectl
