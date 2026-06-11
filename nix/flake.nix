@@ -2,8 +2,8 @@
   description = "Pinned Nix environment for Qubes templates and Debian servers";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/d849bb215dcdf71bce3e686839ccdb4219e84b2f";
-    rust-overlay.url = "github:oxalica/rust-overlay/47ab6c7b3c6a68beac60067490240efa32ae344c";
+    nixpkgs.url = "github:NixOS/nixpkgs/8c3cede7ddc26bd659d2d383b5610efbd2c7a16e";
+    rust-overlay.url = "github:oxalica/rust-overlay/107c334f141854f563f8adf1db781dc453d92639";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
@@ -226,8 +226,7 @@
         (pkgs.wine.override { pulseaudioSupport = true; })
 
         # Games.
-        # broken hash
-        #pkgs.vcmi
+        pkgs.vcmi
       ];
 
       serverFakeRootEnv = mkFakeRootEnv "debian-server-fake-root" commonFakeRootPaths;
