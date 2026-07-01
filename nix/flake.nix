@@ -209,6 +209,7 @@
         pkgs.qbittorrent
         pkgs.telegram-desktop
         pkgs.ayugram-desktop
+        pkgs.signal-desktop
         pkgs.keepassxc
         pkgs.geany
         (pkgs.mplayer.override { pulseSupport = true; })
