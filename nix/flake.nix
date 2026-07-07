@@ -146,6 +146,7 @@
         pkgs.go-grip
         pkgs.irssi
         pkgs.kondo
+        pkgs.ocrmypdf
 
         # Keybase.
         pkgs.keybase
