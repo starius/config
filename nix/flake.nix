@@ -147,6 +147,7 @@
         pkgs.irssi
         pkgs.kondo
         pkgs.ocrmypdf
+        pkgs.whisper-ctranslate2
 
         # Keybase.
         pkgs.keybase
