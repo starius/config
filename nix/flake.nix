@@ -191,6 +191,7 @@
         pkgs.k9s
         pkgs.docker
         pkgs.helm
+        pkgs.google-cloud-sdk
 
         # VMs and emulators.
         pkgs.qemu-user
