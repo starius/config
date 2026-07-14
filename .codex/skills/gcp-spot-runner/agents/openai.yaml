@@ -1,0 +1,6 @@
+interface:
+  display_name: "GCP Spot Runner"
+  short_description: "Run heavy jobs on temporary Spot VMs"
+  default_prompt: "Use $gcp-spot-runner to offload this heavy build or benchmark to a temporary Spot VM."
+policy:
+  allow_implicit_invocation: false

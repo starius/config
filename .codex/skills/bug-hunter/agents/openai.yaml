@@ -1,0 +1,6 @@
+interface:
+  display_name: "Bug Hunter"
+  short_description: "Hunt subtle bugs with traces and root cause"
+  default_prompt: "Use $bug-hunter to find high-confidence bugs and suboptimal decisions in this branch."
+policy:
+  allow_implicit_invocation: false
