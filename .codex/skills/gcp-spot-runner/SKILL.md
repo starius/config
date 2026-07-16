@@ -1,6 +1,6 @@
 ---
 name: gcp-spot-runner
-description: Explicit-only workflow for running heavy builds, Dockerized compiles, large tests, benchmarks, or long compute jobs on temporary Google Cloud Spot VMs with gcloud. Use only when the user explicitly invokes $gcp-spot-runner or asks for a tmp Google Cloud server, remote machine/server, Spot VM, or similar remote offload; enforces remote execution, cost/resource guards, Nix-first setup, SSH/tmux reuse, result handling, cleanup, and privacy.
+description: Explicit-only workflow for running heavy builds, Dockerized compiles, large tests, benchmarks, or long compute jobs on temporary Google Cloud Spot VMs with gcloud. Use only when the user explicitly invokes $gcp-spot-runner or asks for a tmp Google Cloud server, remote machine/server, Spot VM, or similar remote offload; enforces remote execution, local-source authority, cost/resource guards, Nix-first setup, SSH/tmux reuse, result handling, cleanup, and privacy.
 ---
 
 # GCP Spot Runner
@@ -10,6 +10,7 @@ Use only after an explicit remote/cloud offload request. Use `gcloud`; if missin
 ## Hard Guards
 
 - Run heavy compilation, Docker builds, large tests, benchmarks, and long compute jobs on the remote VM, not locally. Local commands are only for inspection, sync/setup, and result analysis unless the user permits local execution.
+- The local worktree is authoritative for source. Treat remote source copies as disposable execution caches. Prefer editing locally; if source files change remotely, bring those source changes back to the local worktree immediately and re-sync local-to-remote before continuing. Never leave source changes only on a remote VM or stopped disk.
 - One Codex session gets one VM. Do not reuse a VM from another session unless the user explicitly asks to reuse that specific `<task-slug>`/machine.
 - Before creating anything, count all instances in the active project. If there are 10 or more, do not create a VM.
 - At the start, clean up only skill-owned resources: VMs named `codex-spot-<task-slug>-<rand>` with labels `managed-by=codex,skill=gcp-spot-runner,task-slug=<task-slug>`. Delete stopped skill-owned VMs/disks only when `codex-last-active` metadata or stop time is older than 3 days. Never manage resources missing both the prefix and labels.
@@ -45,8 +46,8 @@ If C3 is unavailable, fall back to `n2-standard-4` (~$71/mo with disk) or `n2-st
 1. Create/reuse the session temp dir under `/tmp`; keep all local runner state and downloaded summaries/logs there.
 2. Reuse only the VM already chosen in this current session, or a specific skill-owned VM whose `<task-slug>` the user explicitly asked to reuse. Do not infer VM reuse from an existing temp dir, compatible shape, or shared slug.
 3. When resuming the current/explicit VM, start it, refresh `codex-last-active`, recreate SSH multiplexing because the IP may have changed, attach/create `tmux` session `codex-run`, and print the user attach command again. Otherwise create a new VM only after all guards pass.
-4. Sync only needed source/configuration. Exclude secrets, unnecessary `.git`, caches, dependencies, build outputs, `node_modules`, `target`, `dist`, `bazel-*`, and large binaries.
-5. Run heavy commands in `tmux` and tee concise logs/results.
+4. Sync only needed source/configuration from local to remote. Exclude secrets, unnecessary `.git`, caches, dependencies, build outputs, `node_modules`, `target`, `dist`, `bazel-*`, and large binaries.
+5. Run heavy commands in `tmux` and tee concise logs/results. If a remote command edits source/configuration, immediately copy back only those source changes, inspect/apply them locally without overwriting unrelated local edits, then sync local-to-remote again.
 6. Print a user-runnable attach command in chat, e.g. `ssh <alias-or-host> -t 'tmux attach -t codex-run || tmux new -s codex-run'`. Chat may mention host/IP when useful; commits and non-ignored files must not.
 7. Use multiplexed SSH to send commands, capture panes, poll status, and sync small results. Avoid repeated `gcloud compute ssh` except for create/start/bootstrap or SSH config regeneration.
 8. If stuck from OOM, swapping, or host trouble, reboot/reset once with `gcloud`; if still unhealthy, stop/delete only that skill-owned VM and replace only after re-checking guards.
