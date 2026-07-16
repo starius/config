@@ -14,9 +14,25 @@ Use only after an explicit remote/cloud offload request. Use `gcloud`; if missin
 - Before creating anything, count all instances in the active project. If there are 10 or more, do not create a VM.
 - At the start, clean up only skill-owned resources: VMs named `codex-spot-<task-slug>-<rand>` with labels `managed-by=codex,skill=gcp-spot-runner,task-slug=<task-slug>`. Delete stopped skill-owned VMs/disks only when `codex-last-active` metadata or stop time is older than 3 days. Never manage resources missing both the prefix and labels.
 - Create only skill-owned Spot VMs: `--provisioning-model=SPOT`, name `codex-spot-<task-slug>-<rand>`, labels `managed-by=codex,skill=gcp-spot-runner,task-slug=<task-slug>`, metadata `codex-last-active=<iso-utc>,codex-run-id=<opaque-id>`, ephemeral external IP only. Keep `<task-slug>` short, lowercase, and GCE-name-safe. Prefer auto-delete boot disks; no static IPs, GPUs, TPUs, local SSDs, premium disks, external services, or open firewall rules unless explicitly required.
-- Verify the estimated monthly VM plus disk cost is under USD 200 before creation. If current pricing cannot be checked, do not create the VM.
+- Use the Fast Machine Table when the task fits; it counts as pre-collected cost verification. Otherwise verify current monthly VM plus disk cost is under USD 200 before creation; if current pricing cannot be checked, do not create the VM.
 - Pick the cheapest suitable machine: match required architecture; use ARM only if supported; avoid tiny/shared-core types for Docker, large builds, tests, or benchmarks unless clearly sufficient.
 - Stop the VM after 5 idle minutes, preserving disk for reuse. Refresh `codex-last-active` while work/chat is active. Delete stopped skill-owned VMs/disks after 3 days. Never leave an unused VM running longer unless explicitly asked.
+
+## Fast Machine Table
+
+Use these `us-central1`/Americas Linux Spot defaults first; prices collected 2026-07-15 from Google Cloud Billing SKUs, using 730 h/mo and <=100 GB balanced PD (~$10/mo). If a row fits, skip live price hunting and only check quota/availability.
+
+| Use | Arch | Machine | VM $/mo | With 100 GB PD |
+| --- | --- | --- | ---: | ---: |
+| small/normal build/test | amd64 | `c3-standard-4` 4 vCPU/16 GB | $34 | $44 |
+| medium build/test | amd64 | `c3-standard-8` 8 vCPU/32 GB | $69 | $79 |
+| large build/test, near cap | amd64 | `c3-standard-22` 22 vCPU/88 GB | $189 | $199 |
+| small/normal ARM-safe | arm64 | `t2a-standard-4` 4 vCPU/16 GB | $44 | $54 |
+| medium ARM-safe | arm64 | `t2a-standard-8` 8 vCPU/32 GB | $87 | $97 |
+| large ARM-safe | arm64 | `t2a-standard-16` 16 vCPU/64 GB | $174 | $184 |
+| faster ARM medium | arm64 | `c4a-standard-8` 8 vCPU/32 GB | $108 | $118 |
+
+If C3 is unavailable, fall back to `n2-standard-4` (~$71/mo with disk) or `n2-standard-8` (~$132/mo with disk). Do not use `c3-standard-44+`, `t2a-standard-32+`, or `c4a-standard-16+` under the $200/month cap without fresh pricing and explicit approval.
 
 ## Setup
 
