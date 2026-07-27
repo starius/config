@@ -216,6 +216,7 @@
         pkgs.keepassxc
         pkgs.geany
         (pkgs.mplayer.override { pulseSupport = true; })
+        pkgs.mpv
         pkgs.evince
         # pkgs.calibre https://github.com/NixOS/nixpkgs/pull/494483
         pkgs.gimp3
