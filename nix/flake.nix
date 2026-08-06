@@ -192,6 +192,7 @@
         pkgs.docker
         pkgs.helm
         pkgs.google-cloud-sdk
+        pkgs.grafana-loki
 
         # VMs and emulators.
         pkgs.qemu-user

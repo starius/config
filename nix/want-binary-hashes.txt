@@ -329,6 +329,7 @@
 /nix/store/jvgsq29say05i61gp00hqcv650fyzsya-google-cloud-sdk-570.0.0	sha256:048vamdqp2l81x7ahqrnrfjmn8ypqxf76g8d30ixij4i85qr52mn
 /nix/store/p0vn8678162imxjbrk5awgzfj4gixm1j-goperf-0-unstable-2026-07-08	sha256:1g0xkps8f3x1bld2yc4k9f2sgwjz3iw2n799dsgrsw3alwiqvzp2
 /nix/store/2z8kbgfls60vr3a587qp1xkpgwgy9dk3-gotools-0.44.0	sha256:068yqgvqcv3f0y0dyap7sf3vy760lf1lkx6ms9xdfwy1njlks9qm
+/nix/store/0gpsn9c0skx0kprdcplw7c3j0w1sraxc-grafana-loki-3.7.4	sha256:09l1mzqhbxfgbjxgp9mdmrh412gfv6vg9api784lb4fczrg6988q
 /nix/store/da2qmc9ghj2ivn1xpbiplx7m7zl7d0wx-graphene-1.10.8	sha256:0hi06kcq6afnv6m1rakngf29647ir38fzwza1hpas3fkhs4gxkxv
 /nix/store/x805v1s6xn8xgbz8688pq53g7gki3a0a-graphene-1.10.8	sha256:1lyq47ki5qlfhzffbs94wg4368s44nr1sjm8mjr3v0h7d41bwfpg
 /nix/store/l6gy7h3c6znq292h0spqvrhs86nspcgq-graphicsmagick-1.3.48	sha256:0bj14n9jn28sm4hvmnkn0i89nqr0wgapjpmf0n4rigmkknvmszj8
@@ -1299,7 +1300,7 @@
 /nix/store/rnppvbz06ln6zs4hkrzakyylkkv5jx3r-qtwebengine-6.11.1	sha256:1c4wynrnl1m9xp1zbs3pcgwf4097kvcwj1pxw7in9bjy36aqrqi7
 /nix/store/gwg5i6scirr24szhzs205fm7lywny6h5-qtwebsockets-6.11.1	sha256:0v24jm342zg8f7r2q9wp2ad0f02dg0czqvi94xf94w40737fwh0b
 /nix/store/5ciwzridcdg5hj5v8h16fxpd7i20s6bv-qtx11extras-5.15.19	sha256:1pfgzigfah3jb39qi2v9zg1lpdnffc50vl3rhxmksx2c977ja2sk
-/nix/store/l5z2wprfwzg8gc2qn0c7li1zrj8bbkpx-qubes-template-env	sha256:0pdmk07k64k1qk15xxx24npcv4x9qvs8rp4idzc115vlfkqzka2d
+/nix/store/wzkfvm1n2650w362xxyxf7cyn1jksala-qubes-template-env	sha256:04b6pljmj7wmk2g96pwdq2xrz8ybm7hh7jp6v3xxxin6x6ay5dnd
 /nix/store/1m7qydy76s9hrdnbngppwm9g754l9nyg-raptor2-2.0.16	sha256:0m78x4nldkljcdijhrfdllj5hxsj0v42wpnljdrq0zbmgagln3yk
 /nix/store/f1gissbwwcy8q2ffcjd4q60vmacchfbl-raptor2-2.0.16	sha256:0x54qpkaljlix3nzsgb1bncyhz2qdh11ywa3dzig5hdmc57i1apb
 /nix/store/d1mw1wmv37v4qp5661x4vb4rvhmaf6vx-readline-8.3p3	sha256:01z39clslvaga6ymxf230fq6ljxrcdcm6ygi04mqiip62azhdnc0
