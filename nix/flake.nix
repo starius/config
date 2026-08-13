@@ -2,8 +2,8 @@
   description = "Pinned Nix environment for Qubes templates and Debian servers";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/624af665418d3c65d544145b4d34ad696439570e";
-    rust-overlay.url = "github:oxalica/rust-overlay/c67ce00525464a710971351c183ce67acb6ca827";
+    nixpkgs.url = "github:NixOS/nixpkgs/044bfe75bfe4c7bbe043dc17b5e42ea823b84a09";
+    rust-overlay.url = "github:oxalica/rust-overlay/892c035d7c2ff75acd5da10424a47ab454e1f3dc";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
@@ -116,7 +116,7 @@
         pkgs.wireguard-tools
         pkgs.nettools
         pkgs.steghide
-        pkgs.mat2
+        # pkgs.mat2
         pkgs.exiftool
         pkgs.sshfs
         pkgs.gocryptfs
@@ -130,8 +130,6 @@
         pkgs.tor
         pkgs.arti
         pkgs.codex
-        pkgs.gemini-cli-bin
-        pkgs.opencode
         pkgs.termsvg
         pkgs.ripgrep
         pkgs.ntfs3g
@@ -147,7 +145,7 @@
         pkgs.irssi
         pkgs.kondo
         pkgs.ocrmypdf
-        #pkgs.whisper-ctranslate2 # Broken in latest version.
+        pkgs.whisper-ctranslate2
 
         # Keybase.
         pkgs.keybase
