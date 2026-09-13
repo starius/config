@@ -2,8 +2,8 @@
   description = "Pinned Nix environment for Qubes templates and Debian servers";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/ac6b2166e7a9375683b8e98f860f273222337b16";
-    rust-overlay.url = "github:oxalica/rust-overlay/132a10336af9ae819bdf640c0dd1c789b12d7107";
+    nixpkgs.url = "github:NixOS/nixpkgs/aff8a0b28396750446e5537a96461bc4facdb287";
+    rust-overlay.url = "github:oxalica/rust-overlay/228ecefb6329d5a531b77b46b581a2f0c26ee056";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
@@ -116,7 +116,7 @@
         pkgs.wireguard-tools
         pkgs.nettools
         pkgs.steghide
-        # pkgs.mat2
+        pkgs.mat2
         pkgs.exiftool
         pkgs.sshfs
         pkgs.gocryptfs
@@ -150,6 +150,7 @@
         # Keybase.
         pkgs.keybase
         pkgs.kbfs
+        # pkgs.keybase-gui
         pkgs.fuse
 
         # Development.
@@ -217,7 +218,7 @@
         (pkgs.mplayer.override { pulseSupport = true; })
         pkgs.mpv
         pkgs.evince
-        # pkgs.calibre https://github.com/NixOS/nixpkgs/pull/494483
+        pkgs.calibre
         pkgs.gimp3
         pkgs.inkscape
         pkgs.abiword
@@ -226,7 +227,6 @@
         pkgs.electrum
         pkgs.feather
         pkgs.sparrow
-        pkgs.keybase-gui
         (pkgs.wine.override { pulseaudioSupport = true; })
 
         # Games.
