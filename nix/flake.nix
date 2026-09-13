@@ -146,11 +146,6 @@
         pkgs.kondo
         pkgs.ocrmypdf
         pkgs.whisper-ctranslate2
-
-        # Keybase.
-        pkgs.keybase
-        pkgs.kbfs
-        # pkgs.keybase-gui
         pkgs.fuse
 
         # Development.
@@ -210,9 +205,6 @@
         pkgs.firefox
         pkgs.ungoogled-chromium
         pkgs.qbittorrent
-        pkgs.telegram-desktop
-        pkgs.ayugram-desktop
-        pkgs.signal-desktop
         pkgs.keepassxc
         pkgs.geany
         (pkgs.mplayer.override { pulseSupport = true; })
@@ -228,6 +220,17 @@
         pkgs.feather
         pkgs.sparrow
         (pkgs.wine.override { pulseaudioSupport = true; })
+
+        # IM.
+        pkgs.keybase
+        pkgs.kbfs
+        # pkgs.keybase-gui
+        pkgs.telegram-desktop
+        pkgs.ayugram-desktop
+        pkgs.signal-desktop
+        pkgs.cwtch
+        pkgs.ricochet-refresh
+        pkgs.quiet
 
         # Games.
         pkgs.vcmi
