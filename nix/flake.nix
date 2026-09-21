@@ -210,7 +210,7 @@
         (pkgs.mplayer.override { pulseSupport = true; })
         pkgs.mpv
         pkgs.evince
-        pkgs.calibre
+        pkgs.koreader
         pkgs.gimp3
         pkgs.inkscape
         pkgs.abiword
