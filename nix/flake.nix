@@ -171,6 +171,7 @@
         (pkgs.rust-bin.stable.latest.default.override {
           targets = [ "x86_64-unknown-linux-musl" ];
         })
+        pkgs.cargo-bloat
         # Musl cross-compiler (for linking static binaries).
         pkgs.pkgsCross.musl64.stdenv.cc
         pkgs.pkg-config
