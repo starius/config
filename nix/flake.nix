@@ -162,6 +162,7 @@
         pkgs.cmakeCurses
         pkgs.clang-tools
         pkgs.gcc
+        pkgs.ninja
         pkgs.yasm
         pkgs.gdb
         pkgs.valgrind

@@ -955,6 +955,7 @@
 /nix/store/51vcygimhm9wxydpj230r646bnz2vim7-ngtcp2-1.23.0	sha256:1bj32h5ks28ir8b2cqip8b5krsy9cai6xqpk081cmlv6jk64sqb7
 /nix/store/ainq5bmz60y52n0c88wbq0lsx771f3jy-ngtcp2-1.23.0-dev	sha256:0krb4jsv06s3pj0y6b13yhdvfirdz6lxqr9y67zyms8fmm9ra8gw
 /nix/store/y4vhly6p7j6a7grxgz8h71a1jwy7q53s-ngtcp2-1.25.0	sha256:1172yk9jpzp22k8zy2cmckkmdsagpbsa3k9i06xvry5kppmqhjq2
+/nix/store/r8a159fqvj0mpczq0dq8d3dwdd2rsz8c-ninja-1.13.2	sha256:0hlilp4rlgc92vnfj4jajbzps2qn6n5v8ddyk21rizc7zds7zq6m
 /nix/store/3vd56d4l3ih231ci008zyvrjjs199zz5-nix-2.34.8	sha256:03y67k672x93f5595lqca7jix5pw018fn604fk0rhks439wvgpwc
 /nix/store/qfwk7cyvb885l2mc06ac3a7nmv19nigi-nix-2.34.8	sha256:1i4i60pq7b0gcrh2kqsvl22zxkbcknf6ya7yl1h2smzayggxzlm7
 /nix/store/8pr2qhnhqx5pi8ky1m1dq900yzynb4x7-nix-2.34.8-man	sha256:1f8gvjrnixchl14g4c4a05fzldhmxiwfil3bicsclx8rm158ars9
@@ -1454,7 +1455,7 @@
 /nix/store/ixiigagvk4lwp5mncm2dy44gd8il9dfc-qtwebengine-6.11.2	sha256:1nf7n7iwcfvbbqqiksaci4ff40cyxr24rn3csj5ni5ysf0hk42hl
 /nix/store/7klc3nvbpmdqyf6rmyp0h8hiiclzk1if-qtwebsockets-6.11.2	sha256:097zfc9jqsywzy2fclmp36xayncy10fd8l700k061qmyf8g1fybr
 /nix/store/9aw9rbv177bynrrzgj65xh2nmzg7z28k-qtx11extras-5.15.19	sha256:0p6kcif3rkkw58gk5d8d8l78xjgw9ynra993assq52kvryszkgmf
-/nix/store/97xxlqm086mdy1xy5wbd6kwg6rggfdgy-qubes-template-env	sha256:1dcfdwhi4jv2nyiwj3q1w4mi8dfn1r40chbyg3nrqym3ssq8wc3c
+/nix/store/w3zsbfclzysd5sh39f7s3p2kishika97-qubes-template-env	sha256:0r7dinc29ziqncafh8x08175r6jfv7f3hfdglga03cx8v7d4nj0c
 /nix/store/7mabhyr448hzbxr8ws47cjani31afjsl-quiet-7.0.1	sha256:0bq1bx6wqr3apifaphm9svl6520nkipw68fb43zmvf071z4n4fc3
 /nix/store/zcpg1a7ibzlqs7yi0ywhih14pr7hsgha-quiet-7.0.1-bwrap	sha256:1jjyf7czfqw7xzrhp5mcfmhh46k6p3ghzhlhchvgiv1s2nj9fpbz
 /nix/store/kw2b9ydkj9pldvrcfjq6lwjprrqgmbpv-quiet-7.0.1-extracted	sha256:1pw7sna90z4883il206p9q1741yi4ybvq98q30bchyk2hs3avv4y
