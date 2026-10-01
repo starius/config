@@ -87,6 +87,7 @@
 
         # Command line.
         pkgs.util-linux
+        pkgs.netcat
         pkgs.dateutils
         pkgs.ascii
         pkgs.file
