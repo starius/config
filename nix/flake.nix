@@ -2,8 +2,8 @@
   description = "Pinned Nix environment for Qubes templates and Debian servers";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/35e212742ceab4ae1dcfbfd9039a39215c816e8e";
-    rust-overlay.url = "github:oxalica/rust-overlay/2776e42828203ec89511699c8dcdedec69ab98e1";
+    nixpkgs.url = "github:NixOS/nixpkgs/b6c8664de9b6cc07fe5666a29f91884ba81197c4";
+    rust-overlay.url = "github:oxalica/rust-overlay/dcee1adabb61484343af863501d2e3d91ef51f72";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
@@ -82,7 +82,7 @@
         pkgs.tmux
         pkgs.openssh
         pkgs.autossh
-        pkgs.mosh
+        # pkgs.mosh
         pkgs.man
 
         # Command line.
@@ -146,7 +146,7 @@
         pkgs.irssi
         pkgs.kondo
         pkgs.ocrmypdf
-        pkgs.whisper-ctranslate2
+        # pkgs.whisper-ctranslate2
         pkgs.fuse
 
         # Development.
@@ -220,7 +220,7 @@
         pkgs.gnumeric
         pkgs.gnuplot
         pkgs.electrum
-        pkgs.feather
+        # pkgs.feather
         pkgs.sparrow
         (pkgs.wine.override { pulseaudioSupport = true; })
 
