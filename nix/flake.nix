@@ -2,8 +2,8 @@
   description = "Pinned Nix environment for Qubes templates and Debian servers";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/7dd199b0e2993e37b4775ed66b1c291699608c9f";
-    rust-overlay.url = "github:oxalica/rust-overlay/8afee9fa8caa877a4feb65adc33e8d72f3747dc9";
+    nixpkgs.url = "github:NixOS/nixpkgs/8edc0c72e3a38faf5434e40d1f19431125fe4b30";
+    rust-overlay.url = "github:oxalica/rust-overlay/e90fafa71b440fabcd52dd7fb017ab2da81c781a";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
