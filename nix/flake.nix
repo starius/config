@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/8edc0c72e3a38faf5434e40d1f19431125fe4b30";
-    rust-overlay.url = "github:oxalica/rust-overlay/e90fafa71b440fabcd52dd7fb017ab2da81c781a";
+    rust-overlay.url = "github:oxalica/rust-overlay/404b7a5537f0adc6e5c558a1b94612e683dec504";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
