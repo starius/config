@@ -182,6 +182,7 @@
         pkgs.automake
         pkgs.libtool
         pkgs.python314Packages.pip
+        pkgs.cutechess
 
         # Deployment.
         pkgs.kubectl
